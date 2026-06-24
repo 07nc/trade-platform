@@ -6,7 +6,7 @@
 ═══════════════════════════════════════════════════ */
 //
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycby6-7D7REqzSijYdT21cEm2YB5So6GyWEQlDXC_eX3uvnXz0CU9Z6Dyjl21hst4zdbtrA/exec"
+  "https://script.google.com/macros/s/AKfycby7wFYYHDrUqeLF-UxwRN1BwcvEc0gI1ZjSBGizNQZgCmlk2Q9HH4OcnZLjvJT_A7-7/exec"
 // ── State ─────────────────────────────────────────
 let accountType = "";
 let selectedBusinessType = "";
