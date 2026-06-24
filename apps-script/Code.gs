@@ -17,7 +17,8 @@
 // Paste your Google Sheet ID here.
 // Get it from the Sheet URL:
 // https://docs.google.com/spreadsheets/d/SHEET_ID_IS_HERE/edit
-const SPREADSHEET_ID = 'https://docs.google.com/spreadsheets/d/1BuTr6SN9cpr8egmbmsM0v8FIR6hkyS6VsfypOWIjQto/edit?gid=0#gid=0';
+
+const SPREADSHEET_ID = '1bIO2okfM-wZNqWJtmQia2MyYv0BRPik6bLhESBC_DJI';
 
 const SHEET_NAME   = 'Partner Submissions';
 const FOLDER_NAME  = 'Real Amount — Visiting Cards';
@@ -82,8 +83,8 @@ function doPost(e) {
       fileUrl = file.getUrl();
     }
 
-    // ── Generate Reference ID ────────────────────────
-    const referenceId = getNextReferenceId(sheet);
+    // ── Reference ID (generated on frontend, stored here)
+    const referenceId = data.referenceId || getNextReferenceId(sheet);
 
     // ── Append data row ─────────────────────────────
     const row = [
@@ -134,6 +135,29 @@ function getNextReferenceId(sheet) {
 
   // Fallback: derive from row count
   return 'REF' + (START + lastRow - 1);
+}
+
+// ── Direct test — run this from the Apps Script editor ──
+function testDoPost() {
+  const fakeRequest = {
+    postData: {
+      contents: JSON.stringify({
+        email:           'test@example.com',
+        businessName:    'Test Business',
+        workplaceAddress:'123 Test Street',
+        gstNumber:       '',
+        contactPerson:   'Test Person',
+        mobileNumber:    '9876543210',
+        businessType:    'Service Provider',
+        selectedItems:   ['Electrician', 'Plumber'],
+        brands:          '',
+        referenceId:     'REF11115'
+      })
+    }
+  };
+
+  const result = doPost(fakeRequest);
+  Logger.log('Response: ' + result.getContent());
 }
 
 // ── Health check (GET) ───────────────────────────────

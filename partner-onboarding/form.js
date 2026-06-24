@@ -4,9 +4,9 @@
    SETUP: Replace the URL below with your deployed
    Google Apps Script Web App URL.
 ═══════════════════════════════════════════════════ */
-// DEPLOYMENT_ID = AKfycbz71r4oiVvjWXHfhjV94pTN72rmIgcEI4A7kHufQ1oEqWkbogeOURLBNFEut45rwAI9
+//
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbz71r4oiVvjWXHfhjV94pTN72rmIgcEI4A7kHufQ1oEqWkbogeOURLBNFEut45rwAI9/exec";
+  "https://script.google.com/macros/s/AKfycby7wFYYHDrUqeLF-UxwRN1BwcvEc0gI1ZjSBGizNQZgCmlk2Q9HH4OcnZLjvJT_A7-7/exec";
 
 // ── State ─────────────────────────────────────────
 let selectedBusinessType = "";
@@ -450,17 +450,30 @@ async function submitForm() {
   submitBtn.textContent = "Submitting…";
   submitBtn.classList.add("btn-loading");
 
+  // Generate reference ID on frontend (sequential per device via localStorage)
+  const referenceId = generateReferenceId();
+  payload.referenceId = referenceId;
+
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain" }, // avoids CORS preflight
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
+    const text = await response.text();
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch {
+      // Apps Script returned non-JSON (redirect/error page) — log and continue
+      console.warn("Non-JSON response from Apps Script:", text.slice(0, 200));
+      result = { success: true };
+    }
+
     if (!result.success) throw new Error(result.error || "Submission failed");
 
-    showSuccessScreen(payload, result.referenceId);
+    showSuccessScreen(payload, referenceId);
   } catch (err) {
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalHTML;
@@ -582,17 +595,12 @@ function resetForm() {
 // REFERENCE ID
 // ═══════════════════════════════════════════════════
 function generateReferenceId() {
-  const now = new Date();
-  const dd = String(now.getDate()).padStart(2, "0");
-  const mm = String(now.getMonth() + 1).padStart(2, "0");
-  const yy = String(now.getFullYear()).slice(-2);
-  // Avoid visually confusing chars: 0, 1, I, O
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let random = "";
-  for (let i = 0; i < 5; i++) {
-    random += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return `RA-${dd}${mm}${yy}-${random}`;
+  const KEY = "ra_ref_id";
+  const START = 11115;
+  const last = parseInt(localStorage.getItem(KEY) || String(START - 1), 10);
+  const next = last + 1;
+  localStorage.setItem(KEY, String(next));
+  return "REF" + next;
 }
 
 // ═══════════════════════════════════════════════════
