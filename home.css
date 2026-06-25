@@ -95,7 +95,7 @@ img {
 }
 
 .nav-logo {
-    height: 44px;
+    height: 56px;
     width: auto;
     object-fit: contain;
     filter: brightness(1.1);
@@ -983,10 +983,8 @@ img {
 
 .contact-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
 }
 
 .contact-card {
@@ -1041,6 +1039,11 @@ img {
     color: var(--accent);
 }
 
+.whatsapp-icon {
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+    color: #fff !important;
+}
+
 /* ═══════════════════════════════
    FOOTER
 ═══════════════════════════════ */
@@ -1062,7 +1065,7 @@ img {
 }
 
 .footer-logo {
-    height: 40px;
+    height: 56px;
     width: auto;
     object-fit: contain;
     margin: 0 auto 0.5rem;
@@ -1094,6 +1097,59 @@ img {
 
 .footer-links a:hover {
     color: var(--accent-light);
+}
+
+.footer-socials {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.social-link {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all var(--transition);
+}
+
+.social-link svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+}
+
+.social-link:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.social-link[aria-label="Instagram"]:hover {
+    background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    border-color: transparent;
+}
+
+.social-link[aria-label="Telegram"]:hover {
+    background: #0088cc;
+    border-color: transparent;
+}
+
+.social-link[aria-label="Facebook"]:hover {
+    background: #1877f2;
+    border-color: transparent;
+}
+
+.social-link[aria-label="WhatsApp"]:hover {
+    background: #25d366;
+    border-color: transparent;
 }
 
 .footer-bottom {
@@ -1201,6 +1257,11 @@ img {
 
     .nav-toggle {
         display: flex;
+    }
+
+    .nav-logo {
+        height: 48px;
+        max-width: calc(100vw - 80px);
     }
 
     .nav-cta {

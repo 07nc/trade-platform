@@ -14,7 +14,7 @@
     <!-- ───── HEADER ───── -->
     <header class="site-header">
         <div class="header-inner">
-            <img src="assets/logo.jpeg" alt="Real Amount" class="logo" />
+            <a href="index.html"><img src="assets/logo.jpeg" alt="Real Amount" class="logo" /></a>
             <div class="header-contact">
                 <a href="tel:+917009095598" class="contact-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -215,7 +215,12 @@
             <!-- /fields-grid -->
 
             <div class="btn-row">
-                <div></div>
+                <button class="btn btn-outline" onclick="goBackToStep0()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    Back
+                </button>
                 <button class="btn btn-primary" onclick="goToStep2()">
                     Next Step
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -311,8 +316,8 @@
         <!-- ── STEP 2A: Product Sale (Retail) ── -->
         <div class="form-card hidden" id="step-2a">
             <div class="card-header">
-                <span class="card-badge product-badge">Product Sale (Retail)</span>
-                <h2>What products do you sell?</h2>
+                <span class="card-badge product-badge" id="step-2a-badge">Product Sale (Retail)</span>
+                <h2 id="step-2a-heading">What products do you sell?</h2>
                 <p class="required-note">
                     Select all that apply <span class="asterisk">*</span>
                 </p>

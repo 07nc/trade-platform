@@ -45,6 +45,19 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDragDrop("payment-upload-zone", "payment-file-input");
   setupRadioCardHighlight();
   setupLiveValidation();
+
+  // ── Auto-skip step-0 if ?type= is in the URL ──
+  const urlParams = new URLSearchParams(window.location.search);
+  const presetType = urlParams.get('type');
+  if (presetType === 'partner') {
+    document.getElementById('at-partner').checked = true;
+    document.getElementById('radio-card-partner').classList.add('selected');
+    goToStep1();
+  } else if (presetType === 'customer') {
+    document.getElementById('at-customer').checked = true;
+    document.getElementById('radio-card-customer').classList.add('selected');
+    goToStep1();
+  }
 });
 
 // ── Live radio card visual ──
@@ -265,6 +278,12 @@ function goToStep2Customer() {
 
   step1Customer.classList.add("hidden");
 
+  // Change heading and badge for customer context
+  const heading = document.getElementById('step-2a-heading');
+  if (heading) heading.textContent = 'What products are you interested in?';
+  const badge = document.getElementById('step-2a-badge');
+  if (badge) badge.textContent = 'Select Products';
+
   if (selectedCustomerService === "Service/Repair") {
     step2b.classList.remove("hidden");
   } else {
@@ -292,6 +311,12 @@ function goBack() {
   } else {
     step1Customer.classList.remove("hidden");
   }
+
+  // Reset heading and badge back to default
+  const heading = document.getElementById('step-2a-heading');
+  if (heading) heading.textContent = 'What products do you sell?';
+  const badge = document.getElementById('step-2a-badge');
+  if (badge) badge.textContent = 'Product Sale (Retail)';
 
   progCircle3.classList.remove("active");
   progCircle2.classList.remove("completed");
