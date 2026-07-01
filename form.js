@@ -661,6 +661,18 @@ async function submitForm() {
   }
 }
 
+// Dynamically load Razorpay script only when needed
+function loadRazorpay() {
+  return new Promise((resolve, reject) => {
+    if (typeof Razorpay !== 'undefined') return resolve();
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Failed to load Razorpay SDK'));
+    document.head.appendChild(script);
+  });
+}
+
 async function submitCustomerForm() {
   const submitBtn = document.getElementById("customer-submit-btn");
   const originalHTML = submitBtn.innerHTML;
@@ -668,6 +680,16 @@ async function submitCustomerForm() {
   submitBtn.disabled = true;
   submitBtn.textContent = "Processing Payment…";
   submitBtn.classList.add("btn-loading");
+
+  try {
+    await loadRazorpay();
+  } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+    submitBtn.classList.remove("btn-loading");
+    showToast("Failed to load payment gateway. Please try again.", "error");
+    return;
+  }
 
   const isProduct = selectedCustomerService !== "Service/Repair";
   const groupName = isProduct ? "products" : "services";
