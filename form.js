@@ -5,8 +5,7 @@
    Google Apps Script Web App URL.
 ═══════════════════════════════════════════════════ */
 //
-const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycby7wFYYHDrUqeLF-UxwRN1BwcvEc0gI1ZjSBGizNQZgCmlk2Q9HH4OcnZLjvJT_A7-7/exec"
+const APPS_SCRIPT_URL = "/api/submit";
 // ── State ─────────────────────────────────────────
 let accountType = "";
 let selectedBusinessType = "";
@@ -70,6 +69,9 @@ function setupRadioCardHighlight() {
       if (radio.id === "at-partner") document.getElementById("radio-card-partner").classList.add("selected");
       if (radio.id === "at-customer") document.getElementById("radio-card-customer").classList.add("selected");
       clearFieldError("accountType-error");
+
+      // Automatically advance to the next step
+      goToStep1();
     });
   });
 
@@ -264,6 +266,14 @@ function goToStep2() {
   progCircle3.classList.add("active");
   progLine2.classList.add("filled");
 
+  // Update UI for Partner
+  const brandsLabel = document.getElementById('brands-label');
+  if (brandsLabel) brandsLabel.textContent = 'Please mention the brands you deal in';
+  const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
+  if (offerPriceProduct) offerPriceProduct.style.display = 'none';
+  const offerPriceService = document.getElementById('offer-price-service-wrapper');
+  if (offerPriceService) offerPriceService.style.display = 'none';
+
   document.getElementById("product-submit-text").textContent = "Submit Form";
   document.getElementById("service-submit-text").textContent = "Submit Form";
 
@@ -295,6 +305,14 @@ function goToStep2Customer() {
   progCircle2.classList.add("completed");
   progCircle3.classList.add("active");
   progLine2.classList.add("filled");
+
+  // Update UI for Customer
+  const brandsLabel = document.getElementById('brands-label');
+  if (brandsLabel) brandsLabel.textContent = 'Please mention the brands you are looking for';
+  const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
+  if (offerPriceProduct) offerPriceProduct.style.display = 'block';
+  const offerPriceService = document.getElementById('offer-price-service-wrapper');
+  if (offerPriceService) offerPriceService.style.display = 'block';
 
   document.getElementById("product-submit-text").textContent = "Next Step";
   document.getElementById("service-submit-text").textContent = "Next Step";
@@ -454,6 +472,14 @@ function validateStep2(type) {
       scrollToField("products-error");
       return false;
     }
+    if (accountType === "Customer") {
+      const offerPrice = document.getElementById("offerPriceProduct").value.trim();
+      if (!offerPrice) {
+        setFieldError("offerPriceProduct", "offerPriceProduct-error", "Offer price is required");
+        scrollToField("offerPriceProduct");
+        return false;
+      }
+    }
   } else {
     const otherChecked = document.getElementById("service-other").checked;
     const otherInput = document.getElementById("service-other-input").value.trim();
@@ -462,20 +488,20 @@ function validateStep2(type) {
       scrollToField("services-error");
       return false;
     }
+    if (accountType === "Customer") {
+      const offerPrice = document.getElementById("offerPriceService").value.trim();
+      if (!offerPrice) {
+        setFieldError("offerPriceService", "offerPriceService-error", "Offer price is required");
+        scrollToField("offerPriceService");
+        return false;
+      }
+    }
   }
 
   return true;
 }
 
 function validateStep3Customer() {
-  clearAllErrors();
-  const zone = document.getElementById("payment-upload-zone");
-  if (!zone._attachedFile) {
-    showFieldErrorMsg("payment-error", "Please upload a payment screenshot");
-    scrollToField("payment-error");
-    showToast("Please upload a payment screenshot.", "error");
-    return false;
-  }
   return true;
 }
 
@@ -581,6 +607,7 @@ async function submitForm() {
     businessType: selectedBusinessType,
     selectedItems: selectedItems,
     brands: isProduct ? document.getElementById("brands").value.trim() : "",
+    offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : document.getElementById("offerPriceService").value.trim(),
   };
 
   const zone = document.getElementById(zoneId);
@@ -635,9 +662,12 @@ async function submitForm() {
 }
 
 async function submitCustomerForm() {
-  if (!validateStep3Customer()) return;
-
   const submitBtn = document.getElementById("customer-submit-btn");
+  const originalHTML = submitBtn.innerHTML;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Processing Payment…";
+  submitBtn.classList.add("btn-loading");
 
   const isProduct = selectedCustomerService !== "Service/Repair";
   const groupName = isProduct ? "products" : "services";
@@ -662,54 +692,100 @@ async function submitCustomerForm() {
     brands: isProduct ? document.getElementById("brands").value.trim() : "",
   };
 
-  const zone = document.getElementById("payment-upload-zone");
-  const file = zone._attachedFile;
-
-  if (file) {
-    try {
-      const dataUrl = await fileToBase64(file);
-      payload.fileData = dataUrl.split(",")[1];
-      payload.fileName = file.name;
-      payload.fileType = file.type || "application/octet-stream";
-    } catch {
-      showToast("Could not read the uploaded file. Please try again.", "error");
-      return;
-    }
-  }
-
-  const originalHTML = submitBtn.innerHTML;
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Submitting…";
-  submitBtn.classList.add("btn-loading");
-
-  const referenceId = generateReferenceId();
-  payload.referenceId = referenceId;
-
   try {
-    const response = await fetch(APPS_SCRIPT_URL, {
+    // 1. Create order on backend (Apps Script)
+    const orderResponse = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ action: "create_razorpay_order" }),
     });
 
-    const text = await response.text();
-    let result;
+    const orderText = await orderResponse.text();
+    let orderResult;
     try {
-      result = JSON.parse(text);
+      orderResult = JSON.parse(orderText);
     } catch {
-      console.warn("Non-JSON response from Apps Script:", text.slice(0, 200));
-      result = { success: true };
+      throw new Error("Invalid order response from server");
     }
 
-    if (!result.success) throw new Error(result.error || "Submission failed");
+    if (!orderResult.success || !orderResult.order) {
+      throw new Error(orderResult.error || "Failed to create order");
+    }
 
-    showSuccessScreenCustomer(payload, referenceId);
+    const orderData = orderResult.order;
+
+    // 2. Open Razorpay Modal
+    const options = {
+      key: orderData.key || "rzp_test_T5neItIIPIHISX",
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: "Real Amount",
+      description: "Service Lead Fee",
+      order_id: orderData.id,
+      handler: async function (response) {
+        // Payment succeeded
+        payload.razorpayPaymentId = response.razorpay_payment_id;
+        payload.razorpayOrderId = response.razorpay_order_id;
+        payload.razorpaySignature = response.razorpay_signature;
+
+        submitBtn.textContent = "Registering…";
+
+        const referenceId = generateReferenceId();
+        payload.referenceId = referenceId;
+
+        try {
+          const finalResponse = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify(payload),
+          });
+
+          const finalText = await finalResponse.text();
+          let finalResult;
+          try {
+            finalResult = JSON.parse(finalText);
+          } catch {
+            finalResult = { success: true };
+          }
+
+          if (!finalResult.success) throw new Error(finalResult.error || "Final registration failed");
+
+          showSuccessScreenCustomer(payload, referenceId);
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalHTML;
+          submitBtn.classList.remove("btn-loading");
+          showToast("Registration failed. Please contact support with Payment ID: " + response.razorpay_payment_id, "error");
+          console.error(err);
+        }
+      },
+      prefill: {
+        name: payload.customerName,
+        contact: payload.customerMobile,
+      },
+
+      theme: {
+        color: "#1a3c5e",
+      },
+      modal: {
+        ondismiss: function () {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalHTML;
+          submitBtn.classList.remove("btn-loading");
+          showToast("Payment cancelled.", "info");
+        }
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+
   } catch (err) {
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalHTML;
     submitBtn.classList.remove("btn-loading");
-    showToast("Network error. Please check your connection and try again.", "error");
-    console.error("Submission error:", err);
+    showToast(err.message || "Failed to initiate payment.", "error");
+    console.error("Payment initiation error:", err);
   }
 }
 
@@ -717,22 +793,31 @@ async function submitCustomerForm() {
 // SUCCESS SCREEN
 // ═══════════════════════════════════════════════════
 function showSuccessScreen(payload, referenceId) {
+  // Query directly from DOM to avoid stale reference
+  const screen = document.getElementById("success-screen");
+  if (screen) {
+    screen.classList.remove("hidden");
+    screen.style.display = "block";
+  }
+
+  // Hide form steps AFTER showing success screen
   step2a.classList.add("hidden");
   step2b.classList.add("hidden");
-  successScreen.classList.remove("hidden");
 
   // Keep progress bar at 3 steps completed
   progCircle3.classList.remove("active");
   progCircle3.classList.add("completed");
 
   const meta = document.getElementById("success-meta");
-  const tags = [
-    payload.businessName,
-    payload.businessType,
-    `+91 ${payload.mobileNumber}`,
-  ].filter(Boolean);
+  if (meta) {
+    const tags = [
+      payload.businessName,
+      payload.businessType,
+      payload.mobileNumber ? `+91 ${payload.mobileNumber}` : null,
+    ].filter(Boolean);
+    meta.innerHTML = tags.map((t) => `<span class="success-tag">${escapeHtml(t)}</span>`).join("");
+  }
 
-  meta.innerHTML = tags.map((t) => `<span class="success-tag">${escapeHtml(t)}</span>`).join("");
   const refEl = document.getElementById("ref-id-display");
   if (refEl) refEl.textContent = referenceId || "—";
 
@@ -892,5 +977,6 @@ function showToast(message, type = "info") {
 }
 
 function escapeHtml(str) {
+  if (!str || typeof str !== 'string') return '';
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }

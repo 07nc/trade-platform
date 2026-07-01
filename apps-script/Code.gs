@@ -29,31 +29,34 @@ const FOLDER_NAME = "Real Amount — Uploads";
 
 // ── Column headers ──────────────────────────────────
 const PARTNER_HEADERS = [
-  "Timestamp",
-  "Reference ID",
-  "Email",
-  "Business Name",
-  "Workplace Address",
-  "GST Number",
-  "Contact Person",
-  "Mobile Number",
-  "Business Type",
-  "Products / Services",
-  "Brands Dealt In",
-  "Visiting Card URL",
+  'Timestamp',
+  'Reference ID',
+  'Email',
+  'Business Name',
+  'Workplace Address',
+  'GST Number',
+  'Contact Person',
+  'Mobile Number',
+  'Business Type',
+  'Products / Services',
+  'Brands Dealt In',
+  'Offer Price',
+  'Product / Service Image URL',
 ];
 
 const CUSTOMER_HEADERS = [
-  "Timestamp",
-  "Reference ID",
-  "Account Type",
-  "Customer Name",
-  "Mobile Number",
-  "Address",
-  "Service Requested",
-  "Items / Category",
-  "Brands (if any)",
-  "Payment Screenshot URL",
+  'Timestamp',
+  'Reference ID',
+  'Account Type',
+  'Customer Name',
+  'Mobile Number',
+  'Address',
+  'Service Requested',
+  'Items / Category',
+  'Brands (if any)',
+  'Razorpay Payment ID',
+  'Razorpay Order ID',
+  'Payment Status',
 ];
 
 // ════════════════════════════════════════════════════
@@ -62,7 +65,14 @@ const CUSTOMER_HEADERS = [
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    const accountType = (data.accountType || "").trim();
+    const action = data.action;
+
+    if (action === 'create_razorpay_order') {
+      const order = createRazorpayOrder(50); // Rs 50/- lead fee
+      return jsonResponse({ success: true, order: order });
+    }
+
+    const accountType = (data.accountType || '').trim();
 
     if (accountType === "Customer") {
       return handleCustomerSubmission(data);
@@ -109,9 +119,10 @@ function handlePartnerSubmission(data) {
     data.mobileNumber || "",
     data.businessType || "",
     Array.isArray(data.selectedItems)
-      ? data.selectedItems.join(", ")
-      : data.selectedItems || "",
-    data.brands || "",
+      ? data.selectedItems.join(', ')
+      : (data.selectedItems || ''),
+    data.brands               || '',
+    data.offerPrice           || '',
     fileUrl,
   ];
 
@@ -136,10 +147,24 @@ function handleCustomerSubmission(data) {
     appendHeaderRow(sheet, CUSTOMER_HEADERS);
   }
 
-  // ── Handle payment screenshot upload ───────────
-  let fileUrl = "";
-  if (data.fileData && data.fileName) {
-    fileUrl = uploadFileToDrive(data, "payment_" + (data.referenceId || ""));
+  // ── Verify Razorpay Payment Signature ───────────
+  const scriptProperties = PropertiesService.getScriptProperties();
+  const keySecret = (scriptProperties.getProperty('RAZORPAY_KEY_SECRET') || 'bbffW0UBFifbhIUKJMcUZiyx').trim();
+  
+  let paymentStatus = 'Pending / Unverified';
+  if (data.razorpayPaymentId && data.razorpayOrderId && data.razorpaySignature) {
+    if (keySecret) {
+      const isValid = verifyRazorpaySignature(
+        data.razorpayOrderId,
+        data.razorpayPaymentId,
+        data.razorpaySignature,
+        keySecret
+      );
+      paymentStatus = isValid ? 'Paid' : 'Signature Verification Failed';
+    } else {
+      // If key secret is not set in script properties, accept signature for test
+      paymentStatus = 'Paid (Unverified - Key Secret Not Set)';
+    }
   }
 
   const referenceId = data.referenceId || getNextReferenceId(sheet);
@@ -153,10 +178,12 @@ function handleCustomerSubmission(data) {
     data.customerAddress || "",
     data.customerService || "",
     Array.isArray(data.selectedItems)
-      ? data.selectedItems.join(", ")
-      : data.selectedItems || "",
-    data.brands || "",
-    fileUrl,
+      ? data.selectedItems.join(', ')
+      : (data.selectedItems || ''),
+    data.brands               || '',
+    data.razorpayPaymentId    || '',
+    data.razorpayOrderId      || '',
+    paymentStatus
   ];
 
   sheet.appendRow(row);
@@ -229,6 +256,58 @@ function doGet() {
   return ContentService.createTextOutput(
     "Real Amount Form API is running. Partner + Customer flows active.",
   ).setMimeType(ContentService.MimeType.TEXT);
+}
+
+// ── Razorpay Helpers ─────────────────────────────────
+function createRazorpayOrder(amountRupees) {
+  const scriptProperties = PropertiesService.getScriptProperties();
+  const keyId = (scriptProperties.getProperty('RAZORPAY_KEY_ID') || 'rzp_live_T8Alm8tnAkFQzi').trim();
+  const keySecret = (scriptProperties.getProperty('RAZORPAY_KEY_SECRET') || 'bbffW0UBFifbhIUKJMcUZiyx').trim();
+  
+  const payload = {
+    amount: amountRupees * 100, // Razorpay expects amount in paise
+    currency: 'INR',
+    receipt: 'rcpt_' + Math.random().toString(36).substring(2, 15)
+  };
+  
+  const options = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: {
+      'Authorization': 'Basic ' + Utilities.base64Encode(keyId + ':' + keySecret)
+    },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+  
+  const response = UrlFetchApp.fetch('https://api.razorpay.com/v1/orders', options);
+  const responseText = response.getContentText();
+  const responseCode = response.getResponseCode();
+  
+  if (responseCode !== 200 && responseCode !== 201) {
+    throw new Error('Razorpay Order Creation Failed: ' + responseText);
+  }
+  
+  const orderData = JSON.parse(responseText);
+  orderData.key = keyId; // Inject key ID for frontend
+  return orderData;
+}
+
+function verifyRazorpaySignature(orderId, paymentId, signature, secretKey) {
+  const message = orderId + '|' + paymentId;
+  const signatureBytes = Utilities.computeHmacSignature(
+    Utilities.MacAlgorithm.HMAC_SHA_256,
+    message,
+    secretKey
+  );
+  
+  // Convert signature bytes to hex
+  let hexSignature = signatureBytes.map(function(byte) {
+    let hex = (byte & 0xFF).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }).join('');
+
+  return hexSignature === signature;
 }
 
 // ════════════════════════════════════════════════════

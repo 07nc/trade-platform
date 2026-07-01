@@ -14,7 +14,7 @@
     <!-- ───── HEADER ───── -->
     <header class="site-header">
         <div class="header-inner">
-            <a href="index.html"><img src="assets/logo.jpeg" alt="Real Amount" class="logo" /></a>
+            <a href="index.html"><img src="assets/logo.png" alt="Real Amount" class="logo" /></a>
             <div class="header-contact">
                 <a href="tel:+917009095598" class="contact-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -105,15 +105,7 @@
                 </div>
             </div>
 
-            <div class="btn-row">
-                <div></div>
-                <button class="btn btn-primary" onclick="goToStep1()">
-                    Next Step
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                </button>
-            </div>
+
         </div>
 
         <!-- ── STEP 1: Basic Info ── -->
@@ -269,9 +261,9 @@
                     <label>What service do you want? <span class="asterisk">*</span></label>
                     <div class="radio-group">
                         <label class="radio-card" id="radio-card-buy-new">
-                            <input type="radio" name="customerService" value="Buy New product" id="cs-buy-new" />
+                            <input type="radio" name="customerService" value="Buy New Product" id="cs-buy-new" />
                             <div class="radio-card-inner">
-                                <span class="radio-title">Buy New product</span>
+                                <span class="radio-title">Buy New Product</span>
                             </div>
                         </label>
                         <label class="radio-card" id="radio-card-service-repair">
@@ -281,15 +273,15 @@
                             </div>
                         </label>
                         <label class="radio-card" id="radio-card-buy-used">
-                            <input type="radio" name="customerService" value="Buy used product" id="cs-buy-used" />
+                            <input type="radio" name="customerService" value="Buy Used Product" id="cs-buy-used" />
                             <div class="radio-card-inner">
-                                <span class="radio-title">Buy used product</span>
+                                <span class="radio-title">Buy Used Product</span>
                             </div>
                         </label>
                         <label class="radio-card" id="radio-card-sell-used">
-                            <input type="radio" name="customerService" value="Sell used product" id="cs-sell-used" />
+                            <input type="radio" name="customerService" value="Sell Used Product" id="cs-sell-used" />
                             <div class="radio-card-inner">
-                                <span class="radio-title">Sell used product</span>
+                                <span class="radio-title">Sell Used Product</span>
                             </div>
                         </label>
                     </div>
@@ -410,12 +402,20 @@
             <!-- Brands + Upload -->
             <div class="card-section">
                 <div class="form-group">
-                    <label for="brands">Please mention the brands you deal in</label>
+                    <label for="brands" id="brands-label">Please mention the brands you are looking for</label>
                     <input type="text" id="brands" name="brands" placeholder="e.g. Samsung, LG, Sony..." />
                 </div>
 
+                <div class="form-group" style="margin-top: 1rem" id="offer-price-product-wrapper">
+                    <label for="offerPriceProduct">Your offer price of the product <span
+                            class="asterisk">*</span></label>
+                    <input type="text" id="offerPriceProduct" name="offerPriceProduct"
+                        placeholder="Enter your offer price" />
+                    <span class="field-error hidden" id="offerPriceProduct-error"></span>
+                </div>
+
                 <div class="form-group" style="margin-top: 1rem">
-                    <label>Upload Business / Visiting Card</label>
+                    <label>Upload Product Image</label>
                     <div class="upload-zone" id="product-upload-zone"
                         onclick="document.getElementById('product-file-input').click()">
                         <input type="file" id="product-file-input" accept=".pdf,image/*" style="display: none"
@@ -541,8 +541,16 @@
 
             <!-- File Upload -->
             <div class="card-section">
+                <div class="form-group" style="margin-bottom: 1rem" id="offer-price-service-wrapper">
+                    <label for="offerPriceService">Your offer price of the service <span
+                            class="asterisk">*</span></label>
+                    <input type="text" id="offerPriceService" name="offerPriceService"
+                        placeholder="Enter your offer price" />
+                    <span class="field-error hidden" id="offerPriceService-error"></span>
+                </div>
+
                 <div class="form-group">
-                    <label>Upload Business / Visiting Card</label>
+                    <label>Upload Service Image</label>
                     <div class="upload-zone" id="service-upload-zone"
                         onclick="document.getElementById('service-file-input').click()">
                         <input type="file" id="service-file-input" accept=".pdf,image/*" style="display: none"
@@ -597,104 +605,97 @@
                 <span class="card-badge">Step 3 of 3</span>
                 <h2>Payment Details</h2>
                 <p class="required-note">
-                    A service fee of Rs 50/- (non refundable) will be charged per lead.
-                </p>
-            </div>
+                    A service fee of Rs 50
+                <div class="fields-grid">
+                    <!-- Secure Payment Info -->
+                    <div class="form-group full-width">
+                        <div class="payment-box" style="text-align: center; padding: 2rem;">
+                            <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem;">Secure Online
+                                Payment</p>
+                            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">You will be redirected to
+                                Razorpay to complete your secure payment of Rs 50/-.</p>
+                            <div
+                                style="font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem;">
+                                ₹50.00</div>
 
-            <div class="fields-grid">
-                <!-- Payment Instructions -->
-                <div class="form-group full-width">
-                    <div class="payment-box">
-                        <p class="payment-title">Please pay Rs 50/- using UPI</p>
-                        <img src="assets/qr.png" alt="Payment QR Code" class="payment-qr" />
-                    </div>
-                </div>
-
-                <!-- File Upload -->
-                <div class="form-group full-width">
-                    <label>Upload Payment Screenshot <span class="asterisk">*</span></label>
-                    <div class="upload-zone" id="payment-upload-zone"
-                        onclick="document.getElementById('payment-file-input').click()">
-                        <input type="file" id="payment-file-input" accept="image/*" style="display: none"
-                            onchange="handleFileSelect(this, 'payment-upload-zone')" />
-                        <div class="upload-placeholder" id="payment-upload-placeholder">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="17 8 12 3 7 8" />
-                                <line x1="12" y1="3" x2="12" y2="15" />
-                            </svg>
-                            <p class="upload-main-text">Click to upload screenshot</p>
-                            <p class="upload-sub-text">Image only &bull; Max 2 MB</p>
-                        </div>
-                        <div class="upload-preview hidden" id="payment-upload-preview">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                            <div>
-                                <p class="file-name" id="payment-file-name"></p>
-                                <p class="file-size" id="payment-file-size"></p>
+                            <div class="policy-box"
+                                style="margin-top: 1.5rem; padding: 1rem; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                                <strong
+                                    style="color: var(--primary-dark); display: block; margin-bottom: 0.4rem;">Refund
+                                    Policy</strong>
+                                Our commitment is to fair pricing. If a customer presents a valid bill for the same
+                                product they intend to buy, showing a lower price on the market, they are eligible for a
+                                refund of the connect charge. In cases where a valid bill is not provided, the connect
+                                charge will not be refundable.
                             </div>
-                            <button type="button" class="remove-file"
-                                onclick="removeFile('payment-upload-zone', 'payment-file-input', event)">&#x2715;</button>
                         </div>
                     </div>
-                    <span class="field-error hidden" id="payment-error"></span>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-outline" onclick="goBackToStep2From3()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        Back
+                    </button>
+                    <button class="btn btn-primary" id="customer-submit-btn" onclick="submitCustomerForm()">
+                        Pay &amp; Register
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </button>
                 </div>
             </div>
-
-            <div class="btn-row">
-                <button class="btn btn-outline" onclick="goBackToStep2From3()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                    Back
-                </button>
-                <button class="btn btn-primary" id="customer-submit-btn" onclick="submitCustomerForm()">
-                    Submit Form
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                </button>
-            </div>
         </div>
 
-        <!-- ── SUCCESS SCREEN ── -->
-        <div class="success-screen hidden" id="success-screen">
-            <div class="success-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <polyline points="22 4 12 14.01 9 11.01" />
-                </svg>
-            </div>
-            <h2>Application Submitted!</h2>
-            <p>
-                Thank you for applying to the Real Amount partner network.
-                Our team will review your application and get in touch with
-                you shortly.
-            </p>
 
-            <!-- Reference ID Box -->
-            <div class="ref-id-box">
-                <p class="ref-id-label">Your Reference ID</p>
-                <p class="ref-id-value" id="ref-id-display">&mdash;</p>
-                <button type="button" class="copy-btn" onclick="copyRefId()">
+            <!-- ── SUCCESS SCREEN ── -->
+            <div class="success-screen hidden" id="success-screen">
+                <div class="success-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
-                    Copy ID
-                </button>
-                <p class="ref-id-hint">
-                    Save this ID for future correspondence with Real Amount
+                </div>
+                <h2>Application Submitted!</h2>
+                <p>
+                    Thank you for applying to the Real Amount partner network.
+                    Our team will review your application and get in touch with
+                    you shortly.
                 </p>
-            </div>
 
-            <div class="success-meta" id="success-meta"></div>
-            <button class="btn btn-primary" onclick="resetForm()" style="margin-top: 1.5rem">
-                Submit Another Response
-            </button>
-        </div>
+                <!-- Reference ID Box -->
+                <div class="ref-id-box">
+                    <p class="ref-id-label">Your Reference ID</p>
+                    <p class="ref-id-value" id="ref-id-display">&mdash;</p>
+                    <button type="button" class="copy-btn" onclick="copyRefId()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        Copy ID
+                    </button>
+                    <p class="ref-id-hint">
+                        Save this ID for future correspondence with Real Amount
+                    </p>
+                </div>
+
+                <div class="contact-prompt-box" style="margin-top: 1.5rem; padding: 1.25rem; background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.3); border-radius: 12px; text-align: center;">
+                    <p style="margin-bottom: 1rem; color: #1a3c5e; font-weight: 500; line-height: 1.5;">
+                        To get further updates, please save our number. We will contact you on WhatsApp!
+                    </p>
+                    <a href="tel:+917009095598" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: #25D366; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); transition: all 0.3s ease;">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        +91 70090 95598
+                    </a>
+                </div>
+
+                <div class="success-meta" id="success-meta"></div>
+                <button class="btn btn-primary" onclick="resetForm()" style="margin-top: 1.5rem">
+                    Submit Another Response
+                </button>
+            </div>
     </main>
 
     <!-- Toast notification -->
