@@ -104,3 +104,36 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// ── Trust Stats Count-Up Animation ──
+function animateCountUp(el) {
+    const target = parseInt(el.getAttribute('data-target'), 10);
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease-out curve for a smooth deceleration
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    requestAnimationFrame(update);
+}
+
+const trustSection = document.getElementById('trust-stats');
+if (trustSection) {
+    let hasAnimated = false;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !hasAnimated) {
+                hasAnimated = true;
+                document.querySelectorAll('.trust-stat-number').forEach(el => animateCountUp(el));
+                observer.unobserve(trustSection);
+            }
+        });
+    }, { threshold: 0.3 });
+    observer.observe(trustSection);
+}
