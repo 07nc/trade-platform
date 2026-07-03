@@ -26,6 +26,7 @@ const SPREADSHEET_ID = "1bIO2okfM-wZNqWJtmQia2MyYv0BRPik6bLhESBC_DJI";
 const PARTNER_SHEET_NAME = "Partner Submissions";
 const CUSTOMER_SHEET_NAME = "Customer Submissions";
 const FOLDER_NAME = "Real Amount — Uploads";
+const NOTIFICATION_EMAIL = "sahil.decent23@gmail.com";
 
 // ── Column headers ──────────────────────────────────
 const PARTNER_HEADERS = [
@@ -129,6 +130,18 @@ function handlePartnerSubmission(data) {
   sheet.appendRow(row);
   sheet.autoResizeColumns(1, PARTNER_HEADERS.length);
 
+  // Send email notification
+  sendNotificationEmail('Partner', referenceId, {
+    'Business Name': data.businessName || '—',
+    'Contact Person': data.contactPerson || '—',
+    'Mobile': data.mobileNumber || '—',
+    'Email': data.email || '—',
+    'Business Type': data.businessType || '—',
+    'Products/Services': Array.isArray(data.selectedItems) ? data.selectedItems.join(', ') : (data.selectedItems || '—'),
+    'Brands': data.brands || '—',
+    'Address': data.workplaceAddress || '—',
+  });
+
   return jsonResponse({ success: true, referenceId: referenceId });
 }
 
@@ -189,7 +202,58 @@ function handleCustomerSubmission(data) {
   sheet.appendRow(row);
   sheet.autoResizeColumns(1, CUSTOMER_HEADERS.length);
 
+  // Send email notification
+  sendNotificationEmail('Customer', referenceId, {
+    'Name': data.customerName || '—',
+    'Mobile': data.customerMobile || '—',
+    'Address': data.customerAddress || '—',
+    'Service': data.customerService || '—',
+    'Items': Array.isArray(data.selectedItems) ? data.selectedItems.join(', ') : (data.selectedItems || '—'),
+    'Brands': data.brands || '—',
+    'Payment ID': data.razorpayPaymentId || '—',
+    'Payment Status': paymentStatus,
+  });
+
   return jsonResponse({ success: true, referenceId: referenceId });
+}
+
+// ════════════════════════════════════════════════════
+// EMAIL NOTIFICATION
+// ════════════════════════════════════════════════════
+function sendNotificationEmail(type, referenceId, details) {
+  try {
+    const detailRows = Object.entries(details)
+      .map(([key, val]) => `<tr><td style="padding:8px 12px;font-weight:600;color:#1a3c5e;border-bottom:1px solid #eee;">${key}</td><td style="padding:8px 12px;color:#333;border-bottom:1px solid #eee;">${val}</td></tr>`)
+      .join('');
+
+    const html = `
+      <div style="font-family:'Inter',Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:#1a3c5e;padding:20px;border-radius:12px 12px 0 0;text-align:center;">
+          <h1 style="color:#c9a84c;margin:0;font-size:22px;">Real Amount</h1>
+          <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px;">New ${type} Registration</p>
+        </div>
+        <div style="background:#fff;padding:24px;border:1px solid #e5e5e5;border-top:none;">
+          <p style="color:#1a3c5e;font-size:16px;margin-top:0;">A new <strong>${type}</strong> just registered on the platform.</p>
+          <p style="background:#f0f7ff;padding:10px 14px;border-radius:8px;font-size:14px;color:#1a3c5e;">Reference ID: <strong>${referenceId}</strong></p>
+          <table style="width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;">
+            ${detailRows}
+          </table>
+        </div>
+        <div style="background:#f9f9f9;padding:14px;border-radius:0 0 12px 12px;border:1px solid #e5e5e5;border-top:none;text-align:center;">
+          <p style="color:#999;font-size:12px;margin:0;">This is an automated notification from Real Amount</p>
+        </div>
+      </div>
+    `;
+
+    MailApp.sendEmail({
+      to: NOTIFICATION_EMAIL,
+      subject: `🔔 New ${type} Registration — ${referenceId}`,
+      htmlBody: html,
+    });
+  } catch (err) {
+    console.error('Email notification failed:', err.message);
+    // Don't throw — email failure should not block the submission
+  }
 }
 
 // ════════════════════════════════════════════════════
