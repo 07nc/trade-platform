@@ -26,7 +26,7 @@ const SPREADSHEET_ID = "1bIO2okfM-wZNqWJtmQia2MyYv0BRPik6bLhESBC_DJI";
 const PARTNER_SHEET_NAME = "Partner Submissions";
 const CUSTOMER_SHEET_NAME = "Customer Submissions";
 const FOLDER_NAME = "Real Amount — Uploads";
-const NOTIFICATION_EMAIL = "sahil.decent23@gmail.com";
+const NOTIFICATION_EMAIL = "realamountofficial@gmail.com";
 
 // ── Column headers ──────────────────────────────────
 const PARTNER_HEADERS = [
