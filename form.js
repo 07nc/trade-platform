@@ -707,9 +707,6 @@ async function submitForm() {
   submitBtn.textContent = "Submitting…";
   submitBtn.classList.add("btn-loading");
 
-  const referenceId = generateReferenceId();
-  payload.referenceId = referenceId;
-
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
@@ -728,7 +725,7 @@ async function submitForm() {
 
     if (!result.success) throw new Error(result.error || "Submission failed");
 
-    showSuccessScreen(payload, referenceId);
+    showSuccessScreen(payload, result.referenceId || "—");
   } catch (err) {
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalHTML;
@@ -829,9 +826,6 @@ async function submitCustomerForm() {
 
         submitBtn.textContent = "Registering…";
 
-        const referenceId = generateReferenceId();
-        payload.referenceId = referenceId;
-
         try {
           const finalResponse = await fetch(APPS_SCRIPT_URL, {
             method: "POST",
@@ -849,7 +843,7 @@ async function submitCustomerForm() {
 
           if (!finalResult.success) throw new Error(finalResult.error || "Final registration failed");
 
-          showSuccessScreenCustomer(payload, referenceId);
+          showSuccessScreenCustomer(payload, finalResult.referenceId || "—");
         } catch (err) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalHTML;
