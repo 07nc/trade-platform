@@ -83,6 +83,10 @@ function setupRadioCardHighlight() {
       if (radio.id === "bt-product") document.getElementById("radio-card-product").classList.add("selected");
       if (radio.id === "bt-service") document.getElementById("radio-card-service").classList.add("selected");
       clearFieldError("businessType-error");
+
+      if (accountType === "Partner" && isStep1ValidSilent()) {
+        goToStep2();
+      }
     });
   });
 
@@ -98,6 +102,10 @@ function setupRadioCardHighlight() {
       if (radio.id === "cs-buy-used") document.getElementById("radio-card-buy-used").classList.add("selected");
       if (radio.id === "cs-sell-used") document.getElementById("radio-card-sell-used").classList.add("selected");
       clearFieldError("customerService-error");
+
+      if (accountType === "Customer" && isStep1CustomerValidSilent()) {
+        goToStep2Customer();
+      }
     });
   });
 }
@@ -113,6 +121,13 @@ function setupLiveValidation() {
     el.addEventListener("input", () => {
       el.classList.remove("error");
       clearFieldError(`${id}-error`);
+
+      // Auto-advance
+      if (accountType === "Partner" && isStep1ValidSilent()) {
+        goToStep2();
+      } else if (accountType === "Customer" && isStep1CustomerValidSilent()) {
+        goToStep2Customer();
+      }
     });
   });
 }
@@ -274,6 +289,11 @@ function goToStep2() {
   const offerPriceService = document.getElementById('offer-price-service-wrapper');
   if (offerPriceService) offerPriceService.style.display = 'none';
 
+  const productUploadLabel = document.getElementById('product-upload-label');
+  if (productUploadLabel) productUploadLabel.textContent = 'Upload visiting card / business card';
+  const serviceUploadLabel = document.getElementById('service-upload-label');
+  if (serviceUploadLabel) serviceUploadLabel.textContent = 'Upload visiting card / business card';
+
   document.getElementById("product-submit-text").textContent = "Submit Form";
   document.getElementById("service-submit-text").textContent = "Submit Form";
 
@@ -308,11 +328,36 @@ function goToStep2Customer() {
 
   // Update UI for Customer
   const brandsLabel = document.getElementById('brands-label');
-  if (brandsLabel) brandsLabel.textContent = 'Please mention the brands you are looking for';
+  if (brandsLabel) {
+    if (selectedCustomerService === "Sell Used Product") {
+      brandsLabel.textContent = 'Please mention the brand of your product';
+    } else {
+      brandsLabel.textContent = 'Please mention the brands you are looking for';
+    }
+  }
+
+  const offerPriceProductLabel = document.getElementById('offer-price-product-label');
+  if (offerPriceProductLabel) offerPriceProductLabel.innerHTML = 'Enter your budget/expected price <span class="asterisk">*</span>';
+  
+  const offerPriceServiceLabel = document.getElementById('offer-price-service-label');
+  if (offerPriceServiceLabel) offerPriceServiceLabel.innerHTML = 'Enter your budget/expected price <span class="asterisk">*</span>';
+
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
   if (offerPriceProduct) offerPriceProduct.style.display = 'block';
   const offerPriceService = document.getElementById('offer-price-service-wrapper');
   if (offerPriceService) offerPriceService.style.display = 'block';
+
+  const productUploadLabel = document.getElementById('product-upload-label');
+  if (productUploadLabel) productUploadLabel.textContent = 'Upload a photo, if relevant';
+  
+  const serviceUploadLabel = document.getElementById('service-upload-label');
+  if (serviceUploadLabel) {
+    if (selectedCustomerService === "Service/Repair") {
+      serviceUploadLabel.textContent = 'Upload a photo of the issue/problem';
+    } else {
+      serviceUploadLabel.textContent = 'Upload a photo, if relevant';
+    }
+  }
 
   document.getElementById("product-submit-text").textContent = "Next Step";
   document.getElementById("service-submit-text").textContent = "Next Step";
@@ -448,6 +493,38 @@ function validateStep1Customer() {
 
   if (!valid) showToast("Please fill in all required fields correctly.", "error");
   return valid;
+}
+
+function isStep1ValidSilent() {
+  const email = document.getElementById("email").value.trim();
+  const bizName = document.getElementById("businessName").value.trim();
+  const address = document.getElementById("workplaceAddress").value.trim();
+  const contact = document.getElementById("contactPerson").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const bizType = document.querySelector('input[name="businessType"]:checked');
+
+  if (!email || !isValidEmail(email)) return false;
+  if (!bizName) return false;
+  if (!address) return false;
+  if (!contact) return false;
+  if (!mobile || mobile.length !== 10) return false;
+  if (!bizType) return false;
+
+  return true;
+}
+
+function isStep1CustomerValidSilent() {
+  const name = document.getElementById("customerName").value.trim();
+  const mobile = document.getElementById("customerMobile").value.trim();
+  const address = document.getElementById("customerAddress").value.trim();
+  const service = document.querySelector('input[name="customerService"]:checked');
+
+  if (!name) return false;
+  if (!mobile || mobile.length !== 10) return false;
+  if (!address) return false;
+  if (!service) return false;
+
+  return true;
 }
 
 function validateStep2(type) {
