@@ -229,7 +229,10 @@ function goToStep1() {
   progCircle2.classList.add("active");
   progLine1.classList.add("filled");
 
+  const mainTitle = document.getElementById("main-form-title");
+
   if (accountType === "Partner") {
+    if (mainTitle) mainTitle.textContent = "Partner Registration Form";
     progLabel1.textContent = "Account";
     progLabel2.textContent = "Basic Info";
     progLabel3.textContent = "Business Details";
@@ -237,6 +240,7 @@ function goToStep1() {
     progLine2.classList.remove("hidden");
     step1.classList.remove("hidden");
   } else {
+    if (mainTitle) mainTitle.textContent = "Customer Registration Form";
     progLabel1.textContent = "Account";
     progLabel2.textContent = "Details";
     progLabel3.textContent = "Payment";
@@ -344,10 +348,16 @@ function goToStep2Customer() {
   }
 
   const offerPriceProductLabel = document.getElementById('offer-price-product-label');
-  if (offerPriceProductLabel) offerPriceProductLabel.innerHTML = 'Price offered by other sellers <span class="asterisk">*</span>';
+  if (offerPriceProductLabel) {
+    if (selectedCustomerService === "Sell Used Product") {
+      offerPriceProductLabel.innerHTML = 'Expected selling price <span class="asterisk">*</span>';
+    } else {
+      offerPriceProductLabel.innerHTML = 'Price offered to you <span class="asterisk">*</span>';
+    }
+  }
   
   const offerPriceServiceLabel = document.getElementById('offer-price-service-label');
-  if (offerPriceServiceLabel) offerPriceServiceLabel.innerHTML = 'Price offered by other sellers <span class="asterisk">*</span>';
+  if (offerPriceServiceLabel) offerPriceServiceLabel.innerHTML = 'Price offered to you <span class="asterisk">*</span>';
 
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
   if (offerPriceProduct) offerPriceProduct.style.display = 'block';
