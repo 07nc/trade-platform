@@ -257,6 +257,9 @@ function goBackToStep0() {
   step1Customer.classList.add("hidden");
   step0.classList.remove("hidden");
 
+  const mainTitle = document.getElementById("main-form-title");
+  if (mainTitle) mainTitle.textContent = "Choose your account type";
+
   progCircle2.classList.remove("active");
   progCircle1.classList.remove("completed");
   progCircle1.classList.add("active");
@@ -1038,6 +1041,9 @@ function resetForm() {
   progLabel1.textContent = "Account Type";
   progLabel2.textContent = "Basic Info";
   progLabel3.textContent = "Payment";
+
+  const mainTitle = document.getElementById("main-form-title");
+  if (mainTitle) mainTitle.textContent = "Choose your account type";
 
   accountType = "";
   selectedBusinessType = "";
