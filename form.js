@@ -289,6 +289,13 @@ function goToStep2() {
   const offerPriceService = document.getElementById('offer-price-service-wrapper');
   if (offerPriceService) offerPriceService.style.display = 'none';
 
+  const productDesc = document.getElementById('product-description-wrapper');
+  if (productDesc) productDesc.style.display = 'block';
+  const serviceDesc = document.getElementById('service-description-wrapper');
+  if (serviceDesc) serviceDesc.style.display = 'block';
+
+  document.querySelectorAll('.none-item').forEach(el => el.style.display = 'inline-flex');
+
   const productUploadLabel = document.getElementById('product-upload-label');
   if (productUploadLabel) productUploadLabel.textContent = 'Upload visiting card / business card';
   const serviceUploadLabel = document.getElementById('service-upload-label');
@@ -337,15 +344,22 @@ function goToStep2Customer() {
   }
 
   const offerPriceProductLabel = document.getElementById('offer-price-product-label');
-  if (offerPriceProductLabel) offerPriceProductLabel.innerHTML = 'Enter your budget/expected price <span class="asterisk">*</span>';
+  if (offerPriceProductLabel) offerPriceProductLabel.innerHTML = 'Price offered by other sellers <span class="asterisk">*</span>';
   
   const offerPriceServiceLabel = document.getElementById('offer-price-service-label');
-  if (offerPriceServiceLabel) offerPriceServiceLabel.innerHTML = 'Enter your budget/expected price <span class="asterisk">*</span>';
+  if (offerPriceServiceLabel) offerPriceServiceLabel.innerHTML = 'Price offered by other sellers <span class="asterisk">*</span>';
 
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
   if (offerPriceProduct) offerPriceProduct.style.display = 'block';
   const offerPriceService = document.getElementById('offer-price-service-wrapper');
   if (offerPriceService) offerPriceService.style.display = 'block';
+
+  const productDesc = document.getElementById('product-description-wrapper');
+  if (productDesc) productDesc.style.display = 'block';
+  const serviceDesc = document.getElementById('service-description-wrapper');
+  if (serviceDesc) serviceDesc.style.display = 'block';
+
+  document.querySelectorAll('.none-item').forEach(el => el.style.display = 'none');
 
   const productUploadLabel = document.getElementById('product-upload-label');
   if (productUploadLabel) productUploadLabel.textContent = 'Upload a photo, if relevant';
@@ -685,6 +699,7 @@ async function submitForm() {
     selectedItems: selectedItems,
     brands: isProduct ? document.getElementById("brands").value.trim() : "",
     offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : document.getElementById("offerPriceService").value.trim(),
+    description: isProduct ? document.getElementById("productDescription").value.trim() : document.getElementById("serviceDescription").value.trim(),
   };
 
   const zone = document.getElementById(zoneId);
@@ -786,7 +801,28 @@ async function submitCustomerForm() {
     customerService: selectedCustomerService,
     selectedItems: selectedItems,
     brands: isProduct ? document.getElementById("brands").value.trim() : "",
+    offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : document.getElementById("offerPriceService").value.trim(),
+    description: isProduct ? document.getElementById("productDescription").value.trim() : document.getElementById("serviceDescription").value.trim(),
   };
+
+  const zoneId = isProduct ? "product-upload-zone" : "service-upload-zone";
+  const zone = document.getElementById(zoneId);
+  const file = zone._attachedFile;
+
+  if (file) {
+    try {
+      const dataUrl = await fileToBase64(file);
+      payload.fileData = dataUrl.split(",")[1];
+      payload.fileName = file.name;
+      payload.fileType = file.type || "application/octet-stream";
+    } catch {
+      showToast("Could not read the uploaded file. Please try again.", "error");
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalHTML;
+      submitBtn.classList.remove("btn-loading");
+      return;
+    }
+  }
 
   try {
     // 1. Create order on backend (Apps Script)

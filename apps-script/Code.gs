@@ -42,6 +42,7 @@ const PARTNER_HEADERS = [
   'Products / Services',
   'Brands Dealt In',
   'Offer Price',
+  'Description',
   'Product / Service Image URL',
 ];
 
@@ -58,6 +59,9 @@ const CUSTOMER_HEADERS = [
   'Razorpay Payment ID',
   'Razorpay Order ID',
   'Payment Status',
+  'Description',
+  'Offer Price',
+  'Product / Service Image URL',
 ];
 
 // ════════════════════════════════════════════════════
@@ -101,13 +105,13 @@ function handlePartnerSubmission(data) {
     appendHeaderRow(sheet, PARTNER_HEADERS);
   }
 
+  const referenceId = data.referenceId || getNextReferenceId(sheet);
+
   // ── Handle file upload ──────────────────────────
   let fileUrl = "";
   if (data.fileData && data.fileName) {
-    fileUrl = uploadFileToDrive(data, "partner_" + (data.referenceId || ""));
+    fileUrl = uploadFileToDrive(data, "partner_" + referenceId);
   }
-
-  const referenceId = data.referenceId || getNextReferenceId(sheet);
 
   const row = [
     new Date(),
@@ -124,6 +128,7 @@ function handlePartnerSubmission(data) {
       : (data.selectedItems || ''),
     data.brands               || '',
     data.offerPrice           || '',
+    data.description          || '',
     fileUrl,
   ];
 
@@ -139,6 +144,7 @@ function handlePartnerSubmission(data) {
     'Business Type': data.businessType || '—',
     'Products/Services': Array.isArray(data.selectedItems) ? data.selectedItems.join(', ') : (data.selectedItems || '—'),
     'Brands': data.brands || '—',
+    'Description': data.description || '—',
     'Address': data.workplaceAddress || '—',
   });
 
@@ -182,6 +188,12 @@ function handleCustomerSubmission(data) {
 
   const referenceId = data.referenceId || getNextReferenceId(sheet);
 
+  // ── Handle file upload ──────────────────────────
+  let fileUrl = "";
+  if (data.fileData && data.fileName) {
+    fileUrl = uploadFileToDrive(data, "customer_" + referenceId);
+  }
+
   const row = [
     new Date(),
     referenceId,
@@ -196,7 +208,10 @@ function handleCustomerSubmission(data) {
     data.brands               || '',
     data.razorpayPaymentId    || '',
     data.razorpayOrderId      || '',
-    paymentStatus
+    paymentStatus,
+    data.description          || '',
+    data.offerPrice           || '',
+    fileUrl,
   ];
 
   sheet.appendRow(row);
@@ -210,6 +225,8 @@ function handleCustomerSubmission(data) {
     'Service': data.customerService || '—',
     'Items': Array.isArray(data.selectedItems) ? data.selectedItems.join(', ') : (data.selectedItems || '—'),
     'Brands': data.brands || '—',
+    'Description': data.description || '—',
+    'Price Offered': data.offerPrice || '—',
     'Payment ID': data.razorpayPaymentId || '—',
     'Payment Status': paymentStatus,
   });
