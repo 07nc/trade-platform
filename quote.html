@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quote — Real Amount</title>
+    <meta name="description" content="Review your quote and complete payment on Real Amount" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        .quote-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .quote-header {
+            background: var(--primary);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .quote-header h1 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin: 0 0 0.25rem;
+        }
+
+        .quote-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .quote-id-badge {
+            display: inline-block;
+            background: rgba(201, 168, 76, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.75rem;
+        }
+
+        .quote-body {
+            padding: 1.5rem 2rem;
+        }
+
+        .quote-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .quote-row:last-child {
+            border-bottom: none;
+        }
+
+        .quote-label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+            min-width: 130px;
+        }
+
+        .quote-value {
+            color: var(--text);
+            font-size: 0.9rem;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .quote-footer {
+            padding: 1.5rem 2rem;
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .quote-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--accent-muted);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.25rem;
+        }
+
+        .quote-total-label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .quote-total-amount {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.35rem;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 0.9rem 2rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--primary);
+            color: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pay-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-paid {
+            background: var(--success-bg);
+            color: var(--success);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .quote-loading {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .quote-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .quote-error {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .quote-error h2 {
+            color: var(--error);
+            margin-bottom: 0.5rem;
+        }
+
+        .quote-success-pay {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .quote-success-pay .check-circle {
+            width: 64px;
+            height: 64px;
+            background: var(--success-bg);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .quote-body {
+                padding: 1rem;
+            }
+            .quote-header {
+                padding: 1.25rem 1rem;
+            }
+            .quote-footer {
+                padding: 1rem;
+            }
+            .quote-row {
+                flex-direction: column;
+                gap: 0.15rem;
+            }
+            .quote-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container" style="max-width: 580px;">
+        <!-- Loading state -->
+        <div id="quote-loading" class="quote-card">
+            <div class="quote-loading">
+                <div class="spinner"></div>
+                <p style="color: var(--text-muted);">Loading your quote...</p>
+            </div>
+        </div>
+
+        <!-- Error state -->
+        <div id="quote-error" class="quote-card hidden">
+            <div class="quote-error">
+                <h2>Quote Not Found</h2>
+                <p style="color: var(--text-muted);" id="quote-error-msg">This quote may have been removed or the link is incorrect.</p>
+                <a href="index.html" class="btn btn-outline" style="margin-top: 1rem; display: inline-block;">Go to Home</a>
+            </div>
+        </div>
+
+        <!-- Quote details -->
+        <div id="quote-content" class="hidden">
+            <div class="quote-card">
+                <div class="quote-header">
+                    <h1>Real Amount</h1>
+                    <p>Service Quote</p>
+                    <span class="quote-id-badge" id="quote-id-display">—</span>
+                </div>
+
+                <div class="quote-body" id="quote-details">
+                    <!-- Filled dynamically -->
+                </div>
+
+                <div class="quote-footer" id="quote-footer">
+                    <div class="quote-total">
+                        <span class="quote-total-label">Service Fee</span>
+                        <span class="quote-total-amount">₹50</span>
+                    </div>
+                    <button class="pay-btn" id="pay-btn" onclick="payQuote()">
+                        Pay ₹50 & Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment success -->
+        <div id="quote-paid-success" class="quote-card hidden">
+            <div class="quote-success-pay">
+                <div class="check-circle">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </div>
+                <h2 style="color: var(--primary); margin-bottom: 0.5rem;">Payment Successful!</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Your registration is now confirmed.</p>
+                <div style="background: var(--bg); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Reference ID</p>
+                    <p style="font-size: 1.1rem; font-weight: 700; color: var(--primary);" id="paid-ref-id">—</p>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">You can close this page now. We'll contact you soon!</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer" style="margin-top: 1rem;">
+            <p>© 2024 Real Amount • Stable Growth | Financial Trust</p>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="quote.js"></script>
+</body>
+
+</html>

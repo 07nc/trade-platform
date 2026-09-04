@@ -27,6 +27,8 @@ const PARTNER_SHEET_NAME = "Partner Submissions";
 const CUSTOMER_SHEET_NAME = "Customer Submissions";
 const FOLDER_NAME = "Real Amount — Uploads";
 const NOTIFICATION_EMAIL = "realamountofficial@gmail.com";
+const QUOTE_SHEET_NAME = "Quotes";
+const ADMIN_PASSWORD = "Realamount@123";
 
 // ── Column headers ──────────────────────────────────
 const PARTNER_HEADERS = [
@@ -64,6 +66,23 @@ const CUSTOMER_HEADERS = [
   'Product / Service Image URL',
 ];
 
+const QUOTE_HEADERS = [
+  'Timestamp',
+  'Quote ID',
+  'Status',
+  'Customer Name',
+  'Mobile Number',
+  'Address',
+  'Service Requested',
+  'Items / Category',
+  'Brands (if any)',
+  'Description',
+  'Price Offered',
+  'Razorpay Payment ID',
+  'Razorpay Order ID',
+  'Payment Status',
+];
+
 // ════════════════════════════════════════════════════
 // POST handler — called when the form submits
 // ════════════════════════════════════════════════════
@@ -75,6 +94,14 @@ function doPost(e) {
     if (action === 'create_razorpay_order') {
       const order = createRazorpayOrder(50); // Rs 50/- lead fee
       return jsonResponse({ success: true, order: order });
+    }
+
+    if (action === 'create_quote') {
+      return handleCreateQuote(data);
+    }
+
+    if (action === 'pay_quote') {
+      return handlePayQuote(data);
     }
 
     const accountType = (data.accountType || '').trim();
@@ -332,8 +359,16 @@ function jsonResponse(obj) {
   );
 }
 
-// ── Health check (GET) ───────────────────────────────
-function doGet() {
+// ── Health check (GET) + Quote fetch ────────────────
+function doGet(e) {
+  const action = (e && e.parameter && e.parameter.action) || '';
+
+  if (action === 'get_quote') {
+    const quoteId = (e.parameter.id || '').trim();
+    if (!quoteId) return jsonResponse({ success: false, error: 'Missing quote ID' });
+    return handleGetQuote(quoteId);
+  }
+
   return ContentService.createTextOutput(
     "Real Amount Form API is running. Partner + Customer flows active.",
   ).setMimeType(ContentService.MimeType.TEXT);
@@ -389,6 +424,184 @@ function verifyRazorpaySignature(orderId, paymentId, signature, secretKey) {
   }).join('');
 
   return hexSignature === signature;
+}
+
+// ════════════════════════════════════════════════════
+// QUOTE HANDLERS
+// ════════════════════════════════════════════════════
+
+function handleCreateQuote(data) {
+  // Verify admin password
+  if (data.password !== ADMIN_PASSWORD) {
+    return jsonResponse({ success: false, error: 'Invalid password' });
+  }
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(QUOTE_SHEET_NAME);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(QUOTE_SHEET_NAME);
+  }
+
+  if (sheet.getLastRow() === 0) {
+    appendHeaderRow(sheet, QUOTE_HEADERS);
+  }
+
+  const quoteId = getNextQuoteId(sheet);
+
+  const row = [
+    new Date(),
+    quoteId,
+    'Unpaid',
+    data.customerName || '',
+    data.customerMobile || '',
+    data.customerAddress || '',
+    data.customerService || '',
+    Array.isArray(data.selectedItems)
+      ? data.selectedItems.join(', ')
+      : (data.selectedItems || ''),
+    data.brands || '',
+    data.description || '',
+    data.offerPrice || '',
+    '', // Razorpay Payment ID (empty until paid)
+    '', // Razorpay Order ID
+    'Pending',
+  ];
+
+  sheet.appendRow(row);
+  sheet.autoResizeColumns(1, QUOTE_HEADERS.length);
+
+  // Send notification
+  sendNotificationEmail('Quote Created', quoteId, {
+    'Customer Name': data.customerName || '—',
+    'Mobile': data.customerMobile || '—',
+    'Address': data.customerAddress || '—',
+    'Service': data.customerService || '—',
+    'Items': Array.isArray(data.selectedItems) ? data.selectedItems.join(', ') : (data.selectedItems || '—'),
+    'Brands': data.brands || '—',
+    'Description': data.description || '—',
+    'Price Offered': data.offerPrice || '—',
+    'Status': 'Awaiting Payment',
+  });
+
+  return jsonResponse({ success: true, quoteId: quoteId });
+}
+
+function handleGetQuote(quoteId) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(QUOTE_SHEET_NAME);
+
+  if (!sheet || sheet.getLastRow() <= 1) {
+    return jsonResponse({ success: false, error: 'Quote not found' });
+  }
+
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][1] === quoteId) {
+      const quote = {};
+      for (let j = 0; j < headers.length; j++) {
+        quote[headers[j]] = data[i][j];
+      }
+      return jsonResponse({ success: true, quote: quote });
+    }
+  }
+
+  return jsonResponse({ success: false, error: 'Quote not found' });
+}
+
+function handlePayQuote(data) {
+  const quoteId = (data.quoteId || '').trim();
+  if (!quoteId) return jsonResponse({ success: false, error: 'Missing quote ID' });
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(QUOTE_SHEET_NAME);
+
+  if (!sheet || sheet.getLastRow() <= 1) {
+    return jsonResponse({ success: false, error: 'Quote not found' });
+  }
+
+  const allData = sheet.getDataRange().getValues();
+  let quoteRowIndex = -1;
+
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][1] === quoteId) {
+      quoteRowIndex = i + 1; // 1-indexed for sheet
+      break;
+    }
+  }
+
+  if (quoteRowIndex === -1) {
+    return jsonResponse({ success: false, error: 'Quote not found' });
+  }
+
+  // Check if already paid
+  const currentStatus = sheet.getRange(quoteRowIndex, 3).getValue();
+  if (currentStatus === 'Paid') {
+    return jsonResponse({ success: false, error: 'Quote already paid' });
+  }
+
+  // Verify Razorpay signature
+  const scriptProperties = PropertiesService.getScriptProperties();
+  const keySecret = (scriptProperties.getProperty('RAZORPAY_KEY_SECRET') || 'bbffW0UBFifbhIUKJMcUZiyx').trim();
+
+  let paymentStatus = 'Pending / Unverified';
+  if (data.razorpayPaymentId && data.razorpayOrderId && data.razorpaySignature) {
+    if (keySecret) {
+      const isValid = verifyRazorpaySignature(
+        data.razorpayOrderId,
+        data.razorpayPaymentId,
+        data.razorpaySignature,
+        keySecret
+      );
+      paymentStatus = isValid ? 'Paid' : 'Signature Verification Failed';
+    } else {
+      paymentStatus = 'Paid (Unverified - Key Secret Not Set)';
+    }
+  }
+
+  // Update the quote row
+  sheet.getRange(quoteRowIndex, 3).setValue('Paid'); // Status
+  sheet.getRange(quoteRowIndex, 12).setValue(data.razorpayPaymentId || ''); // Payment ID
+  sheet.getRange(quoteRowIndex, 13).setValue(data.razorpayOrderId || ''); // Order ID
+  sheet.getRange(quoteRowIndex, 14).setValue(paymentStatus); // Payment Status
+
+  // Copy to Customer Submissions sheet
+  const quoteRow = sheet.getRange(quoteRowIndex, 1, 1, QUOTE_HEADERS.length).getValues()[0];
+  const custData = {
+    accountType: 'Customer',
+    customerName: quoteRow[3],
+    customerMobile: quoteRow[4],
+    customerAddress: quoteRow[5],
+    customerService: quoteRow[6],
+    selectedItems: quoteRow[7],
+    brands: quoteRow[8],
+    description: quoteRow[9],
+    offerPrice: quoteRow[10],
+    razorpayPaymentId: data.razorpayPaymentId || '',
+    razorpayOrderId: data.razorpayOrderId || '',
+    razorpaySignature: data.razorpaySignature || '',
+  };
+  handleCustomerSubmission(custData);
+
+  return jsonResponse({ success: true, quoteId: quoteId, paymentStatus: paymentStatus });
+}
+
+function getNextQuoteId(sheet) {
+  const START = 10001;
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow <= 1) return 'QT' + START;
+
+  const lastId = sheet.getRange(lastRow, 2).getValue().toString().trim();
+
+  if (lastId.startsWith('QT')) {
+    const num = parseInt(lastId.replace('QT', ''), 10);
+    if (!isNaN(num)) return 'QT' + (num + 1);
+  }
+
+  return 'QT' + (START + lastRow - 1);
 }
 
 // ════════════════════════════════════════════════════

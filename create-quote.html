@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Quote | Real Amount</title>
+    <meta name="description" content="Admin: Create a customer quote for Real Amount" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="form-container">
+        <!-- Logo header -->
+        <div class="form-logo">
+            <a href="index.html" style="text-decoration: none; color: inherit;">
+                <span class="logo-text">Real Amount</span>
+            </a>
+        </div>
+
+        <div class="form-title-block">
+            <h1 id="page-title">Admin — Create Quote</h1>
+            <p>Fill in the customer's details and generate a shareable payment link.</p>
+        </div>
+
+        <!-- PASSWORD GATE -->
+        <div class="form-card" id="password-gate">
+            <div class="card-header">
+                <h2>🔒 Admin Access</h2>
+                <p class="required-note">Enter the admin password to continue</p>
+            </div>
+            <div class="fields-grid">
+                <div class="form-group full-width">
+                    <label for="admin-password">Password <span class="asterisk">*</span></label>
+                    <input type="password" id="admin-password" placeholder="Enter admin password" />
+                    <span class="field-error hidden" id="admin-password-error"></span>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="verifyPassword()">
+                    Unlock
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- QUOTE FORM (hidden until password verified) -->
+        <div class="form-card hidden" id="quote-form">
+            <div class="card-header">
+                <span class="card-badge">Quote Details</span>
+                <h2>Customer Information</h2>
+            </div>
+
+            <div class="fields-grid">
+                <div class="form-group">
+                    <label for="q-customerName">Customer Name <span class="asterisk">*</span></label>
+                    <input type="text" id="q-customerName" placeholder="Full name" />
+                    <span class="field-error hidden" id="q-customerName-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="q-customerMobile">Mobile Number <span class="asterisk">*</span></label>
+                    <input type="tel" id="q-customerMobile" placeholder="10-digit number" maxlength="10" />
+                    <span class="field-error hidden" id="q-customerMobile-error"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="q-customerAddress">Address <span class="asterisk">*</span></label>
+                    <input type="text" id="q-customerAddress" placeholder="Customer address" />
+                    <span class="field-error hidden" id="q-customerAddress-error"></span>
+                </div>
+            </div>
+
+            <div class="card-section" style="margin-top: 1.5rem">
+                <h3 style="margin-bottom: 0.75rem; color: var(--primary)">Service Type <span class="asterisk">*</span></h3>
+                <div class="radio-grid">
+                    <label class="radio-card" id="q-radio-buy-new">
+                        <input type="radio" name="q-customerService" value="Buy New Product" />
+                        <div class="radio-card-inner">
+                            <span class="radio-title">Buy New Product</span>
+                        </div>
+                    </label>
+                    <label class="radio-card" id="q-radio-service-repair">
+                        <input type="radio" name="q-customerService" value="Service/Repair" />
+                        <div class="radio-card-inner">
+                            <span class="radio-title">Service/Repair</span>
+                        </div>
+                    </label>
+                    <label class="radio-card" id="q-radio-buy-used">
+                        <input type="radio" name="q-customerService" value="Buy Used Product" />
+                        <div class="radio-card-inner">
+                            <span class="radio-title">Buy Used Product</span>
+                        </div>
+                    </label>
+                    <label class="radio-card" id="q-radio-sell-used">
+                        <input type="radio" name="q-customerService" value="Sell Used Product" />
+                        <div class="radio-card-inner">
+                            <span class="radio-title">Sell Used Product</span>
+                        </div>
+                    </label>
+                </div>
+                <span class="field-error hidden" id="q-customerService-error"></span>
+            </div>
+
+            <div class="fields-grid" style="margin-top: 1.5rem">
+                <div class="form-group full-width">
+                    <label for="q-items">Items / Category</label>
+                    <input type="text" id="q-items" placeholder="e.g. Air Conditioner, LED TV..." />
+                </div>
+
+                <div class="form-group">
+                    <label for="q-brands">Brands</label>
+                    <input type="text" id="q-brands" placeholder="e.g. Samsung, LG..." />
+                </div>
+
+                <div class="form-group">
+                    <label for="q-offerPrice">Price Offered</label>
+                    <input type="text" id="q-offerPrice" placeholder="e.g. ₹15,000" />
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="q-description">Description</label>
+                    <textarea id="q-description" rows="3" placeholder="Describe the requirement..."></textarea>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" id="create-quote-btn" onclick="createQuote()">
+                    <span id="create-quote-text">Create Quote & Get Link</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- SUCCESS — shareable link -->
+        <div class="form-card hidden" id="quote-success">
+            <div style="text-align: center; padding: 2rem 1rem;">
+                <div style="width:64px;height:64px;background:var(--success-bg);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </div>
+                <h2 style="color: var(--primary); margin-bottom: 0.5rem;">Quote Created!</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Share this link with the customer to review and pay.</p>
+
+                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1rem;">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Quote ID</p>
+                    <p style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" id="success-quote-id">—</p>
+                </div>
+
+                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; word-break: break-all;">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Shareable Link</p>
+                    <p style="font-size: 0.95rem; font-weight: 600; color: var(--primary);" id="success-quote-link">—</p>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="copyQuoteLink()" style="font-size: 0.9rem;">
+                        📋 Copy Link
+                    </button>
+                    <button class="btn btn-outline" onclick="shareViaWhatsApp()" style="font-size: 0.9rem; color: #25d366; border-color: #25d366;">
+                        💬 Share via WhatsApp
+                    </button>
+                </div>
+
+                <button class="btn btn-outline" onclick="createAnother()" style="margin-top: 1.5rem; font-size: 0.85rem;">
+                    + Create Another Quote
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <p>© 2024 Real Amount • Stable Growth | Financial Trust</p>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="quote.js"></script>
+</body>
+
+</html>
