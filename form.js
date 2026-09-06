@@ -189,6 +189,50 @@ function setupNoneCheckbox(noneId, groupName) {
   });
 }
 
+// ── Single-select mode for customer checkboxes ──
+function enableSingleSelectCheckboxes(groupName) {
+  const allBoxes = document.querySelectorAll(`input[name="${groupName}"]`);
+  allBoxes.forEach((cb) => {
+    // Remove old listener by cloning
+    const newCb = cb.cloneNode(true);
+    cb.parentNode.replaceChild(newCb, cb);
+  });
+
+  // Re-query after cloning
+  const freshBoxes = document.querySelectorAll(`input[name="${groupName}"]`);
+  freshBoxes.forEach((cb) => {
+    cb.addEventListener("change", () => {
+      if (cb.checked) {
+        freshBoxes.forEach((other) => {
+          if (other !== cb) other.checked = false;
+        });
+        // Also close the "Other" text input if a non-Other item is selected
+        if (cb.value !== "Other") {
+          const otherWrap = document.getElementById(`${groupName === "products" ? "product" : "service"}-other-wrap`);
+          if (otherWrap) otherWrap.classList.add("hidden");
+        }
+      }
+    });
+  });
+
+  // Re-setup Other checkbox toggle
+  const otherCb = document.querySelector(`input[name="${groupName}"][value="Other"]`);
+  if (otherCb) {
+    const prefix = groupName === "products" ? "product" : "service";
+    const wrap = document.getElementById(`${prefix}-other-wrap`);
+    const input = document.getElementById(`${prefix}-other-input`);
+    otherCb.addEventListener("change", () => {
+      if (otherCb.checked) {
+        if (wrap) wrap.classList.remove("hidden");
+        if (input) input.focus();
+      } else {
+        if (wrap) wrap.classList.add("hidden");
+        if (input) input.value = "";
+      }
+    });
+  }
+}
+
 // ── Drag & Drop setup ──
 function setupDragDrop(zoneId, inputId) {
   const zone = document.getElementById(zoneId);
@@ -324,9 +368,9 @@ function goToStep2Customer() {
 
   // Change heading and badge for customer context
   const heading = document.getElementById('step-2a-heading');
-  if (heading) heading.textContent = 'What products are you interested in?';
+  if (heading) heading.textContent = 'What product are you interested in?';
   const badge = document.getElementById('step-2a-badge');
-  if (badge) badge.textContent = 'Select Products';
+  if (badge) badge.textContent = 'Select a Product';
 
   if (selectedCustomerService === "Service/Repair") {
     step2b.classList.remove("hidden");
@@ -388,6 +432,10 @@ function goToStep2Customer() {
 
   document.getElementById("product-submit-text").textContent = "Next Step";
   document.getElementById("service-submit-text").textContent = "Next Step";
+
+  // Enforce single-select for customer checkboxes
+  enableSingleSelectCheckboxes("products");
+  enableSingleSelectCheckboxes("services");
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
