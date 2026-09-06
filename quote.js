@@ -171,7 +171,7 @@ async function createQuote() {
 
     // Show success
     const quoteId = result.quoteId;
-    const quoteLink = `${SITE_DOMAIN}/quote?id=${quoteId}`;
+    const quoteLink = `${SITE_DOMAIN}/quote.html?id=${quoteId}#id=${quoteId}`;
 
     // Store quote data for sharing (only non-personal fields)
     lastCreatedQuoteData = {
@@ -268,7 +268,13 @@ let isEditMode = false;
 
 function initQuotePage() {
   const params = new URLSearchParams(window.location.search);
-  const quoteId = params.get("id");
+  let quoteId = params.get("id");
+  
+  // Fallback to check URL hash if query param was dropped
+  if (!quoteId && window.location.hash) {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    quoteId = hashParams.get("id");
+  }
 
   if (!quoteId) {
     showQuoteError("No quote ID provided in the URL.");
