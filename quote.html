@@ -133,15 +133,6 @@
             transform: none;
         }
 
-        .status-paid {
-            background: var(--success-bg);
-            color: var(--success);
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
         .quote-loading {
             text-align: center;
             padding: 4rem 2rem;
@@ -187,8 +178,88 @@
             margin-bottom: 1rem;
         }
 
+        /* ── Edit mode ── */
+        .quote-edit-section {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .quote-edit-section .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .quote-edit-section label {
+            display: block;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .quote-edit-section input,
+        .quote-edit-section textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .quote-edit-section input:focus,
+        .quote-edit-section textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.1);
+        }
+
+        .quote-btn-row {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0 2rem 1.5rem;
+        }
+
+        .quote-btn-row .btn {
+            flex: 1;
+        }
+
+        .edit-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .edit-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .confirm-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--success);
+            color: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .confirm-btn:hover {
+            background: #15803d;
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 600px) {
-            .quote-body {
+            .quote-body, .quote-edit-section {
                 padding: 1rem;
             }
             .quote-header {
@@ -203,6 +274,10 @@
             }
             .quote-value {
                 text-align: left;
+            }
+            .quote-btn-row {
+                padding: 0 1rem 1rem;
+                flex-direction: column;
             }
         }
     </style>
@@ -227,7 +302,7 @@
             </div>
         </div>
 
-        <!-- Quote details -->
+        <!-- Quote review (no personal details shown) -->
         <div id="quote-content" class="hidden">
             <div class="quote-card">
                 <div class="quote-header">
@@ -236,11 +311,43 @@
                     <span class="quote-id-badge" id="quote-id-display">—</span>
                 </div>
 
+                <!-- Read-only quote details (only service info, no personal details) -->
                 <div class="quote-body" id="quote-details">
                     <!-- Filled dynamically -->
                 </div>
 
-                <div class="quote-footer" id="quote-footer">
+                <!-- Edit section (hidden until Edit clicked) -->
+                <div class="quote-edit-section hidden" id="quote-edit-section">
+                    <div class="form-group">
+                        <label for="edit-items">Items / Category</label>
+                        <input type="text" id="edit-items" placeholder="e.g. Air Conditioner, LED TV..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-brands">Brands</label>
+                        <input type="text" id="edit-brands" placeholder="e.g. Samsung, LG..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-description">Description</label>
+                        <textarea id="edit-description" rows="3" placeholder="Describe your requirement..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-price">Price Offered</label>
+                        <input type="text" id="edit-price" placeholder="e.g. ₹15,000" />
+                    </div>
+                </div>
+
+                <!-- Action buttons: Edit / Confirm -->
+                <div class="quote-btn-row" id="quote-action-btns">
+                    <button class="edit-btn" id="edit-quote-btn" onclick="toggleEditMode()">
+                        ✏️ Edit Details
+                    </button>
+                    <button class="confirm-btn" id="confirm-quote-btn" onclick="confirmAndPay()">
+                        ✓ Confirm & Pay ₹50
+                    </button>
+                </div>
+
+                <!-- Payment section (hidden until Confirm clicked) -->
+                <div class="quote-footer hidden" id="quote-footer">
                     <div class="quote-total">
                         <span class="quote-total-label">Service Fee</span>
                         <span class="quote-total-amount">₹50</span>

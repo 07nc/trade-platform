@@ -23,6 +23,7 @@ function showToast(message, type = "info") {
 // CREATE QUOTE PAGE LOGIC
 // ═══════════════════════════════════════════════════
 let adminPassword = "";
+let lastCreatedQuoteData = null; // Store the quote data for sharing
 
 function verifyPassword() {
   const input = document.getElementById("admin-password");
@@ -172,6 +173,16 @@ async function createQuote() {
     const quoteId = result.quoteId;
     const quoteLink = `${SITE_DOMAIN}/quote.html?id=${quoteId}`;
 
+    // Store quote data for sharing (only non-personal fields)
+    lastCreatedQuoteData = {
+      quoteId: quoteId,
+      service: payload.customerService,
+      items: payload.selectedItems.join(", "),
+      brands: payload.brands,
+      description: payload.description,
+      offerPrice: payload.offerPrice,
+    };
+
     document.getElementById("quote-form").classList.add("hidden");
     document.getElementById("quote-success").classList.remove("hidden");
     document.getElementById("success-quote-id").textContent = quoteId;
@@ -208,6 +219,36 @@ function shareViaWhatsApp() {
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
+// Share order details via WhatsApp (no personal info — only service details)
+function shareOrderDetails() {
+  if (!lastCreatedQuoteData) return;
+  const d = lastCreatedQuoteData;
+  let msg = `📋 *Real Amount — Order Details*\n\n`;
+  msg += `🔖 Quote ID: ${d.quoteId}\n`;
+  if (d.service) msg += `📌 Service: ${d.service}\n`;
+  if (d.items) msg += `📦 Items: ${d.items}\n`;
+  if (d.brands) msg += `🏷️ Brands: ${d.brands}\n`;
+  if (d.description) msg += `📝 Description: ${d.description}\n`;
+  if (d.offerPrice) msg += `💰 Price Offered: ${d.offerPrice}\n`;
+  msg += `\n🔗 Quote Link: ${window._quoteLink}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+// Share order to seller (same details, different intro text)
+function shareOrderToSeller() {
+  if (!lastCreatedQuoteData) return;
+  const d = lastCreatedQuoteData;
+  let msg = `📋 *Real Amount — Customer Requirement*\n\n`;
+  msg += `🔖 Quote ID: ${d.quoteId}\n`;
+  if (d.service) msg += `📌 Service: ${d.service}\n`;
+  if (d.items) msg += `📦 Items: ${d.items}\n`;
+  if (d.brands) msg += `🏷️ Brands: ${d.brands}\n`;
+  if (d.description) msg += `📝 Description: ${d.description}\n`;
+  if (d.offerPrice) msg += `💰 Price Offered: ${d.offerPrice}\n`;
+  msg += `\nPlease share your best offer for this requirement.`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
 function createAnother() {
   document.getElementById("quote-success").classList.add("hidden");
   document.getElementById("quote-form").classList.remove("hidden");
@@ -216,12 +257,14 @@ function createAnother() {
   document.querySelectorAll('#quote-form input[type="text"], #quote-form input[type="tel"], #quote-form textarea').forEach((el) => (el.value = ""));
   document.querySelectorAll('#quote-form input[type="radio"]').forEach((el) => (el.checked = false));
   document.querySelectorAll('#quote-form .radio-card').forEach((el) => el.classList.remove("selected"));
+  lastCreatedQuoteData = null;
 }
 
 // ═══════════════════════════════════════════════════
 // QUOTE VIEW PAGE LOGIC (quote.html)
 // ═══════════════════════════════════════════════════
 let currentQuote = null;
+let isEditMode = false;
 
 function initQuotePage() {
   const params = new URLSearchParams(window.location.search);
@@ -237,12 +280,9 @@ function initQuotePage() {
 
 async function loadQuote(quoteId) {
   const loadingEl = document.getElementById("quote-loading");
-  const errorEl = document.getElementById("quote-error");
   const contentEl = document.getElementById("quote-content");
 
   try {
-    // For GET requests, we need to hit the Apps Script URL directly with query params
-    // But since we go through the Vercel rewrite, we append query params
     const response = await fetch(`${APPS_SCRIPT_URL}?action=get_quote&id=${encodeURIComponent(quoteId)}`);
     const text = await response.text();
     let result;
@@ -258,7 +298,7 @@ async function loadQuote(quoteId) {
 
     currentQuote = result.quote;
 
-    // Hide loading, show content
+    // Hide loading
     if (loadingEl) loadingEl.classList.add("hidden");
 
     // Check if already paid
@@ -274,6 +314,7 @@ async function loadQuote(quoteId) {
   }
 }
 
+// Render only NON-personal details (service type, items, brands, description, price)
 function renderQuote(quote, quoteId) {
   const idEl = document.getElementById("quote-id-display");
   if (idEl) idEl.textContent = quoteId;
@@ -281,10 +322,8 @@ function renderQuote(quote, quoteId) {
   const detailsEl = document.getElementById("quote-details");
   if (!detailsEl) return;
 
+  // Only show service-related fields — NO name, mobile, address
   const fields = [
-    { label: "Customer Name", key: "Customer Name" },
-    { label: "Mobile Number", key: "Mobile Number" },
-    { label: "Address", key: "Address" },
     { label: "Service Type", key: "Service Requested" },
     { label: "Items / Category", key: "Items / Category" },
     { label: "Brands", key: "Brands (if any)" },
@@ -305,7 +344,79 @@ function renderQuote(quote, quoteId) {
     }
   }
 
+  if (!html) {
+    html = '<p style="color: var(--text-muted); text-align: center; padding: 1rem 0;">No details available.</p>';
+  }
+
   detailsEl.innerHTML = html;
+
+  // Pre-fill edit fields
+  const editItems = document.getElementById("edit-items");
+  const editBrands = document.getElementById("edit-brands");
+  const editDesc = document.getElementById("edit-description");
+  const editPrice = document.getElementById("edit-price");
+
+  if (editItems) editItems.value = quote["Items / Category"] || "";
+  if (editBrands) editBrands.value = quote["Brands (if any)"] || "";
+  if (editDesc) editDesc.value = quote["Description"] || "";
+  if (editPrice) editPrice.value = quote["Price Offered"] || "";
+}
+
+function toggleEditMode() {
+  const editSection = document.getElementById("quote-edit-section");
+  const detailsSection = document.getElementById("quote-details");
+  const editBtn = document.getElementById("edit-quote-btn");
+
+  if (!isEditMode) {
+    // Enter edit mode
+    isEditMode = true;
+    if (editSection) editSection.classList.remove("hidden");
+    if (detailsSection) detailsSection.classList.add("hidden");
+    if (editBtn) editBtn.textContent = "✕ Cancel Edit";
+  } else {
+    // Exit edit mode
+    isEditMode = false;
+    if (editSection) editSection.classList.add("hidden");
+    if (detailsSection) detailsSection.classList.remove("hidden");
+    if (editBtn) editBtn.textContent = "✏️ Edit Details";
+  }
+}
+
+function confirmAndPay() {
+  // If in edit mode, apply edits to currentQuote first
+  if (isEditMode) {
+    const editItems = document.getElementById("edit-items");
+    const editBrands = document.getElementById("edit-brands");
+    const editDesc = document.getElementById("edit-description");
+    const editPrice = document.getElementById("edit-price");
+
+    if (editItems) currentQuote["Items / Category"] = editItems.value.trim();
+    if (editBrands) currentQuote["Brands (if any)"] = editBrands.value.trim();
+    if (editDesc) currentQuote["Description"] = editDesc.value.trim();
+    if (editPrice) currentQuote["Price Offered"] = editPrice.value.trim();
+
+    // Re-render with updated data
+    const quoteId = currentQuote["Quote ID"];
+    renderQuote(currentQuote, quoteId);
+
+    // Exit edit mode
+    isEditMode = false;
+    const editSection = document.getElementById("quote-edit-section");
+    const detailsSection = document.getElementById("quote-details");
+    const editBtn = document.getElementById("edit-quote-btn");
+    if (editSection) editSection.classList.add("hidden");
+    if (detailsSection) detailsSection.classList.remove("hidden");
+    if (editBtn) editBtn.textContent = "✏️ Edit Details";
+  }
+
+  // Hide the Edit/Confirm buttons, show payment footer
+  const actionBtns = document.getElementById("quote-action-btns");
+  const footer = document.getElementById("quote-footer");
+  if (actionBtns) actionBtns.classList.add("hidden");
+  if (footer) footer.classList.remove("hidden");
+
+  // Scroll to payment
+  if (footer) footer.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function showQuoteError(msg) {
@@ -393,16 +504,27 @@ async function payQuote() {
         btn.textContent = "Confirming…";
 
         try {
+          // Include any edits the customer made
+          const payPayload = {
+            action: "pay_quote",
+            quoteId: quoteId,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+          };
+
+          // If customer edited fields, include them
+          if (currentQuote._edited) {
+            payPayload.editedItems = currentQuote["Items / Category"] || "";
+            payPayload.editedBrands = currentQuote["Brands (if any)"] || "";
+            payPayload.editedDescription = currentQuote["Description"] || "";
+            payPayload.editedPrice = currentQuote["Price Offered"] || "";
+          }
+
           const payResponse = await fetch(APPS_SCRIPT_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({
-              action: "pay_quote",
-              quoteId: quoteId,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpaySignature: response.razorpay_signature,
-            }),
+            body: JSON.stringify(payPayload),
           });
 
           const payText = await payResponse.text();
