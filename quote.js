@@ -171,7 +171,7 @@ async function createQuote() {
 
     // Show success
     const quoteId = result.quoteId;
-    const quoteLink = `${SITE_DOMAIN}/quote.html?id=${quoteId}`;
+    const quoteLink = `${SITE_DOMAIN}/quote?id=${quoteId}`;
 
     // Store quote data for sharing (only non-personal fields)
     lastCreatedQuoteData = {
