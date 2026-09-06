@@ -283,7 +283,11 @@ async function loadQuote(quoteId) {
   const contentEl = document.getElementById("quote-content");
 
   try {
-    const response = await fetch(`${APPS_SCRIPT_URL}?action=get_quote&id=${encodeURIComponent(quoteId)}`);
+    const response = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "get_quote", quoteId: quoteId }),
+    });
     const text = await response.text();
     let result;
     try {

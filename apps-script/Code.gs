@@ -100,6 +100,11 @@ function doPost(e) {
       return handleCreateQuote(data);
     }
 
+    if (action === 'get_quote') {
+      if (!data.quoteId) return jsonResponse({ success: false, error: 'Missing quote ID' });
+      return handleGetQuote(data.quoteId);
+    }
+
     if (action === 'pay_quote') {
       return handlePayQuote(data);
     }
