@@ -12,25 +12,73 @@
 </head>
 
 <body>
-    <div class="form-container">
-        <!-- Logo header -->
-        <header class="site-header">
-            <div class="header-inner">
-                <a href="index.html"><img src="assets/logo.png" alt="Real Amount" class="logo" /></a>
+    <!-- ───── HEADER ───── -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html"><img src="assets/logo.png" alt="Real Amount" class="logo" /></a>
+            <div class="header-contact">
+                <a href="tel:+917009095598" class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    +91 7009095598
+                </a>
+                <a href="mailto:realamountofficial@gmail.com" class="contact-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                    realamountofficial@gmail.com
+                </a>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <div class="form-title-block">
-            <h1 id="page-title">Admin — Create Quote</h1>
-            <p>Fill in the customer's details and generate a shareable payment link.</p>
+    <!-- ───── MAIN ───── -->
+    <main class="main-container">
+        <!-- Progress Indicator -->
+        <div class="progress-wrapper" id="progress-wrapper">
+            <div class="progress-track">
+                <div class="progress-step" id="prog-step-0">
+                    <div class="step-circle active" id="prog-circle-0">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <span class="step-label" id="prog-label-0">Admin Auth</span>
+                </div>
+                <div class="progress-line" id="prog-line-0"></div>
+                <div class="progress-step" id="prog-step-1">
+                    <div class="step-circle" id="prog-circle-1">1</div>
+                    <span class="step-label" id="prog-label-1">Basic Info</span>
+                </div>
+                <div class="progress-line" id="prog-line-1"></div>
+                <div class="progress-step" id="prog-step-2">
+                    <div class="step-circle" id="prog-circle-2">2</div>
+                    <span class="step-label" id="prog-label-2">Requirements</span>
+                </div>
+            </div>
         </div>
 
-        <!-- PASSWORD GATE -->
-        <div class="form-card" id="password-gate">
+        <!-- Form Title -->
+        <div class="form-title-block">
+            <h1 id="main-form-title">Create Quote</h1>
+            <p id="main-form-subtitle">
+                Admin — Fill in the customer's details and generate a shareable payment link.
+            </p>
+        </div>
+
+        <!-- ── STEP 0: Admin Auth ── -->
+        <div class="form-card" id="step-0">
             <div class="card-header">
-                <h2>🔒 Admin Access</h2>
-                <p class="required-note">Enter the admin password to continue</p>
+                <h2>Admin Authentication</h2>
+                <p class="required-note">
+                    Enter the admin password to continue <span class="asterisk">*</span>
+                </p>
             </div>
+
             <div class="fields-grid">
                 <div class="form-group full-width">
                     <label for="admin-password">Password <span class="asterisk">*</span></label>
@@ -38,8 +86,9 @@
                     <span class="field-error hidden" id="admin-password-error"></span>
                 </div>
             </div>
+
             <div class="btn-row">
-                <button class="btn btn-primary" onclick="verifyPassword()">
+                <button class="btn btn-primary" onclick="verifyPasswordAndGoToStep1()">
                     Unlock
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <polyline points="9 18 15 12 9 6" />
@@ -48,89 +97,75 @@
             </div>
         </div>
 
-        <!-- QUOTE FORM (hidden until password verified) -->
-        <div class="form-card hidden" id="quote-form">
+        <!-- ── STEP 1: Customer Details ── -->
+        <div class="form-card hidden" id="step-1">
             <div class="card-header">
-                <span class="card-badge">Quote Details</span>
-                <h2>Customer Information</h2>
+                <span class="card-badge">Step 1 of 2</span>
+                <h2>Customer Details</h2>
+                <p class="required-note">
+                    <span class="asterisk">*</span> indicates required field
+                </p>
             </div>
 
             <div class="fields-grid">
-                <div class="form-group">
-                    <label for="q-customerName">Customer Name <span class="asterisk">*</span></label>
-                    <input type="text" id="q-customerName" placeholder="Full name" />
-                    <span class="field-error hidden" id="q-customerName-error"></span>
+                <div class="form-group full-width">
+                    <label for="customerName">Name <span class="asterisk">*</span></label>
+                    <input type="text" id="customerName" name="customerName" placeholder="Enter customer full name" />
+                    <span class="field-error hidden" id="customerName-error"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="q-customerMobile">Mobile Number <span class="asterisk">*</span></label>
-                    <input type="tel" id="q-customerMobile" placeholder="10-digit number" maxlength="10" />
-                    <span class="field-error hidden" id="q-customerMobile-error"></span>
+                    <label for="customerMobile">Mobile Number <span class="asterisk">*</span></label>
+                    <div class="input-with-prefix">
+                        <span class="input-prefix">+91</span>
+                        <input type="tel" id="customerMobile" name="customerMobile" placeholder="10-digit number"
+                            maxlength="10" inputmode="numeric" />
+                    </div>
+                    <span class="field-error hidden" id="customerMobile-error"></span>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="q-customerAddress">Address <span class="asterisk">*</span></label>
-                    <input type="text" id="q-customerAddress" placeholder="Customer address" />
-                    <span class="field-error hidden" id="q-customerAddress-error"></span>
-                </div>
-            </div>
-
-            <div class="card-section" style="margin-top: 1.5rem">
-                <h3 style="margin-bottom: 0.75rem; color: var(--primary)">Service Type <span class="asterisk">*</span></h3>
-                <div class="radio-grid">
-                    <label class="radio-card" id="q-radio-buy-new">
-                        <input type="radio" name="q-customerService" value="Buy New Product" />
-                        <div class="radio-card-inner">
-                            <span class="radio-title">Buy New Product</span>
-                        </div>
-                    </label>
-                    <label class="radio-card" id="q-radio-service-repair">
-                        <input type="radio" name="q-customerService" value="Service/Repair" />
-                        <div class="radio-card-inner">
-                            <span class="radio-title">Service/Repair</span>
-                        </div>
-                    </label>
-                    <label class="radio-card" id="q-radio-buy-used">
-                        <input type="radio" name="q-customerService" value="Buy Used Product" />
-                        <div class="radio-card-inner">
-                            <span class="radio-title">Buy Used Product</span>
-                        </div>
-                    </label>
-                    <label class="radio-card" id="q-radio-sell-used">
-                        <input type="radio" name="q-customerService" value="Sell Used Product" />
-                        <div class="radio-card-inner">
-                            <span class="radio-title">Sell Used Product</span>
-                        </div>
-                    </label>
-                </div>
-                <span class="field-error hidden" id="q-customerService-error"></span>
-            </div>
-
-            <div class="fields-grid" style="margin-top: 1.5rem">
-                <div class="form-group full-width">
-                    <label for="q-items">Items / Category</label>
-                    <input type="text" id="q-items" placeholder="e.g. Air Conditioner, LED TV..." />
-                </div>
-
-                <div class="form-group">
-                    <label for="q-brands">Brands</label>
-                    <input type="text" id="q-brands" placeholder="e.g. Samsung, LG..." />
-                </div>
-
-                <div class="form-group">
-                    <label for="q-offerPrice">Price Offered</label>
-                    <input type="text" id="q-offerPrice" placeholder="e.g. ₹15,000" />
+                    <label for="customerAddress">Address <span class="asterisk">*</span></label>
+                    <textarea id="customerAddress" name="customerAddress" placeholder="Customer full address"
+                        rows="3"></textarea>
+                    <span class="field-error hidden" id="customerAddress-error"></span>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="q-description">Description</label>
-                    <textarea id="q-description" rows="3" placeholder="Describe the requirement..."></textarea>
+                    <label>What service do you want? <span class="asterisk">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-card" id="radio-card-buy-new">
+                            <input type="radio" name="customerService" value="Buy New Product" id="cs-buy-new" />
+                            <div class="radio-card-inner">
+                                <span class="radio-title">Buy New Product</span>
+                            </div>
+                        </label>
+                        <label class="radio-card" id="radio-card-service-repair">
+                            <input type="radio" name="customerService" value="Service/Repair" id="cs-service-repair" />
+                            <div class="radio-card-inner">
+                                <span class="radio-title">Service/Repair</span>
+                            </div>
+                        </label>
+                        <label class="radio-card" id="radio-card-buy-used">
+                            <input type="radio" name="customerService" value="Buy Used Product" id="cs-buy-used" />
+                            <div class="radio-card-inner">
+                                <span class="radio-title">Buy Used Product</span>
+                            </div>
+                        </label>
+                        <label class="radio-card" id="radio-card-sell-used">
+                            <input type="radio" name="customerService" value="Sell Used Product" id="cs-sell-used" />
+                            <div class="radio-card-inner">
+                                <span class="radio-title">Sell Used Product</span>
+                            </div>
+                        </label>
+                    </div>
+                    <span class="field-error hidden" id="customerService-error"></span>
                 </div>
             </div>
 
             <div class="btn-row">
-                <button class="btn btn-primary" id="create-quote-btn" onclick="createQuote()">
-                    <span id="create-quote-text">Create Quote & Get Link</span>
+                <button class="btn btn-primary" onclick="goToStep2()">
+                    Next Step
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <polyline points="9 18 15 12 9 6" />
                     </svg>
@@ -138,61 +173,288 @@
             </div>
         </div>
 
-        <!-- SUCCESS — shareable link -->
-        <div class="form-card hidden" id="quote-success">
-            <div style="text-align: center; padding: 2rem 1rem;">
-                <div style="width:64px;height:64px;background:var(--success-bg);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5">
+        <!-- ── STEP 2A: Product Sale (Retail) ── -->
+        <div class="form-card hidden" id="step-2a">
+            <div class="card-header">
+                <span class="card-badge product-badge" id="step-2a-badge">Select a Product</span>
+                <h2 id="step-2a-heading">What product are you interested in?</h2>
+                <p class="required-note">
+                    Select the product <span class="asterisk">*</span>
+                </p>
+            </div>
+
+            <div class="checkbox-grid" id="product-checkbox-grid">
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Air Conditioner" /><span
+                        class="checkbox-box"></span>Air
+                    Conditioner</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Refrigerator" /><span
+                        class="checkbox-box"></span>Refrigerator</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Led Tv" /><span
+                        class="checkbox-box"></span>Led Tv</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="RO" /><span
+                        class="checkbox-box"></span>RO</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Inverter" /><span
+                        class="checkbox-box"></span>Inverter</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Oven/OTG/Induction" /><span
+                        class="checkbox-box"></span>Oven/OTG/Induction</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Cooler" /><span
+                        class="checkbox-box"></span>Cooler</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Washing Machine" /><span
+                        class="checkbox-box"></span>Washing
+                    Machine</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Mobile" /><span
+                        class="checkbox-box"></span>Mobile</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Books and Stationary" /><span
+                        class="checkbox-box"></span>Books and
+                    Stationary</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Kitchen Appliances" /><span
+                        class="checkbox-box"></span>Kitchen
+                    Appliances</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Plywood and Hardware" /><span
+                        class="checkbox-box"></span>Plywood and
+                    Hardware</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Automotive" /><span
+                        class="checkbox-box"></span>Automotive</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Furniture" /><span
+                        class="checkbox-box"></span>Furniture</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Gift Shop" /><span
+                        class="checkbox-box"></span>Gift Shop</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Footwear" /><span
+                        class="checkbox-box"></span>Footwear</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Chemist" /><span
+                        class="checkbox-box"></span>Chemist</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Building Material" /><span
+                        class="checkbox-box"></span>Building
+                    Material</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Agricultural Goods" /><span
+                        class="checkbox-box"></span>Agricultural
+                    Goods</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Sweet Shop" /><span
+                        class="checkbox-box"></span>Sweet Shop</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Sanitary Store" /><span
+                        class="checkbox-box"></span>Sanitary
+                    Store</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Home Baker" /><span
+                        class="checkbox-box"></span>Home Baker</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Hardware and Tools" /><span
+                        class="checkbox-box"></span>Hardware and
+                    Tools</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Toys/Games" /><span
+                        class="checkbox-box"></span>Toys/Games</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Flowers and Gifts" /><span
+                        class="checkbox-box"></span>Flowers and
+                    Gifts</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Boutique" /><span
+                        class="checkbox-box"></span>Boutique</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Home Decor" /><span
+                        class="checkbox-box"></span>Home Decor</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Opticals" /><span
+                        class="checkbox-box"></span>Opticals</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Grocery Store" /><span
+                        class="checkbox-box"></span>Grocery Store</label>
+                <label class="checkbox-item"><input type="checkbox" name="products" value="Spare Parts" /><span
+                        class="checkbox-box"></span>Spare Parts</label>
+                <label class="checkbox-item other-item">
+                    <input type="checkbox" name="products" value="Other" id="product-other" />
+                    <span class="checkbox-box"></span>Other
+                </label>
+            </div>
+            <div class="other-input-wrap hidden" id="product-other-wrap">
+                <input type="text" id="product-other-input" class="other-input" placeholder="Please specify..." />
+            </div>
+            <span class="field-error hidden" id="products-error"></span>
+
+            <!-- Brands & Description -->
+            <div class="card-section" style="margin-top: 1.5rem">
+                <div class="form-group">
+                    <label for="productBrands">Please mention the brands</label>
+                    <input type="text" id="productBrands" name="productBrands" placeholder="e.g. Samsung, LG, Sony..." />
+                </div>
+
+                <div class="form-group" style="margin-top: 1rem">
+                    <label for="productDescription">Product Description</label>
+                    <textarea id="productDescription" name="productDescription" placeholder="Describe the product..." rows="3"></textarea>
+                </div>
+
+                <div class="form-group" style="margin-top: 1rem">
+                    <label for="productOfferPrice">Offer Price <span class="asterisk">*</span></label>
+                    <input type="text" id="productOfferPrice" name="productOfferPrice" placeholder="Enter offer price" />
+                    <span class="field-error hidden" id="productOfferPrice-error"></span>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-outline" onclick="goBackToStep1()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    Back
+                </button>
+                <button class="btn btn-primary" id="btn-create-quote-product" onclick="createQuote('product')">
+                    <span id="btn-text-product">Create Quote &amp; Get Link</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <polyline points="20 6 9 17 4 12" />
                     </svg>
-                </div>
-                <h2 style="color: var(--primary); margin-bottom: 0.5rem;">Quote Created!</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Share this link with the customer to review and pay.</p>
-
-                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1rem;">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Quote ID</p>
-                    <p style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" id="success-quote-id">—</p>
-                </div>
-
-                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; word-break: break-all;">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Shareable Link</p>
-                    <p style="font-size: 0.95rem; font-weight: 600; color: var(--primary);" id="success-quote-link">—</p>
-                </div>
-
-                <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="copyQuoteLink()" style="font-size: 0.9rem;">
-                        📋 Copy Link
-                    </button>
-                    <button class="btn btn-outline" onclick="shareViaWhatsApp()" style="font-size: 0.9rem; color: #25d366; border-color: #25d366;">
-                        💬 Share Link via WhatsApp
-                    </button>
-                </div>
-
-                <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem;">
-                    <button class="btn btn-outline" onclick="shareOrderDetails()" style="font-size: 0.9rem;">
-                        📄 Share Order Details
-                    </button>
-                    <button class="btn btn-outline" onclick="shareOrderToSeller()" style="font-size: 0.9rem;">
-                        🏪 Share to Seller
-                    </button>
-                </div>
-
-                <button class="btn btn-outline" onclick="createAnother()" style="margin-top: 1.5rem; font-size: 0.85rem;">
-                    + Create Another Quote
                 </button>
             </div>
         </div>
+        <!-- /step-2a -->
 
-        <!-- Footer -->
-        <div class="form-footer">
-            <p>© 2024 Real Amount • Stable Growth | Financial Trust</p>
+        <!-- ── STEP 2B: Service Provider ── -->
+        <div class="form-card hidden" id="step-2b">
+            <div class="card-header">
+                <span class="card-badge service-badge">Service Provider</span>
+                <h2>Select Your Service</h2>
+                <p class="required-note">
+                    Select the service <span class="asterisk">*</span>
+                </p>
+            </div>
+
+            <div class="checkbox-grid" id="service-checkbox-grid">
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Ac Service/Repair" /><span
+                        class="checkbox-box"></span>Ac
+                    Service/Repair</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Refrigerator Repair" /><span
+                        class="checkbox-box"></span>Refrigerator
+                    Repair</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Tv/Led Repair" /><span
+                        class="checkbox-box"></span>Tv/Led Repair</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Mobile Repair" /><span
+                        class="checkbox-box"></span>Mobile Repair</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Laptop Repair" /><span
+                        class="checkbox-box"></span>Laptop Repair</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Plumber" /><span
+                        class="checkbox-box"></span>Plumber</label>
+                <label class="checkbox-item"><input type="checkbox" name="services"
+                        value="IELETS/Coaching Centre" /><span class="checkbox-box"></span>IELETS/Coaching
+                    Centre</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Investment" /><span
+                        class="checkbox-box"></span>Investment</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Auto Dealer" /><span
+                        class="checkbox-box"></span>Auto Dealer</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Electrician" /><span
+                        class="checkbox-box"></span>Electrician</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Carpenter" /><span
+                        class="checkbox-box"></span>Carpenter</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Education" /><span
+                        class="checkbox-box"></span>Education</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Health Care" /><span
+                        class="checkbox-box"></span>Health Care</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Taxi/Cab Services" /><span
+                        class="checkbox-box"></span>Taxi/Cab
+                    Services</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Financial Services" /><span
+                        class="checkbox-box"></span>Financial
+                    Services</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Event Management" /><span
+                        class="checkbox-box"></span>Event
+                    Management</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Catering" /><span
+                        class="checkbox-box"></span>Catering</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Car Washing" /><span
+                        class="checkbox-box"></span>Car Washing</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Photographer" /><span
+                        class="checkbox-box"></span>Photographer</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Courier Services" /><span
+                        class="checkbox-box"></span>Courier
+                    Services</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Banquet Hall" /><span
+                        class="checkbox-box"></span>Banquet Hall</label>
+                <label class="checkbox-item"><input type="checkbox" name="services" value="Real Estate" /><span
+                        class="checkbox-box"></span>Real Estate</label>
+                <label class="checkbox-item other-item">
+                    <input type="checkbox" name="services" value="Other" id="service-other" />
+                    <span class="checkbox-box"></span>Other
+                </label>
+            </div>
+            <div class="other-input-wrap hidden" id="service-other-wrap">
+                <input type="text" id="service-other-input" class="other-input" placeholder="Please specify..." />
+            </div>
+            <span class="field-error hidden" id="services-error"></span>
+
+            <!-- Service Description -->
+            <div class="card-section" style="margin-top: 1.5rem">
+                <div class="form-group" style="margin-bottom: 1rem">
+                    <label for="serviceDescription">Service Description</label>
+                    <textarea id="serviceDescription" name="serviceDescription" placeholder="Describe the service..." rows="3"></textarea>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem">
+                    <label for="serviceOfferPrice">Offer Price <span class="asterisk">*</span></label>
+                    <input type="text" id="serviceOfferPrice" name="serviceOfferPrice"
+                        placeholder="Enter offer price" />
+                    <span class="field-error hidden" id="serviceOfferPrice-error"></span>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-outline" onclick="goBackToStep1()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    Back
+                </button>
+                <button class="btn btn-primary" id="btn-create-quote-service" onclick="createQuote('service')">
+                    <span id="btn-text-service">Create Quote &amp; Get Link</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </button>
+            </div>
         </div>
-    </div>
+        <!-- /step-2b -->
 
+        <!-- ── QUOTE SUCCESS SCREEN ── -->
+        <div class="success-screen hidden" id="quote-success">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+            </div>
+            <h2>Quote Created Successfully!</h2>
+            <p>The customer quote has been generated. Share the link below with the customer so they can review and pay the connect fee.</p>
+            
+            <div class="ref-id-box" style="margin-top: 1.5rem">
+                <p class="ref-id-label">Quote ID</p>
+                <p class="ref-id-value" id="success-quote-id">—</p>
+                
+                <div style="background: rgba(0,0,0,0.03); padding: 0.75rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; word-break: break-all; color: var(--text-muted); margin: 1rem 0;" id="success-quote-link">
+                    —
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
+                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="copyQuoteLink()">
+                        📋 Copy Link
+                    </button>
+                    <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem; background: #25D366; color: white; border-color: #25D366;" onclick="shareViaWhatsApp()">
+                        💬 Share Link (WA)
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem;">
+                    <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="shareOrderDetails()">
+                        Share Order Details (Customer)
+                    </button>
+                    <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="shareOrderToSeller()">
+                        Share Order to Seller
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn btn-outline" onclick="createAnother()" style="margin-top: 1.5rem">
+                Create Another Quote
+            </button>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <p>
+            &copy; 2024 Real Amount &bull; Stable Growth | Financial Trust
+        </p>
+    </footer>
     <!-- Toast -->
-    <div class="toast" id="toast"></div>
+    <div class="toast hidden" id="toast"></div>
 
     <script src="quote.js?v=2"></script>
 </body>
-
 </html>

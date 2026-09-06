@@ -25,7 +25,9 @@ function showToast(message, type = "info") {
 let adminPassword = "";
 let lastCreatedQuoteData = null; // Store the quote data for sharing
 
-function verifyPassword() {
+// ── STEP NAVIGATION & VALIDATION ──
+
+function verifyPasswordAndGoToStep1() {
   const input = document.getElementById("admin-password");
   const errorEl = document.getElementById("admin-password-error");
   const val = input ? input.value.trim() : "";
@@ -42,32 +44,82 @@ function verifyPassword() {
   // Store password for later use in API call
   adminPassword = val;
 
-  // Hide password gate, show form
-  document.getElementById("password-gate").classList.add("hidden");
-  document.getElementById("quote-form").classList.remove("hidden");
+  // Transition to Step 1
+  document.getElementById("step-0").classList.add("hidden");
+  document.getElementById("step-1").classList.remove("hidden");
+  
+  document.getElementById("prog-circle-0").innerHTML = "✓";
+  document.getElementById("prog-circle-1").classList.add("active");
+  document.getElementById("prog-line-0").classList.add("active");
 
-  // Setup radio highlight
+  // Setup radio highlights, mobile format, single selects, other inputs
   setupQuoteRadios();
   setupQuoteMobile();
+  setupOtherCheckboxQuote("product-other", "product-other-wrap", "product-other-input");
+  setupOtherCheckboxQuote("service-other", "service-other-wrap", "service-other-input");
+  enableSingleSelectCheckboxesQuote("product-checkbox-grid");
+  enableSingleSelectCheckboxesQuote("service-checkbox-grid");
 }
 
+function goToStep2() {
+  if (!validateStep1()) return;
+
+  const service = document.querySelector('input[name="customerService"]:checked').value;
+  
+  document.getElementById("step-1").classList.add("hidden");
+  
+  if (service === "Service/Repair") {
+    document.getElementById("step-2b").classList.remove("hidden");
+  } else {
+    // Buy New, Buy Used, Sell Used
+    const badge = document.getElementById("step-2a-badge");
+    if (badge) badge.textContent = service;
+    document.getElementById("step-2a").classList.remove("hidden");
+  }
+
+  document.getElementById("prog-circle-1").innerHTML = "✓";
+  document.getElementById("prog-circle-2").classList.add("active");
+  document.getElementById("prog-line-1").classList.add("active");
+  
+  window.scrollTo(0, 0);
+}
+
+function goBackToStep1() {
+  document.getElementById("step-2a").classList.add("hidden");
+  document.getElementById("step-2b").classList.add("hidden");
+  document.getElementById("step-1").classList.remove("hidden");
+
+  document.getElementById("prog-circle-1").innerHTML = "1";
+  document.getElementById("prog-circle-2").classList.remove("active");
+  document.getElementById("prog-line-1").classList.remove("active");
+  
+  window.scrollTo(0, 0);
+}
+
+// ── SETUP & UI HELPERS ──
+
 function setupQuoteRadios() {
-  document.querySelectorAll('input[name="q-customerService"]').forEach((radio) => {
+  document.querySelectorAll('input[name="customerService"]').forEach((radio) => {
     radio.addEventListener("change", () => {
-      document.querySelectorAll('#quote-form .radio-card').forEach((card) => card.classList.remove("selected"));
+      document.querySelectorAll('#step-1 .radio-card').forEach((card) => card.classList.remove("selected"));
       radio.closest(".radio-card").classList.add("selected");
 
-      const errorEl = document.getElementById("q-customerService-error");
+      const errorEl = document.getElementById("customerService-error");
       if (errorEl) {
         errorEl.textContent = "";
         errorEl.classList.add("hidden");
+      }
+      
+      // Auto advance for better UX
+      if (isStep1ValidSilent()) {
+        goToStep2();
       }
     });
   });
 }
 
 function setupQuoteMobile() {
-  const mob = document.getElementById("q-customerMobile");
+  const mob = document.getElementById("customerMobile");
   if (mob) {
     mob.addEventListener("input", () => {
       mob.value = mob.value.replace(/\D/g, "").slice(0, 10);
@@ -75,46 +127,79 @@ function setupQuoteMobile() {
   }
 }
 
-function validateQuoteForm() {
-  let valid = true;
+function setupOtherCheckboxQuote(checkboxId, wrapId, inputId) {
+  const cb = document.getElementById(checkboxId);
+  const wrap = document.getElementById(wrapId);
+  const input = document.getElementById(inputId);
+  if (!cb || !wrap || !input) return;
 
-  const name = document.getElementById("q-customerName").value.trim();
-  const mobile = document.getElementById("q-customerMobile").value.trim();
-  const address = document.getElementById("q-customerAddress").value.trim();
-  const service = document.querySelector('input[name="q-customerService"]:checked');
-
-  // Clear previous errors
-  document.querySelectorAll(".field-error").forEach((el) => {
-    el.textContent = "";
-    el.classList.add("hidden");
+  cb.addEventListener("change", () => {
+    if (cb.checked) {
+      wrap.classList.remove("hidden");
+      input.focus();
+    } else {
+      wrap.classList.add("hidden");
+      input.value = "";
+    }
   });
+}
+
+function enableSingleSelectCheckboxesQuote(gridId) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
+
+  checkboxes.forEach((cb) => {
+    cb.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        checkboxes.forEach((other) => {
+          if (other !== e.target) {
+            other.checked = false;
+            // Also hide 'other' input if it was unchecked
+            if (other.id === "product-other") document.getElementById("product-other-wrap").classList.add("hidden");
+            if (other.id === "service-other") document.getElementById("service-other-wrap").classList.add("hidden");
+          }
+        });
+      }
+      // Clear errors
+      const errorId = gridId === "product-checkbox-grid" ? "products-error" : "services-error";
+      clearFieldErrorQuote(errorId);
+    });
+  });
+}
+
+// ── VALIDATION ──
+
+function validateStep1() {
+  let valid = true;
+  const name = document.getElementById("customerName").value.trim();
+  const mobile = document.getElementById("customerMobile").value.trim();
+  const address = document.getElementById("customerAddress").value.trim();
+  const service = document.querySelector('input[name="customerService"]:checked');
+
+  document.querySelectorAll(".field-error").forEach((el) => { el.textContent = ""; el.classList.add("hidden"); });
   document.querySelectorAll(".error").forEach((el) => el.classList.remove("error"));
 
-  if (!name) {
-    showFieldError("q-customerName", "q-customerName-error", "Name is required");
-    valid = false;
-  }
-  if (!mobile || mobile.length !== 10) {
-    showFieldError("q-customerMobile", "q-customerMobile-error", "Enter a valid 10-digit number");
-    valid = false;
-  }
-  if (!address) {
-    showFieldError("q-customerAddress", "q-customerAddress-error", "Address is required");
-    valid = false;
-  }
+  if (!name) { showFieldErrorQuote("customerName", "customerName-error", "Name is required"); valid = false; }
+  if (!mobile || mobile.length !== 10) { showFieldErrorQuote("customerMobile", "customerMobile-error", "Enter a valid 10-digit number"); valid = false; }
+  if (!address) { showFieldErrorQuote("customerAddress", "customerAddress-error", "Address is required"); valid = false; }
   if (!service) {
-    const el = document.getElementById("q-customerService-error");
-    if (el) {
-      el.textContent = "Please select a service type";
-      el.classList.remove("hidden");
-    }
+    const el = document.getElementById("customerService-error");
+    if (el) { el.textContent = "Please select a service type"; el.classList.remove("hidden"); }
     valid = false;
   }
-
   return valid;
 }
 
-function showFieldError(fieldId, errorId, message) {
+function isStep1ValidSilent() {
+  const name = document.getElementById("customerName").value.trim();
+  const mobile = document.getElementById("customerMobile").value.trim();
+  const address = document.getElementById("customerAddress").value.trim();
+  const service = document.querySelector('input[name="customerService"]:checked');
+  return name && mobile.length === 10 && address && service;
+}
+
+function showFieldErrorQuote(fieldId, errorId, message) {
   const field = document.getElementById(fieldId);
   if (field) field.classList.add("error");
   const el = document.getElementById(errorId);
@@ -124,32 +209,87 @@ function showFieldError(fieldId, errorId, message) {
   }
 }
 
-async function createQuote() {
-  if (!validateQuoteForm()) {
-    showToast("Please fill all required fields.", "error");
-    return;
+function clearFieldErrorQuote(errorId) {
+  const el = document.getElementById(errorId);
+  if (el) {
+    el.textContent = "";
+    el.classList.add("hidden");
+  }
+}
+
+// ── SUBMISSION ──
+
+async function createQuote(type) {
+  // Validate Step 2 fields
+  let items = [];
+  let brands = "";
+  let description = "";
+  let offerPrice = "";
+
+  if (type === "product") {
+    document.querySelectorAll('input[name="products"]:checked').forEach(cb => {
+      if (cb.value === "Other") {
+        const otherVal = document.getElementById("product-other-input").value.trim();
+        if (otherVal) items.push(otherVal);
+      } else {
+        items.push(cb.value);
+      }
+    });
+    brands = document.getElementById("productBrands").value.trim();
+    description = document.getElementById("productDescription").value.trim();
+    offerPrice = document.getElementById("productOfferPrice").value.trim();
+
+    if (items.length === 0) {
+      const el = document.getElementById("products-error");
+      if (el) { el.textContent = "Please select a product"; el.classList.remove("hidden"); }
+      return;
+    }
+    if (!offerPrice) {
+      showFieldErrorQuote("productOfferPrice", "productOfferPrice-error", "Offer price is required");
+      return;
+    }
+  } else {
+    document.querySelectorAll('input[name="services"]:checked').forEach(cb => {
+      if (cb.value === "Other") {
+        const otherVal = document.getElementById("service-other-input").value.trim();
+        if (otherVal) items.push(otherVal);
+      } else {
+        items.push(cb.value);
+      }
+    });
+    description = document.getElementById("serviceDescription").value.trim();
+    offerPrice = document.getElementById("serviceOfferPrice").value.trim();
+
+    if (items.length === 0) {
+      const el = document.getElementById("services-error");
+      if (el) { el.textContent = "Please select a service"; el.classList.remove("hidden"); }
+      return;
+    }
+    if (!offerPrice) {
+      showFieldErrorQuote("serviceOfferPrice", "serviceOfferPrice-error", "Offer price is required");
+      return;
+    }
   }
 
-  const btn = document.getElementById("create-quote-btn");
-  const btnText = document.getElementById("create-quote-text");
+  const btn = document.getElementById(`btn-create-quote-${type}`);
+  const btnText = document.getElementById(`btn-text-${type}`);
   btn.disabled = true;
   btnText.textContent = "Creating…";
   btn.classList.add("btn-loading");
 
-  const service = document.querySelector('input[name="q-customerService"]:checked');
-  const items = document.getElementById("q-items").value.trim();
+  const serviceType = document.querySelector('input[name="customerService"]:checked').value;
 
   const payload = {
     action: "create_quote",
     password: adminPassword,
-    customerName: document.getElementById("q-customerName").value.trim(),
-    customerMobile: document.getElementById("q-customerMobile").value.trim(),
-    customerAddress: document.getElementById("q-customerAddress").value.trim(),
-    customerService: service ? service.value : "",
-    selectedItems: items ? items.split(",").map((s) => s.trim()).filter(Boolean) : [],
-    brands: document.getElementById("q-brands").value.trim(),
-    offerPrice: document.getElementById("q-offerPrice").value.trim(),
-    description: document.getElementById("q-description").value.trim(),
+    customerName: document.getElementById("customerName").value.trim(),
+    customerMobile: document.getElementById("customerMobile").value.trim(),
+    customerAddress: document.getElementById("customerAddress").value.trim(),
+    customerService: serviceType,
+    selectedItems: items,
+    brands: brands,
+    offerPrice: offerPrice,
+    description: description,
   };
 
   try {
@@ -183,7 +323,9 @@ async function createQuote() {
       offerPrice: payload.offerPrice,
     };
 
-    document.getElementById("quote-form").classList.add("hidden");
+    document.getElementById("step-2a").classList.add("hidden");
+    document.getElementById("step-2b").classList.add("hidden");
+    
     document.getElementById("quote-success").classList.remove("hidden");
     document.getElementById("success-quote-id").textContent = quoteId;
     document.getElementById("success-quote-link").textContent = quoteLink;
@@ -193,6 +335,7 @@ async function createQuote() {
     window._quoteId = quoteId;
 
     showToast("Quote created successfully!", "success");
+    window.scrollTo(0, 0);
   } catch (err) {
     btn.disabled = false;
     btnText.textContent = "Create Quote & Get Link";
@@ -250,15 +393,10 @@ function shareOrderToSeller() {
 }
 
 function createAnother() {
-  document.getElementById("quote-success").classList.add("hidden");
-  document.getElementById("quote-form").classList.remove("hidden");
-
-  // Clear fields
-  document.querySelectorAll('#quote-form input[type="text"], #quote-form input[type="tel"], #quote-form textarea').forEach((el) => (el.value = ""));
-  document.querySelectorAll('#quote-form input[type="radio"]').forEach((el) => (el.checked = false));
-  document.querySelectorAll('#quote-form .radio-card').forEach((el) => el.classList.remove("selected"));
-  lastCreatedQuoteData = null;
+  // Reload the page is easiest way to reset entirely
+  window.location.reload();
 }
+
 
 // ═══════════════════════════════════════════════════
 // QUOTE VIEW PAGE LOGIC (quote.html)
@@ -613,7 +751,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const pwInput = document.getElementById("admin-password");
   if (pwInput) {
     pwInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") verifyPassword();
+      if (e.key === "Enter") verifyPasswordAndGoToStep1();
     });
   }
 });
