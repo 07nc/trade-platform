@@ -549,7 +549,7 @@ async function handleStep2Submit(type) {
                   <label for="merchantOtp" style="color: #16a34a; font-weight: 600; text-align: center; display: block; margin-bottom: 0.5rem;">
                     Enter OTP sent to ${result.maskedEmail || 'your email'} <span class="asterisk">*</span>
                   </label>
-                  <input type="text" id="merchantOtp" name="merchantOtp" placeholder="6-digit OTP" maxlength="6" style="text-align: center; letter-spacing: 0.3em; font-size: 1.5rem; font-weight: bold; width: 100%; max-width: 200px; margin: 0 auto; display: block; border: 2px solid #16a34a; border-radius: 6px;" />
+                  <input type="text" id="merchantOtp" name="merchantOtp" placeholder="------" maxlength="6" style="text-align: center; letter-spacing: 0.3em; font-size: 1.5rem; font-weight: bold; width: 100%; max-width: 200px; margin: 0 auto; display: block; border: 2px solid #16a34a; border-radius: 6px; padding: 0.5rem;" />
                   <span class="field-error hidden" id="merchantOtp-error" style="text-align: center; margin-top: 0.5rem;"></span>
               </div>
               
