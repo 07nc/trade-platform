@@ -1035,10 +1035,23 @@ async function submitCustomerForm() {
     }
   }
 
-  // ── MERCHANT BYPASS: Skip Razorpay, submit directly ──
-  if (isRegisteredMerchant) {
+  // ── MERCHANT OR FREE SERVICE BYPASS: Skip Razorpay, submit directly ──
+  if (isRegisteredMerchant || isFreeService) {
+    if (isRegisteredMerchant) {
+      const otpInput = document.getElementById("merchantOtp").value.trim();
+      if (!otpInput || otpInput.length !== 6) {
+        setFieldError("merchantOtp", "merchantOtp-error", "Please enter a valid 6-digit OTP");
+        scrollToField("merchantOtp");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHTML;
+        submitBtn.classList.remove("btn-loading");
+        return;
+      }
+      clearFieldError("merchantOtp", "merchantOtp-error");
+      payload.merchantOtp = otpInput;
+    }
+
     submitBtn.textContent = "Submitting…";
-    payload.merchantBypass = true;
 
     try {
       const response = await fetch(APPS_SCRIPT_URL, {
@@ -1063,7 +1076,7 @@ async function submitCustomerForm() {
       submitBtn.innerHTML = originalHTML;
       submitBtn.classList.remove("btn-loading");
       showToast(err.message || "Submission failed. Please try again.", "error");
-      console.error("Merchant submission error:", err);
+      console.error("Submission error:", err);
     }
     return;
   }

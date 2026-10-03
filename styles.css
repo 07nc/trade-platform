@@ -1124,7 +1124,7 @@ textarea {
 /* ═══════════════════════════════
    RESPONSIVE — Mobile
 ═══════════════════════════════ */
-@media (max-width: 400px) {
+@media (max-width: 520px) {
     .header-contact {
         display: none;
     }
