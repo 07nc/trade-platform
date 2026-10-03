@@ -165,9 +165,10 @@ function setupOtherCheckbox(checkboxId, wrapId, inputId) {
   });
 }
 
-// ── "None of the above" unchecks all others ──
 function setupNoneCheckbox(noneId, groupName) {
   const noneBox = document.getElementById(noneId);
+  if (!noneBox) return; // Add null check in case the element doesn't exist
+  
   const allBoxes = document.querySelectorAll(`input[name="${groupName}"]`);
 
   noneBox.addEventListener("change", () => {
