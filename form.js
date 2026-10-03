@@ -338,8 +338,7 @@ function goToStep2() {
   if (brandsLabel) brandsLabel.textContent = 'Please mention the brands you deal in';
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
   if (offerPriceProduct) offerPriceProduct.style.display = 'none';
-  const offerPriceService = document.getElementById('offer-price-service-wrapper');
-  if (offerPriceService) offerPriceService.style.display = 'none';
+  
 
   const productDesc = document.getElementById('product-description-wrapper');
   if (productDesc) productDesc.style.display = 'block';
@@ -404,13 +403,11 @@ function goToStep2Customer() {
     }
   }
   
-  const offerPriceServiceLabel = document.getElementById('offer-price-service-label');
-  if (offerPriceServiceLabel) offerPriceServiceLabel.innerHTML = 'Price offered to you <span class="asterisk">*</span>';
+  
 
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
   if (offerPriceProduct) offerPriceProduct.style.display = 'block';
-  const offerPriceService = document.getElementById('offer-price-service-wrapper');
-  if (offerPriceService) offerPriceService.style.display = 'block';
+  
 
   const productDesc = document.getElementById('product-description-wrapper');
   if (productDesc) productDesc.style.display = 'block';
@@ -804,14 +801,7 @@ function validateStep2(type) {
       scrollToField("services-error");
       return false;
     }
-    if (accountType === "Customer") {
-      const offerPrice = document.getElementById("offerPriceService").value.trim();
-      if (!offerPrice) {
-        setFieldError("offerPriceService", "offerPriceService-error", "Offer price is required");
-        scrollToField("offerPriceService");
-        return false;
-      }
-    }
+    
   }
 
   return true;
@@ -925,7 +915,7 @@ async function submitForm() {
     businessType: selectedBusinessType,
     selectedItems: selectedItems,
     brands: isProduct ? document.getElementById("brands").value.trim() : "",
-    offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : document.getElementById("offerPriceService").value.trim(),
+    offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : "",
     description: isProduct ? document.getElementById("productDescription").value.trim() : document.getElementById("serviceDescription").value.trim(),
   };
 
@@ -1019,7 +1009,7 @@ async function submitCustomerForm() {
     customerService: selectedCustomerService,
     selectedItems: selectedItems,
     brands: isProduct ? document.getElementById("brands").value.trim() : "",
-    offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : document.getElementById("offerPriceService").value.trim(),
+    offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : "",
     description: isProduct ? document.getElementById("productDescription").value.trim() : document.getElementById("serviceDescription").value.trim(),
   };
 
