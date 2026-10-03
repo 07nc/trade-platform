@@ -636,6 +636,9 @@ async function handleStep2Submit(type) {
       isRegisteredMerchant = false;
     }
     }
+
+    step3Customer.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
 
