@@ -92,7 +92,8 @@ function doPost(e) {
     const action = data.action;
 
     if (action === 'create_razorpay_order') {
-      const order = createRazorpayOrder(50); // Rs 50/- lead fee
+      const amount = parseInt(data.amount) || 50;
+      const order = createRazorpayOrder(amount); // Dynamic lead fee
       return jsonResponse({ success: true, order: order });
     }
 

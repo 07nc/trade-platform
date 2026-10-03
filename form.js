@@ -463,7 +463,8 @@ function goBack() {
 }
 
 let isRegisteredMerchant = false;
-let isFreeService = false; // Tracks if current customer is a merchant
+let isFreeService = false;
+let currentPaymentAmount = 50; // Tracks if current customer is a merchant
 
 async function handleStep2Submit(type) {
   if (!validateStep2(type)) return;
@@ -478,7 +479,15 @@ async function handleStep2Submit(type) {
     const mobile = document.getElementById("customerMobile").value.trim();
     isRegisteredMerchant = false;
 
+    
     isFreeService = (selectedCustomerService === "Service/Repair");
+
+    currentPaymentAmount = 50;
+    if (type === "product") {
+        const price = parseFloat(document.getElementById("offerPriceProduct").value) || 0;
+        currentPaymentAmount = Math.max(10, Math.min(50, Math.round(price * 0.025)));
+    }
+
 
     if (isFreeService) {
       // It's a completely free service for everyone
@@ -500,7 +509,7 @@ async function handleStep2Submit(type) {
             You requested a <strong>Service/Repair</strong>.
             <br>This category is completely <strong>FREE</strong> for all customers!
           </p>
-          <div style="font-size: 2rem; font-weight: 700; color: #16a34a; margin-bottom: 1rem; text-decoration: line-through; opacity: 0.5;">₹50.00</div>
+          <div style="font-size: 2rem; font-weight: 700; color: #16a34a; margin-bottom: 1rem; text-decoration: line-through; opacity: 0.5;">₹${currentPaymentAmount}</div>
           <div style="font-size: 2rem; font-weight: 700; color: #16a34a;">FREE ✓</div>
           <div class="policy-box" style="margin-top: 1.5rem; padding: 1rem; background: rgba(22, 163, 74, 0.05); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
             No platform fee is required to request services. Submit your details below to get connected!
@@ -541,7 +550,7 @@ async function handleStep2Submit(type) {
               </p>
               <p style="color: var(--text-muted); margin-bottom: 1rem;">
                 Your mobile number <strong>+91 ${mobile}</strong> is registered as a partner.
-                <br>The ₹50 service fee has been <strong>waived</strong> for you.
+                <br>The ₹${currentPaymentAmount} service fee has been <strong>waived</strong> for you.
               </p>
               
               <!-- OTP Box -->
@@ -553,7 +562,7 @@ async function handleStep2Submit(type) {
                   <span class="field-error hidden" id="merchantOtp-error" style="text-align: center; margin-top: 0.5rem;"></span>
               </div>
               
-              <div style="font-size: 1.5rem; font-weight: 700; color: #16a34a; margin-top: 1rem; text-decoration: line-through; opacity: 0.5;">₹50.00</div>
+              <div style="font-size: 1.5rem; font-weight: 700; color: #16a34a; margin-top: 1rem; text-decoration: line-through; opacity: 0.5;">₹${currentPaymentAmount}</div>
               <div style="font-size: 1.5rem; font-weight: 700; color: #16a34a;">FREE ✓</div>
               <p style="color: var(--primary); font-size: 0.9rem; margin-top: 0.5rem; font-weight: 600;">
                 (Free requests remaining this month: ${result.remaining})
@@ -586,7 +595,7 @@ async function handleStep2Submit(type) {
               </p>
               <p style="color: var(--text-muted); margin-bottom: 1rem;">
                 Your mobile number <strong>+91 ${mobile}</strong> has used its 5 free requests for this month.
-                <br>Please pay the standard ₹50 service fee to continue.
+                <br>Please pay the standard ₹${currentPaymentAmount} service fee to continue.
               </p>
               <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
                 ₹50.00
@@ -595,7 +604,7 @@ async function handleStep2Submit(type) {
             `;
           }
           if (submitBtn) {
-            submitBtn.innerHTML = "Pay ₹50 & Submit";
+            submitBtn.innerHTML = "Pay ₹${currentPaymentAmount} & Submit";
           }
         }
       } else {
@@ -628,7 +637,7 @@ async function handleStep2Submit(type) {
             `;
         }
         if (submitBtn) {
-            submitBtn.innerHTML = "Pay ₹50 & Submit";
+            submitBtn.innerHTML = "Pay ₹${currentPaymentAmount} & Submit";
         }
       }
     } catch (err) {
@@ -1099,7 +1108,7 @@ async function submitCustomerForm() {
     const orderResponse = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "create_razorpay_order" }),
+      body: JSON.stringify({ action: "create_razorpay_order", amount: currentPaymentAmount }),
     });
 
     const orderText = await orderResponse.text();
