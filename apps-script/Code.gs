@@ -109,6 +109,13 @@ function doPost(e) {
       return handlePayQuote(data);
     }
 
+    if (action === 'check_merchant') {
+      const mobile = (data.mobile || '').trim();
+      if (!mobile) return jsonResponse({ success: true, isMerchant: false });
+      const isMerchant = isMerchantByMobile(mobile);
+      return jsonResponse({ success: true, isMerchant: isMerchant });
+    }
+
     const accountType = (data.accountType || '').trim();
 
     if (accountType === "Customer") {
@@ -198,23 +205,34 @@ function handleCustomerSubmission(data) {
     appendHeaderRow(sheet, CUSTOMER_HEADERS);
   }
 
-  // ── Verify Razorpay Payment Signature ───────────
-  const scriptProperties = PropertiesService.getScriptProperties();
-  const keySecret = (scriptProperties.getProperty('RAZORPAY_KEY_SECRET') || 'bbffW0UBFifbhIUKJMcUZiyx').trim();
-  
+  // ── Check if this is a free merchant submission ──
   let paymentStatus = 'Pending / Unverified';
-  if (data.razorpayPaymentId && data.razorpayOrderId && data.razorpaySignature) {
-    if (keySecret) {
-      const isValid = verifyRazorpaySignature(
-        data.razorpayOrderId,
-        data.razorpayPaymentId,
-        data.razorpaySignature,
-        keySecret
-      );
-      paymentStatus = isValid ? 'Paid' : 'Signature Verification Failed';
+  if (data.merchantBypass === true) {
+    // Verify that the mobile is indeed a registered merchant
+    const mobile = (data.customerMobile || '').trim();
+    if (isMerchantByMobile(mobile)) {
+      paymentStatus = 'Free — Registered Merchant';
     } else {
-      // If key secret is not set in script properties, accept signature for test
-      paymentStatus = 'Paid (Unverified - Key Secret Not Set)';
+      return jsonResponse({ success: false, error: 'Merchant verification failed. Payment is required.' });
+    }
+  } else {
+    // ── Verify Razorpay Payment Signature ───────────
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const keySecret = (scriptProperties.getProperty('RAZORPAY_KEY_SECRET') || 'bbffW0UBFifbhIUKJMcUZiyx').trim();
+    
+    if (data.razorpayPaymentId && data.razorpayOrderId && data.razorpaySignature) {
+      if (keySecret) {
+        const isValid = verifyRazorpaySignature(
+          data.razorpayOrderId,
+          data.razorpayPaymentId,
+          data.razorpaySignature,
+          keySecret
+        );
+        paymentStatus = isValid ? 'Paid' : 'Signature Verification Failed';
+      } else {
+        // If key secret is not set in script properties, accept signature for test
+        paymentStatus = 'Paid (Unverified - Key Secret Not Set)';
+      }
     }
   }
 
@@ -302,6 +320,41 @@ function sendNotificationEmail(type, referenceId, details) {
   } catch (err) {
     console.error('Email notification failed:', err.message);
     // Don't throw — email failure should not block the submission
+  }
+}
+
+// ════════════════════════════════════════════════════
+// MERCHANT DETECTION
+// ════════════════════════════════════════════════════
+
+/**
+ * Check if a mobile number is registered as a Partner/Merchant.
+ * Looks up column 8 (Mobile Number) in the Partner Submissions sheet.
+ */
+function isMerchantByMobile(mobile) {
+  if (!mobile) return false;
+  
+  // Normalize: strip spaces, dashes, +91 prefix
+  const normalized = mobile.replace(/[\s\-+]/g, '').replace(/^91/, '');
+  
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(PARTNER_SHEET_NAME);
+    if (!sheet || sheet.getLastRow() <= 1) return false;
+    
+    // Column 8 = Mobile Number in PARTNER_HEADERS
+    const mobileCol = 8;
+    const data = sheet.getRange(2, mobileCol, sheet.getLastRow() - 1, 1).getValues();
+    
+    for (let i = 0; i < data.length; i++) {
+      const cellValue = String(data[i][0]).replace(/[\s\-+]/g, '').replace(/^91/, '');
+      if (cellValue === normalized) return true;
+    }
+    
+    return false;
+  } catch (err) {
+    console.error('Merchant check error:', err.message);
+    return false;
   }
 }
 

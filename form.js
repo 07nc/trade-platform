@@ -464,7 +464,9 @@ function goBack() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function handleStep2Submit(type) {
+let isRegisteredMerchant = false; // Tracks if current customer is a merchant
+
+async function handleStep2Submit(type) {
   if (!validateStep2(type)) return;
 
   if (accountType === "Partner") {
@@ -472,6 +474,67 @@ function handleStep2Submit(type) {
   } else {
     if (type === "product") step2a.classList.add("hidden");
     else step2b.classList.add("hidden");
+
+    // Check if the customer is a registered merchant
+    const mobile = document.getElementById("customerMobile").value.trim();
+    isRegisteredMerchant = false;
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ action: "check_merchant", mobile: mobile }),
+      });
+      const text = await res.text();
+      const result = JSON.parse(text);
+      if (result.success && result.isMerchant) {
+        isRegisteredMerchant = true;
+      }
+    } catch (err) {
+      console.error("Merchant check failed:", err);
+      // Fall through to normal payment flow
+    }
+
+    // Update step 3 UI based on merchant status
+    const paymentBox = document.querySelector("#step-3-customer .payment-box");
+    const submitBtn = document.getElementById("customer-submit-btn");
+    
+    if (isRegisteredMerchant && paymentBox && submitBtn) {
+      paymentBox.innerHTML = `
+        <div style="margin-bottom: 1rem;">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#16a34a" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #16a34a;">
+          Registered Merchant Detected! 🎉
+        </p>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+          Your mobile number <strong>+91 ${mobile}</strong> is registered as a partner with Real Amount.
+          <br>The ₹50 service fee has been <strong>waived</strong> for you.
+        </p>
+        <div style="font-size: 2rem; font-weight: 700; color: #16a34a; margin-bottom: 1rem; text-decoration: line-through; opacity: 0.5;">₹50.00</div>
+        <div style="font-size: 2rem; font-weight: 700; color: #16a34a;">FREE ✓</div>
+        <div class="policy-box" style="margin-top: 1.5rem; padding: 1rem; background: rgba(22, 163, 74, 0.05); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+          <strong style="color: var(--primary-dark); display: block; margin-bottom: 0.4rem;">Why is this free?</strong>
+          As a registered merchant on our platform, you enjoy free access to the customer requirement service. Thank you for being a Real Amount partner!
+        </div>
+      `;
+      submitBtn.innerHTML = `Submit Requirement <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>`;
+    } else if (paymentBox) {
+      // Restore normal payment UI (in case going back and forth)
+      paymentBox.innerHTML = `
+        <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem;">Secure Online Payment</p>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">You will be redirected to Razorpay to complete your secure payment of Rs 50/-.</p>
+        <div style="font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem;">₹50.00</div>
+        <div class="policy-box" style="margin-top: 1.5rem; padding: 1rem; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+          <strong style="color: var(--primary-dark); display: block; margin-bottom: 0.4rem;">Refund Policy</strong>
+          Our commitment is to fair pricing. If a customer presents a valid bill for the same product they intend to buy, showing a lower price on the market, they are eligible for a refund of the connect charge. In cases where a valid bill is not provided, the connect charge will not be refundable.
+        </div>
+      `;
+      submitBtn.innerHTML = `Pay &amp; Register <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>`;
+    }
 
     step3Customer.classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -828,18 +891,7 @@ async function submitCustomerForm() {
   const originalHTML = submitBtn.innerHTML;
 
   submitBtn.disabled = true;
-  submitBtn.textContent = "Processing Payment…";
   submitBtn.classList.add("btn-loading");
-
-  try {
-    await loadRazorpay();
-  } catch (err) {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = originalHTML;
-    submitBtn.classList.remove("btn-loading");
-    showToast("Failed to load payment gateway. Please try again.", "error");
-    return;
-  }
 
   const isProduct = selectedCustomerService !== "Service/Repair";
   const groupName = isProduct ? "products" : "services";
@@ -883,6 +935,52 @@ async function submitCustomerForm() {
       submitBtn.classList.remove("btn-loading");
       return;
     }
+  }
+
+  // ── MERCHANT BYPASS: Skip Razorpay, submit directly ──
+  if (isRegisteredMerchant) {
+    submitBtn.textContent = "Submitting…";
+    payload.merchantBypass = true;
+
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload),
+      });
+
+      const text = await response.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch {
+        result = { success: true };
+      }
+
+      if (!result.success) throw new Error(result.error || "Submission failed");
+
+      showSuccessScreenCustomer(payload, result.referenceId || "—");
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalHTML;
+      submitBtn.classList.remove("btn-loading");
+      showToast(err.message || "Submission failed. Please try again.", "error");
+      console.error("Merchant submission error:", err);
+    }
+    return;
+  }
+
+  // ── NORMAL FLOW: Razorpay payment ──
+  submitBtn.textContent = "Processing Payment…";
+
+  try {
+    await loadRazorpay();
+  } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHTML;
+    submitBtn.classList.remove("btn-loading");
+    showToast("Failed to load payment gateway. Please try again.", "error");
+    return;
   }
 
   try {
@@ -978,6 +1076,7 @@ async function submitCustomerForm() {
     console.error("Payment initiation error:", err);
   }
 }
+
 
 // ═══════════════════════════════════════════════════
 // SUCCESS SCREEN
