@@ -465,7 +465,8 @@ function goBack() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-let isRegisteredMerchant = false; // Tracks if current customer is a merchant
+let isRegisteredMerchant = false;
+let isFreeService = false; // Tracks if current customer is a merchant
 
 async function handleStep2Submit(type) {
   if (!validateStep2(type)) return;
@@ -480,65 +481,164 @@ async function handleStep2Submit(type) {
     const mobile = document.getElementById("customerMobile").value.trim();
     isRegisteredMerchant = false;
 
-    try {
-      const res = await fetch(APPS_SCRIPT_URL, {
+    isFreeService = (selectedCustomerService === "Service/Repair");
+
+    if (isFreeService) {
+      // It's a completely free service for everyone
+      const paymentBox = document.querySelector("#step-3-customer .payment-box");
+      const submitBtn = document.getElementById("customer-submit-btn");
+      
+      if (paymentBox) {
+        paymentBox.innerHTML = `
+          <div style="margin-bottom: 1rem;">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#16a34a" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #16a34a;">
+            Congratulations! 🎉
+          </p>
+          <p style="color: var(--text-muted); margin-bottom: 1rem;">
+            You requested a <strong>Service/Repair</strong>.
+            <br>This category is completely <strong>FREE</strong> for all customers!
+          </p>
+          <div style="font-size: 2rem; font-weight: 700; color: #16a34a; margin-bottom: 1rem; text-decoration: line-through; opacity: 0.5;">₹50.00</div>
+          <div style="font-size: 2rem; font-weight: 700; color: #16a34a;">FREE ✓</div>
+          <div class="policy-box" style="margin-top: 1.5rem; padding: 1rem; background: rgba(22, 163, 74, 0.05); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+            No platform fee is required to request services. Submit your details below to get connected!
+          </div>
+        `;
+      }
+      if (submitBtn) {
+        submitBtn.innerHTML = "Submit Request";
+      }
+      
+    } else {
+      // Normal flow (Merchant check or Paid)
+      try {
+        const res = await fetch(APPS_SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ action: "check_merchant", mobile: mobile }),
       });
       const text = await res.text();
       const result = JSON.parse(text);
+      
+      const paymentBox = document.querySelector("#step-3-customer .payment-box");
+      const submitBtn = document.getElementById("customer-submit-btn");
+
       if (result.success && result.isMerchant) {
-        isRegisteredMerchant = true;
+        if (result.hasFreeQuota) {
+          isRegisteredMerchant = true; // Use free bypass
+          if (paymentBox) {
+            paymentBox.innerHTML = `
+              <div style="margin-bottom: 1rem;">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#16a34a" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #16a34a;">
+                Registered Merchant Detected! 🎉
+              </p>
+              <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                Your mobile number <strong>+91 ${mobile}</strong> is registered as a partner.
+                <br>The ₹50 service fee has been <strong>waived</strong> for you.
+              </p>
+              
+              <!-- OTP Box -->
+              <div class="form-group" style="margin-top: 1.5rem; background: #fff; padding: 1rem; border-radius: 8px; border: 1px solid rgba(22, 163, 74, 0.3);">
+                  <label for="merchantOtp" style="color: #16a34a; font-weight: 600; text-align: center; display: block; margin-bottom: 0.5rem;">
+                    Enter OTP sent to ${result.maskedEmail || 'your email'} <span class="asterisk">*</span>
+                  </label>
+                  <input type="text" id="merchantOtp" name="merchantOtp" placeholder="6-digit OTP" maxlength="6" style="text-align: center; letter-spacing: 0.3em; font-size: 1.5rem; font-weight: bold; width: 100%; max-width: 200px; margin: 0 auto; display: block; border: 2px solid #16a34a; border-radius: 6px;" />
+                  <span class="field-error hidden" id="merchantOtp-error" style="text-align: center; margin-top: 0.5rem;"></span>
+              </div>
+              
+              <div style="font-size: 1.5rem; font-weight: 700; color: #16a34a; margin-top: 1rem; text-decoration: line-through; opacity: 0.5;">₹50.00</div>
+              <div style="font-size: 1.5rem; font-weight: 700; color: #16a34a;">FREE ✓</div>
+              <p style="color: var(--primary); font-size: 0.9rem; margin-top: 0.5rem; font-weight: 600;">
+                (Free requests remaining this month: ${result.remaining})
+              </p>
+              <div class="policy-box" style="margin-top: 1.5rem; padding: 1rem; background: rgba(22, 163, 74, 0.05); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <i class="ph ph-shield-check" style="color: #16a34a; font-size: 1.1rem; flex-shrink: 0; margin-top: 2px;"></i>
+                    <strong style="color: var(--text);">Merchant Benefit Applied</strong>
+                </div>
+                As a valued partner, you can submit up to 5 free requests per month. No payment is required for this transaction.
+              </div>
+            `;
+          }
+          if (submitBtn) {
+            submitBtn.innerHTML = "Verify OTP & Submit";
+          }
+        } else {
+          isRegisteredMerchant = false; // Must pay!
+          if (paymentBox) {
+            paymentBox.innerHTML = `
+              <div style="margin-bottom: 1rem;">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#eab308" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #eab308;">
+                Free Quota Reached
+              </p>
+              <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                Your mobile number <strong>+91 ${mobile}</strong> has used its 5 free requests for this month.
+                <br>Please pay the standard ₹50 service fee to continue.
+              </p>
+              <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
+                ₹50.00
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">One-time platform service fee</p>
+            `;
+          }
+          if (submitBtn) {
+            submitBtn.innerHTML = "Pay ₹50 & Submit";
+          }
+        }
+      } else {
+        // Not a merchant, standard payment UI applies automatically (already in HTML)
+        isRegisteredMerchant = false;
+        // reset to default if they went back and changed mobile
+        if (paymentBox) {
+            paymentBox.innerHTML = `
+              <div style="margin-bottom: 1rem;">
+                  <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--primary)" stroke-width="2">
+                      <rect x="2" y="5" width="20" height="14" rx="2" />
+                      <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg>
+              </div>
+              <p class="payment-title">Platform Service Fee</p>
+              <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
+                  ₹50.00
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                  One-time non-refundable fee for processing your request.
+              </p>
+              
+              <div class="policy-box">
+                  <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                      <i class="ph ph-shield-check" style="color: var(--primary); font-size: 1.1rem; flex-shrink: 0; margin-top: 2px;"></i>
+                      <strong style="color: var(--text);">Secure Payment</strong>
+                  </div>
+                  Your payment is processed securely through Razorpay. Real Amount does not store your payment details.
+              </div>
+            `;
+        }
+        if (submitBtn) {
+            submitBtn.innerHTML = "Pay ₹50 & Submit";
+        }
       }
     } catch (err) {
       console.error("Merchant check failed:", err);
-      // Fall through to normal payment flow
+      isRegisteredMerchant = false;
     }
-
-    // Update step 3 UI based on merchant status
-    const paymentBox = document.querySelector("#step-3-customer .payment-box");
-    const submitBtn = document.getElementById("customer-submit-btn");
-    
-    if (isRegisteredMerchant && paymentBox && submitBtn) {
-      paymentBox.innerHTML = `
-        <div style="margin-bottom: 1rem;">
-          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#16a34a" stroke-width="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-            <polyline points="22 4 12 14.01 9 11.01"/>
-          </svg>
-        </div>
-        <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #16a34a;">
-          Registered Merchant Detected! 🎉
-        </p>
-        <p style="color: var(--text-muted); margin-bottom: 1rem;">
-          Your mobile number <strong>+91 ${mobile}</strong> is registered as a partner with Real Amount.
-          <br>The ₹50 service fee has been <strong>waived</strong> for you.
-        </p>
-        <div style="font-size: 2rem; font-weight: 700; color: #16a34a; margin-bottom: 1rem; text-decoration: line-through; opacity: 0.5;">₹50.00</div>
-        <div style="font-size: 2rem; font-weight: 700; color: #16a34a;">FREE ✓</div>
-        <div class="policy-box" style="margin-top: 1.5rem; padding: 1rem; background: rgba(22, 163, 74, 0.05); border: 1px solid rgba(22, 163, 74, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
-          <strong style="color: var(--primary-dark); display: block; margin-bottom: 0.4rem;">Why is this free?</strong>
-          As a registered merchant on our platform, you enjoy free access to the customer requirement service. Thank you for being a Real Amount partner!
-        </div>
-      `;
-      submitBtn.innerHTML = `Submit Requirement <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>`;
-    } else if (paymentBox) {
-      // Restore normal payment UI (in case going back and forth)
-      paymentBox.innerHTML = `
-        <p class="payment-title" style="font-size: 1.25rem; margin-bottom: 0.5rem;">Secure Online Payment</p>
-        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">You will be redirected to Razorpay to complete your secure payment of Rs 50/-.</p>
-        <div style="font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem;">₹50.00</div>
-        <div class="policy-box" style="margin-top: 1.5rem; padding: 1rem; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.2); border-radius: 8px; text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
-          <strong style="color: var(--primary-dark); display: block; margin-bottom: 0.4rem;">Refund Policy</strong>
-          Our commitment is to fair pricing. If a customer presents a valid bill for the same product they intend to buy, showing a lower price on the market, they are eligible for a refund of the connect charge. In cases where a valid bill is not provided, the connect charge will not be refundable.
-        </div>
-      `;
-      submitBtn.innerHTML = `Pay &amp; Register <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>`;
     }
-
-    step3Customer.classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
 
@@ -813,7 +913,9 @@ async function submitForm() {
   });
 
   const payload = {
-    accountType: accountType,
+      accountType: accountType,
+      merchantBypass: isRegisteredMerchant,
+      freeServiceBypass: isFreeService,
     email: document.getElementById("email").value.trim(),
     businessName: document.getElementById("businessName").value.trim(),
     workplaceAddress: document.getElementById("workplaceAddress").value.trim(),
@@ -908,7 +1010,9 @@ async function submitCustomerForm() {
   });
 
   const payload = {
-    accountType: accountType,
+      accountType: accountType,
+      merchantBypass: isRegisteredMerchant,
+      freeServiceBypass: isFreeService,
     customerName: document.getElementById("customerName").value.trim(),
     customerMobile: document.getElementById("customerMobile").value.trim(),
     customerAddress: document.getElementById("customerAddress").value.trim(),
