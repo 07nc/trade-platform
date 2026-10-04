@@ -604,13 +604,13 @@ async function handleStep2Submit(type) {
                 <br>Please pay the standard ₹${currentPaymentAmount} service fee to continue.
               </p>
               <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
-                ₹50.00
+                ₹${currentPaymentAmount}.00
               </div>
               <p style="color: var(--text-muted); font-size: 0.85rem;">One-time platform service fee</p>
             `;
           }
           if (submitBtn) {
-            submitBtn.innerHTML = "Pay ₹${currentPaymentAmount} & Submit";
+            submitBtn.innerHTML = `Pay ₹${currentPaymentAmount} & Submit`;
           }
         }
       } else {
@@ -627,7 +627,7 @@ async function handleStep2Submit(type) {
               </div>
               <p class="payment-title">Platform Service Fee</p>
               <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
-                  ₹50.00
+                  ₹${currentPaymentAmount}.00
               </div>
               <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
                   One-time non-refundable fee for processing your request.
@@ -643,7 +643,7 @@ async function handleStep2Submit(type) {
             `;
         }
         if (submitBtn) {
-            submitBtn.innerHTML = "Pay ₹${currentPaymentAmount} & Submit";
+            submitBtn.innerHTML = `Pay ₹${currentPaymentAmount} & Submit`;
         }
       }
     } catch (err) {
