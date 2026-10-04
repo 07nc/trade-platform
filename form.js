@@ -1057,7 +1057,7 @@ async function submitCustomerForm() {
         return;
       }
       clearFieldError("merchantOtp", "merchantOtp-error");
-      payload.merchantOtp = otpInput;
+      payload.otp = otpInput;
     }
 
     submitBtn.textContent = "Submitting…";
@@ -1086,6 +1086,14 @@ async function submitCustomerForm() {
       submitBtn.classList.remove("btn-loading");
       showToast(err.message || "Submission failed. Please try again.", "error");
       console.error("Submission error:", err);
+      // If OTP error, clear and re-focus the OTP input
+      const otpField = document.getElementById("merchantOtp");
+      if (otpField) {
+        otpField.value = "";
+        otpField.disabled = false;
+        otpField.focus();
+        setFieldError("merchantOtp", "merchantOtp-error", err.message || "Invalid OTP");
+      }
     }
     return;
   }
