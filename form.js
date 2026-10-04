@@ -442,6 +442,12 @@ function goBack() {
   step2a.classList.add("hidden");
   step2b.classList.add("hidden");
 
+  // Reset step 2 submit buttons in case they were left in loading state
+  ["product-submit-btn", "service-submit-btn"].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) { btn.disabled = false; btn.classList.remove("btn-loading"); }
+  });
+
   if (accountType === "Partner") {
     step1.classList.remove("hidden");
   } else {
@@ -646,6 +652,13 @@ async function handleStep2Submit(type) {
     }
     }
 
+    // Reset submit button state before showing step 3
+    const step3SubmitBtn = document.getElementById("customer-submit-btn");
+    if (step3SubmitBtn) {
+      step3SubmitBtn.disabled = false;
+      step3SubmitBtn.classList.remove("btn-loading");
+    }
+
     step3Customer.classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -653,6 +666,13 @@ async function handleStep2Submit(type) {
 
 function goBackToStep2From3() {
   step3Customer.classList.add("hidden");
+
+  // Reset all submit buttons in case they were left in loading state
+  ["product-submit-btn", "service-submit-btn", "customer-submit-btn"].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) { btn.disabled = false; btn.classList.remove("btn-loading"); }
+  });
+
   if (selectedCustomerService === "Service/Repair") {
     step2b.classList.remove("hidden");
   } else {
