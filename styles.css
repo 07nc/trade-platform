@@ -68,63 +68,267 @@ body {
    HEADER
 ═══════════════════════════════ */
 .site-header {
-    background: linear-gradient(
-        135deg,
-        var(--primary-dark) 0%,
-        var(--primary) 60%,
-        var(--primary-light) 100%
-    );
-    border-bottom: 3px solid var(--accent);
+    background: linear-gradient(180deg, #081829 0%, #0c233c 100%);
+    border-bottom: 2px solid var(--accent);
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 16px rgba(26, 60, 94, 0.25);
+    box-shadow: 0 2px 16px rgba(8, 24, 41, 0.35);
 }
 
 .header-inner {
-    max-width: 780px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0.85rem 1.5rem;
+    padding: 0.75rem 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+}
+
+.brand-logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
 }
 
 .logo {
-    height: 52px;
+    height: 48px;
     width: auto;
     object-fit: contain;
     filter: brightness(1.05);
 }
 
-.header-contact {
+.mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.mobile-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-btn svg {
+    width: 26px;
+    height: 26px;
+    stroke: #ffffff;
+}
+
+/* ── Mobile Slide-Out Drawer ── */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 290px;
+    height: 100%;
+    background: #0c233c;
+    color: #ffffff;
+    z-index: 1100;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    align-items: flex-end;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.45);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.contact-item {
+.mobile-drawer.open {
+    left: 0;
+}
+
+.drawer-header {
+    padding: 1.25rem 1.5rem;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    color: rgba(255, 255, 255, 0.9);
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drawer-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.drawer-close-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.drawer-nav {
+    flex: 1;
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    overflow-y: auto;
+}
+
+.drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    transition: color var(--transition);
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
-.contact-item:hover {
-    color: var(--accent-light);
+.drawer-link:hover,
+.drawer-link.active {
+    background: rgba(201, 168, 76, 0.15);
+    color: #f1c964;
 }
 
-.contact-item svg {
-    width: 13px;
-    height: 13px;
+.drawer-icon {
+    font-size: 1.2rem;
+}
+
+.drawer-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(8, 24, 41, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1050;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.drawer-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ═══════════════════════════════════════
+   FORM HERO BANNER
+   ═══════════════════════════════════════ */
+.form-hero-banner {
+    background: linear-gradient(180deg, #fffdf8 0%, #fef8eb 100%);
+    border-bottom: 1.5px solid #f1e2bc;
+    padding: 1.35rem 1.25rem 1.25rem;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(12, 35, 60, 0.03);
+    position: relative;
+}
+
+.form-banner-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-banner-title-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-bottom: 0.25rem;
+}
+
+.form-banner-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    color: var(--accent);
+}
+
+.banner-svg-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.form-banner-title {
+    color: #0c233c;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 0;
+}
+
+.form-banner-subtitle {
+    color: #334155;
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.45;
+    max-width: 540px;
+    margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    .header-inner {
+        padding: 0.65rem 1rem;
+    }
+    .logo {
+        height: 42px;
+    }
+    .form-hero-banner {
+        padding: 1.15rem 0.85rem 1.05rem;
+    }
+    .banner-svg-icon {
+        width: 28px;
+        height: 28px;
+    }
+    .form-banner-title {
+        font-size: 1.22rem;
+    }
+    .form-banner-subtitle {
+        font-size: 0.82rem;
+        line-height: 1.4;
+    }
+}
+
+/* Dark mode overrides for banner */
+[data-theme="dark"] .form-hero-banner {
+    background: linear-gradient(180deg, #0d1a29 0%, #112236 100%);
+    border-bottom: 1.5px solid #243b55;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .form-banner-title {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .form-banner-subtitle {
+    color: #94a3b8;
 }
 
 /* ═══════════════════════════════

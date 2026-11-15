@@ -45,8 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRadioCardHighlight();
   setupLiveValidation();
 
+  // ── Mobile Drawer Navigation ──
+  initMobileDrawer();
+
   // ── Auto-handle URL parameters (?type= and ?category=) ──
   handlePresetURLParams();
+
+  // Initial Hero Banner sync
+  updateFormBannerHeader(accountType || "default");
 
   // ── Partner Product Brand Cards dynamic update ──
   document.querySelectorAll('input[name="products"]').forEach((cb) => {
@@ -69,6 +75,79 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// ── FORM HERO BANNER ICONS & CONTROLLER ──
+const ICON_CUSTOMER_MEGAPHONE = `
+<svg viewBox="0 0 36 36" class="banner-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M5 14v5a1 1 0 001 1h4l8 6V7l-8 6H7a1 1 0 00-1 1z" fill="#fef3c7" stroke="#b45309" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M19 10c4 0 8-2.5 10.5-4.5v21C27 24.5 23 22 19 22" fill="#fde68a" stroke="#b45309" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M12 20v5a2 2 0 002 2h1a2 2 0 002-2v-3" stroke="#b45309" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
+`;
+
+const ICON_PARTNER_STORE = `
+<svg viewBox="0 0 36 36" class="banner-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M5 14L7 6h22l2 8v1.5a3.5 3.5 0 01-6 2.3 3.5 3.5 0 01-6 0 3.5 3.5 0 01-6 0 3.5 3.5 0 01-6-2.3V14z" fill="#fde68a" stroke="#b45309" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M6 18v11a1 1 0 001 1h22a1 1 0 001-1V18" fill="#fffdf5" stroke="#b45309" stroke-width="2.2"/>
+  <path d="M14 30v-9a1 1 0 011-1h6a1 1 0 011 1v9" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <rect x="8.5" y="19" width="3.5" height="4" rx="0.5" stroke="#b45309" stroke-width="1.8" fill="#fef3c7"/>
+  <rect x="24" y="19" width="3.5" height="4" rx="0.5" stroke="#b45309" stroke-width="1.8" fill="#fef3c7"/>
+</svg>
+`;
+
+const ICON_DEFAULT = `
+<svg viewBox="0 0 36 36" class="banner-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M18 4a14 14 0 100 28 14 14 0 000-28z" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <path d="M12 18l4 4 8-8" stroke="#b45309" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+
+function updateFormBannerHeader(type) {
+  const iconEl = document.getElementById("form-banner-icon");
+  const titleEl = document.getElementById("main-form-title");
+  const subEl = document.getElementById("main-form-subtitle");
+
+  const cleanType = String(type || "").toLowerCase();
+
+  if (cleanType === "customer") {
+    if (iconEl) iconEl.innerHTML = ICON_CUSTOMER_MEGAPHONE;
+    if (titleEl) titleEl.textContent = "Post Your Requirement";
+    if (subEl) subEl.textContent = "Tell us what you need, and get the best offers from local businesses.";
+  } else if (cleanType === "partner") {
+    if (iconEl) iconEl.innerHTML = ICON_PARTNER_STORE;
+    if (titleEl) titleEl.textContent = "Partner Registration Form";
+    if (subEl) subEl.textContent = "Join the Real Amount network and grow your business.";
+  } else {
+    if (iconEl) iconEl.innerHTML = ICON_DEFAULT;
+    if (titleEl) titleEl.textContent = "Choose your account type";
+    if (subEl) subEl.textContent = "Join the Real Amount network — fill in your details below.";
+  }
+}
+
+function initMobileDrawer() {
+  const menuBtn = document.getElementById("menu-toggle-btn");
+  const drawer = document.getElementById("app-drawer");
+  const backdrop = document.getElementById("drawer-backdrop");
+  const closeBtn = document.getElementById("drawer-close-btn");
+
+  if (!menuBtn || !drawer) return;
+
+  function openDrawer() {
+    drawer.classList.add("open");
+    if (backdrop) backdrop.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  menuBtn.addEventListener("click", openDrawer);
+  if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+  if (backdrop) backdrop.addEventListener("click", closeDrawer);
+}
 
 // ── CANONICAL CATEGORIES FOR DIRECT SELECTION ──
 const CANONICAL_SERVICES = [
@@ -737,10 +816,9 @@ function goToStep1() {
   if (progCircle2) progCircle2.classList.add("active");
   if (progLine1) progLine1.classList.add("filled");
 
-  const mainTitle = document.getElementById("main-form-title");
+  updateFormBannerHeader(accountType);
 
   if (accountType === "Partner") {
-    if (mainTitle) mainTitle.textContent = "Partner Registration Form";
     if (progLabel1) progLabel1.textContent = "Account";
     if (progLabel2) progLabel2.textContent = "Basic Info";
     if (progLabel3) progLabel3.textContent = "Business Details";
@@ -748,7 +826,6 @@ function goToStep1() {
     if (progLine2) progLine2.classList.remove("hidden");
     step1.classList.remove("hidden");
   } else {
-    if (mainTitle) mainTitle.textContent = "Customer Registration Form";
     if (progLabel1) progLabel1.textContent = "Account";
     if (progLabel2) progLabel2.textContent = "Details";
     if (progLabel3) progLabel3.textContent = "Payment";
@@ -765,8 +842,7 @@ function goBackToStep0() {
   step1Customer.classList.add("hidden");
   step0.classList.remove("hidden");
 
-  const mainTitle = document.getElementById("main-form-title");
-  if (mainTitle) mainTitle.textContent = "Choose your account type";
+  updateFormBannerHeader("default");
 
   if (progCircle2) progCircle2.classList.remove("active");
   if (progCircle1) {
@@ -1878,8 +1954,7 @@ function resetForm() {
   if (progLabel2) progLabel2.textContent = "Basic Info";
   if (progLabel3) progLabel3.textContent = "Payment";
 
-  const mainTitle = document.getElementById("main-form-title");
-  if (mainTitle) mainTitle.textContent = "Choose your account type";
+  updateFormBannerHeader("default");
 
   accountType = "";
   selectedBusinessType = "";

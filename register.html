@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Partner Onboarding | Real Amount</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=2.1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -14,25 +14,71 @@
     <!-- ───── HEADER ───── -->
     <header class="site-header">
         <div class="header-inner">
-            <a href="index.html"><img src="assets/logo.png" alt="Real Amount" class="logo" /></a>
-            <div class="header-contact">
-                <a href="tel:+917009095598" class="contact-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path
-                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </svg>
-                    +91 7009095598
-                </a>
-                <a href="mailto:realamountofficial@gmail.com" class="contact-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,13 2,6" />
-                    </svg>
-                    realamountofficial@gmail.com
-                </a>
-            </div>
+            <a href="index.html" class="brand-logo-link" aria-label="Real Amount Home">
+                <img src="assets/logo.png" alt="Real Amount" class="logo" />
+            </a>
+            <button type="button" class="mobile-menu-btn" id="menu-toggle-btn" aria-label="Open Navigation Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
         </div>
     </header>
+
+    <!-- ───── MOBILE SLIDE-OUT DRAWER ───── -->
+    <aside class="mobile-drawer" id="app-drawer" aria-hidden="true">
+        <div class="drawer-header">
+            <img src="assets/logo.png" alt="Real Amount" class="drawer-logo" />
+            <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Close Menu">✕</button>
+        </div>
+        <nav class="drawer-nav">
+            <a href="index.html" class="drawer-link">
+                <span class="drawer-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="register.html?type=customer" class="drawer-link">
+                <span class="drawer-icon">📢</span>
+                <span>Post Your Requirement</span>
+            </a>
+            <a href="register.html?type=partner" class="drawer-link">
+                <span class="drawer-icon">🏪</span>
+                <span>Register Your Business</span>
+            </a>
+            <a href="index.html#contact" class="drawer-link">
+                <span class="drawer-icon">📞</span>
+                <span>Contact Us</span>
+            </a>
+            <a href="https://wa.me/917009095598?text=Hi" target="_blank" rel="noopener" class="drawer-link">
+                <span class="drawer-icon">💬</span>
+                <span>WhatsApp Support</span>
+            </a>
+        </nav>
+        <div class="drawer-footer">
+            <p>Real Amount &bull; Stable Growth | Financial Trust</p>
+        </div>
+    </aside>
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+    <!-- ───── FORM HERO BANNER ───── -->
+    <section class="form-hero-banner" id="form-hero-banner">
+        <div class="form-banner-inner">
+            <div class="form-banner-title-row">
+                <span class="form-banner-icon" id="form-banner-icon">
+                    <svg viewBox="0 0 36 36" class="banner-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 14v5a1 1 0 001 1h4l8 6V7l-8 6H7a1 1 0 00-1 1z" fill="#fef3c7" stroke="#b45309" stroke-width="2.2" stroke-linejoin="round"/>
+                        <path d="M19 10c4 0 8-2.5 10.5-4.5v21C27 24.5 23 22 19 22" fill="#fde68a" stroke="#b45309" stroke-width="2.2" stroke-linejoin="round"/>
+                        <path d="M12 20v5a2 2 0 002 2h1a2 2 0 002-2v-3" stroke="#b45309" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <h1 class="form-banner-title" id="main-form-title">Post Your Requirement</h1>
+            </div>
+            <p class="form-banner-subtitle" id="main-form-subtitle">
+                Tell us what you need, and get the best offers from local businesses.
+            </p>
+        </div>
+    </section>
 
     <!-- ───── MAIN ───── -->
     <main class="main-container">
@@ -54,14 +100,6 @@
                     <span class="step-label" id="prog-label-3">Payment</span>
                 </div>
             </div>
-        </div>
-
-        <!-- Form Title -->
-        <div class="form-title-block">
-            <h1 id="main-form-title">Choose your account type</h1>
-            <p id="main-form-subtitle">
-                Join the Real Amount network — fill in your details below.
-            </p>
         </div>
 
         <!-- ── STEP 0: Account Type ── -->
@@ -825,7 +863,7 @@
         </p>
     </footer>
 
-    <script src="form.js?v=1.3"></script>
+    <script src="form.js?v=2.1"></script>
 </body>
 
 </html>
