@@ -120,10 +120,10 @@ const I18N = {
   }
 };
 
-let currentLang = 'hi'; // Default to Hindi as per mockup headline preference
+let currentLang = 'en'; // Default to English as per user request
 
 function applyLanguage(lang) {
-  currentLang = (lang === 'en') ? 'en' : 'hi';
+  currentLang = (lang === 'hi') ? 'hi' : 'en';
   document.documentElement.setAttribute('lang', currentLang);
 
   // Update Toggle Button Text (Show the OTHER language to switch to)
@@ -162,7 +162,7 @@ function applyLanguage(lang) {
 }
 
 function initLanguageToggle() {
-  const savedLang = localStorage.getItem('real_amount_lang') || 'hi';
+  const savedLang = localStorage.getItem('real_amount_lang') || 'en';
 
   const langBtn = document.getElementById('lang-toggle-btn');
   if (langBtn) {

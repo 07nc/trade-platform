@@ -2115,60 +2115,131 @@ function escapeHtml(str) {
 }
 
 // ═══════════════════════════════════════════════════
-// CATEGORY SEARCH IN CUSTOMER & PARTNER FORMS
+// CATEGORY SEARCH & FILTER IN FORMS (SINGLE UNIFIED INTERFACE)
 // ═══════════════════════════════════════════════════
 
+const CATEGORY_SEARCH_ALIASES = {
+  // Services
+  "Ac Service/Repair": ["ac", "air conditioner", "ac repair", "ac service", "gas charge", "cooling repair"],
+  "Refrigerator Repair": ["fridge", "refrigerator", "freezer", "fridge repair"],
+  "Tv/Led Repair": ["tv", "led", "television", "tv repair", "screen repair"],
+  "Mobile Repair": ["mobile", "phone", "smartphone", "iphone", "android", "screen change"],
+  "Laptop Repair": ["laptop", "computer", "pc", "macbook", "windows repair"],
+  "Plumber": ["plumber", "plumbing", "pipe", "tap", "leakage", "water fitting", "drainage"],
+  "Car Service": ["car service", "car repair", "mechanic", "garage", "car maintenance"],
+  "Two Wheeler Service": ["bike", "motorcycle", "scooter", "scooty", "two wheeler", "bike service"],
+  "Professional Services (CA/Tax Advocate/Doctor)": ["ca", "tax", "gst", "advocate", "lawyer", "doctor", "consultant"],
+  "Insurance(Life/Health/Vehicle)": ["insurance", "policy", "lic", "health insurance", "car insurance"],
+  "Unisex Saloon": ["saloon", "salon", "parlour", "haircut", "spa", "beauty parlour"],
+  "Banking Services": ["bank", "banking", "loan", "personal loan", "home loan", "credit card"],
+  "Auto Dealer": ["auto dealer", "car dealer", "used car", "car bazaar", "dealership"],
+  "Electrician": ["electrician", "electric", "wiring", "fan repair", "short circuit", "switch board"],
+  "Carpenter": ["carpenter", "wood work", "furniture repair", "door repair", "wood"],
+  "Education": ["education", "tuition", "coaching", "school", "classes", "teacher", "tutor"],
+  "Health Care": ["health", "healthcare", "clinic", "hospital", "nursing", "ambulance", "pathology"],
+  "Taxi/Cab Services": ["taxi", "cab", "rental car", "driver", "tour"],
+  "Financial Services": ["finance", "financial", "mutual fund", "sip", "investment", "shares"],
+  "Car Washing": ["car wash", "car cleaning", "detailing", "washing", "foam wash"],
+  "Photographer": ["photographer", "photography", "videography", "photoshoot", "cameraman"],
+  "Courier Services": ["courier", "parcel", "delivery", "speed post", "shipping"],
+  "Banquet Hall": ["banquet", "marriage hall", "party hall", "wedding lawn", "venue"],
+  "Real Estate": ["real estate", "property", "flat", "plot", "rent house", "broker", "dealer"],
+
+  // Products
+  "Air Conditioner": ["ac", "air conditioner", "split ac", "window ac", "cooling"],
+  "Refrigerator": ["fridge", "refrigerator", "deep freezer"],
+  "Led Tv": ["tv", "led", "television", "smart tv", "oled"],
+  "RO": ["ro", "water purifier", "aquaguard", "water filter"],
+  "Inverter": ["inverter", "battery", "ups", "inverter battery"],
+  "Oven/OTG/Induction": ["oven", "otg", "induction", "microwave"],
+  "Cooler": ["cooler", "air cooler", "fan"],
+  "Washing Machine": ["washing machine", "washer", "dryer", "clothes washer"],
+  "Mobile": ["mobile", "phone", "smartphone", "iphone", "android"],
+  "Books and Stationary": ["books", "stationery", "notebook", "pen", "office supplies"],
+  "Kitchen Appliances": ["kitchen appliances", "mixer", "grinder", "juicer", "blender", "chimney"],
+  "Plywood and Hardware": ["plywood", "timber", "hardware", "laminate", "mdf", "board"],
+  "Automotive": ["automotive", "car parts", "bike parts", "auto spares", "vehicle"],
+  "Furniture": ["furniture", "sofa", "bed", "table", "chair", "almirah", "wardrobe"],
+  "Gift Shop": ["gift", "gift shop", "presents", "memento"],
+  "Footwear": ["footwear", "shoes", "sneakers", "slippers", "sandals", "boots"],
+  "Chemist": ["chemist", "pharmacy", "medical store", "medicines", "drugs"],
+  "Building Material": ["building material", "cement", "bricks", "sand", "steel", "iron"],
+  "Agricultural Goods": ["agriculture", "seeds", "fertilizers", "farming", "kisan"],
+  "Event Management": ["event management", "decoration", "party planner", "wedding planner"],
+  "Catering": ["catering", "caterer", "food catering", "halwai"],
+  "Sweet Shop": ["sweet shop", "sweets", "mithai", "bakery", "pastry"],
+  "Sanitary Store": ["sanitary", "sanitaryware", "tiles", "wash basin", "faucets"],
+  "Home Baker": ["home baker", "cake", "baking", "pastries"],
+  "Hardware and Tools": ["hardware", "tools", "drill", "hammer", "wrench"],
+  "Toys/Games": ["toys", "games", "board games", "video games", "kids"],
+  "Flowers and Gifts": ["flowers", "bouquet", "florist", "roses"],
+  "Boutique": ["boutique", "clothes", "clothing", "dresses", "designer wear", "ladies wear"],
+  "Home Decor": ["home decor", "lighting", "paintings", "curtains", "vases"],
+  "Opticals": ["opticals", "glasses", "spectacles", "sunglasses", "frames", "lenses"],
+  "Grocery Store": ["grocery", "kirana", "supermarket", "ration", "daily needs"],
+  "Spare Parts": ["spare parts", "parts", "components", "replacement parts"]
+};
+
+function categoryMatchesQuery(categoryName, query) {
+  if (!query) return true;
+  const q = query.toLowerCase().trim();
+  const nameLower = categoryName.toLowerCase();
+
+  // 1. Direct name match (starts with)
+  if (nameLower.startsWith(q)) return true;
+
+  // 2. Any word in the category name starts with query
+  const words = nameLower.split(/[\s/()\-]+/);
+  if (words.some(w => w.startsWith(q))) return true;
+
+  // 3. Multi-word acronym/initials (e.g. "Air Conditioner" -> "ac")
+  const initials = words.map(w => w[0]).join('');
+  if (initials.startsWith(q)) return true;
+
+  // 4. Aliases (only word-start matching so "pharmacy" never matches "ac"!)
+  const aliases = CATEGORY_SEARCH_ALIASES[categoryName] || [];
+  for (const alias of aliases) {
+    const aLower = alias.toLowerCase();
+    if (aLower.startsWith(q)) return true;
+    const aWords = aLower.split(/[\s/()\-]+/);
+    if (aWords.some(w => w.startsWith(q))) return true;
+  }
+
+  // 5. For longer queries (3+ chars), name contains query
+  if (q.length >= 3 && nameLower.includes(q)) return true;
+
+  return false;
+}
+
 function initFormCategorySearch() {
-  setupCategorySearch({
-    searchBarWrapId: "service-category-search-bar",
+  setupCategoryFilter({
     inputId: "service-category-search-input",
     clearBtnId: "service-search-clear-btn",
-    dropdownId: "service-search-dropdown-results",
     gridId: "service-checkbox-grid",
     categoryType: "service",
-    categories: CANONICAL_SERVICES,
     inputName: "services"
   });
 
-  setupCategorySearch({
-    searchBarWrapId: "product-category-search-bar",
+  setupCategoryFilter({
     inputId: "product-category-search-input",
     clearBtnId: "product-search-clear-btn",
-    dropdownId: "product-search-dropdown-results",
     gridId: "product-checkbox-grid",
     categoryType: "product",
-    categories: CANONICAL_PRODUCTS,
     inputName: "products"
   });
 }
 
-function setupCategorySearch(config) {
-  const searchWrap = document.getElementById(config.searchBarWrapId);
+function setupCategoryFilter(config) {
   const searchInput = document.getElementById(config.inputId);
   const clearBtn = document.getElementById(config.clearBtnId);
-  const dropdown = document.getElementById(config.dropdownId);
   const grid = document.getElementById(config.gridId);
-  if (!searchWrap || !searchInput || !dropdown || !grid) return;
+  if (!searchInput || !grid) return;
 
-  let currentFocusIndex = -1;
-
-  function filterList(query) {
-    if (!query) return [];
-    const q = query.toLowerCase().trim();
-    return config.categories.filter((cat) => {
-      if (cat.name.toLowerCase().includes(q)) return true;
-      if (cat.keywords && cat.keywords.some((k) => k.toLowerCase().includes(q))) return true;
-      return false;
-    });
-  }
-
-  function filterGrid(query) {
+  function applyFilter(query) {
     const q = query.toLowerCase().trim();
     const items = grid.querySelectorAll(".checkbox-item");
-    const matchedCategories = filterList(q);
-    const matchedNames = new Set(matchedCategories.map((c) => c.name.toLowerCase()));
-
     let visibleCount = 0;
+
     items.forEach((item) => {
       const cb = item.querySelector(`input[name="${config.inputName}"]`);
       if (!cb) return;
@@ -2185,11 +2256,7 @@ function setupCategorySearch(config) {
         return;
       }
 
-      const valLower = val.toLowerCase();
-      const matchesDirect = valLower.includes(q);
-      const matchesKeywords = matchedNames.has(valLower);
-
-      if (matchesDirect || matchesKeywords) {
+      if (categoryMatchesQuery(val, q)) {
         item.style.display = "";
         visibleCount++;
       } else {
@@ -2209,72 +2276,6 @@ function setupCategorySearch(config) {
     }
   }
 
-  function showDropdown() {
-    dropdown.classList.remove("hidden");
-    dropdown.style.display = "block";
-  }
-
-  function hideDropdown() {
-    dropdown.classList.add("hidden");
-    dropdown.style.display = "none";
-    currentFocusIndex = -1;
-  }
-
-  function renderDropdown(items) {
-    dropdown.innerHTML = "";
-    currentFocusIndex = -1;
-
-    if (items.length === 0) {
-      dropdown.innerHTML = `
-        <div class="search-no-results">
-          No ${config.categoryType}s found matching "${escapeHtml(searchInput.value)}".<br>
-          <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; display: inline-block;">You can select "Other" below to enter a custom ${config.categoryType}.</span>
-        </div>
-      `;
-      showDropdown();
-      return;
-    }
-
-    items.forEach((item, index) => {
-      const div = document.createElement("div");
-      div.className = "search-result-item";
-      div.setAttribute("data-index", index);
-
-      const typeBadge = config.categoryType === "service" ? "Service" : "Product";
-      const isChecked = isCategoryChecked(config.inputName, item.name);
-
-      div.innerHTML = `
-        <img src="${item.icon}" alt="" onerror="this.onerror=null; this.src='https://img.icons8.com/color/48/maintenance.png';" />
-        <span>${escapeHtml(item.name)}</span>
-        ${isChecked ? '<span class="selected-indicator-pill">✓ Selected</span>' : ''}
-        <span class="search-result-badge">${typeBadge}</span>
-      `;
-
-      div.addEventListener("mousedown", (e) => {
-        e.preventDefault();
-        selectCategoryFromSearch(item.name, config.inputName, grid);
-        searchInput.value = "";
-        if (clearBtn) {
-          clearBtn.classList.add("hidden");
-          clearBtn.style.display = "none";
-        }
-        filterGrid("");
-        hideDropdown();
-      });
-
-      dropdown.appendChild(div);
-    });
-
-    showDropdown();
-  }
-
-  searchInput.addEventListener("focus", () => {
-    const val = searchInput.value.trim();
-    if (val) {
-      renderDropdown(filterList(val));
-    }
-  });
-
   searchInput.addEventListener("input", () => {
     const val = searchInput.value.trim();
     if (clearBtn) {
@@ -2286,14 +2287,7 @@ function setupCategorySearch(config) {
         clearBtn.style.display = "none";
       }
     }
-
-    filterGrid(val);
-
-    if (val) {
-      renderDropdown(filterList(val));
-    } else {
-      hideDropdown();
-    }
+    applyFilter(val);
   });
 
   if (clearBtn) {
@@ -2301,78 +2295,9 @@ function setupCategorySearch(config) {
       searchInput.value = "";
       clearBtn.classList.add("hidden");
       clearBtn.style.display = "none";
-      filterGrid("");
-      hideDropdown();
+      applyFilter("");
       searchInput.focus();
     });
-  }
-
-  document.addEventListener("click", (e) => {
-    if (!searchWrap.contains(e.target) && !dropdown.contains(e.target)) {
-      hideDropdown();
-    }
-  });
-
-  searchInput.addEventListener("keydown", (e) => {
-    const items = dropdown.querySelectorAll(".search-result-item");
-    if (!items.length || dropdown.classList.contains("hidden")) return;
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      currentFocusIndex = (currentFocusIndex + 1) % items.length;
-      updateDropdownHighlight(items, currentFocusIndex);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      currentFocusIndex = (currentFocusIndex - 1 + items.length) % items.length;
-      updateDropdownHighlight(items, currentFocusIndex);
-    } else if (e.key === "Enter") {
-      if (currentFocusIndex >= 0 && items[currentFocusIndex]) {
-        e.preventDefault();
-        items[currentFocusIndex].dispatchEvent(new MouseEvent("mousedown"));
-      }
-    } else if (e.key === "Escape") {
-      hideDropdown();
-    }
-  });
-}
-
-function updateDropdownHighlight(items, focusIndex) {
-  items.forEach((item, idx) => {
-    if (idx === focusIndex) {
-      item.classList.add("highlighted");
-      item.scrollIntoView({ block: "nearest" });
-    } else {
-      item.classList.remove("highlighted");
-    }
-  });
-}
-
-function isCategoryChecked(inputName, categoryName) {
-  const cb = document.querySelector(`input[name="${inputName}"][value="${categoryName}"]`);
-  return cb ? cb.checked : false;
-}
-
-function selectCategoryFromSearch(categoryName, inputName, grid) {
-  const cb = grid.querySelector(`input[name="${inputName}"][value="${categoryName}"]`);
-  if (cb) {
-    cb.checked = true;
-    const parentLabel = cb.closest(".checkbox-item");
-    if (parentLabel) {
-      parentLabel.classList.add("checked");
-      parentLabel.scrollIntoView({ behavior: "smooth", block: "center" });
-
-      parentLabel.classList.remove("just-selected-glow");
-      void parentLabel.offsetWidth; // trigger reflow
-      parentLabel.classList.add("just-selected-glow");
-    }
-
-    clearFieldError(`${inputName}-error`);
-
-    if (inputName === "products" && accountType === "Partner" && typeof renderPartnerCategoryBrandCards === "function") {
-      renderPartnerCategoryBrandCards();
-    }
-
-    showToast(`Selected "${categoryName}"`, "success");
   }
 }
 
