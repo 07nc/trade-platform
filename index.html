@@ -7,7 +7,7 @@
     <title>Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं!</title>
     <meta name="description"
         content="Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं! Connect directly with trusted local shops and service experts for the lowest price." />
-    <link rel="stylesheet" href="home.css?v=2.6" />
+    <link rel="stylesheet" href="home.css?v=2.8" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -103,7 +103,14 @@
                         Guaranteed Best Prices,<br />Just Tell Us What You Need!
                     </h1>
 
-                    <!-- Highlighted Hindi Tagline Badge with Radiant Whiskers -->
+                    <!-- Golden curve swoosh (shown in Hindi mode when headline is in Hindi) -->
+                    <div class="headline-curve-wrap" id="headline-curve-wrap">
+                        <svg class="headline-curve" viewBox="0 0 320 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 14 Q 160 2 314 14" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                        </svg>
+                    </div>
+
+                    <!-- Highlighted Hindi Tagline Badge with Radiant Whiskers (shown in English mode) -->
                     <div class="tagline-highlight-wrapper">
                         <div class="tagline-highlight-badge">
                             <svg class="tagline-sparkle sparkle-left" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -345,7 +352,7 @@
                                     </svg>
                                 </div>
                                 <div class="contact-item-text">
-                                    <span class="contact-item-label" data-i18n="card_call_title">Call Directly</span>
+                                    <span class="contact-item-label" data-i18n="card_call_title">Call Us</span>
                                     <strong class="contact-item-val">+91 7009095598</strong>
                                 </div>
                             </a>
@@ -357,13 +364,13 @@
                                     </svg>
                                 </div>
                                 <div class="contact-item-text">
-                                    <span class="contact-item-label" data-i18n="card_whatsapp_title">Chat on WhatsApp</span>
+                                    <span class="contact-item-label" data-i18n="card_whatsapp_title">WhatsApp</span>
                                     <strong class="contact-item-val">Message Us</strong>
                                 </div>
                             </a>
 
                             <a href="mailto:realamountofficial@gmail.com" class="contact-item-card">
-                                <div class="contact-item-icon">
+                                <div class="contact-item-icon email-icon-box">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                                         <polyline points="22,6 12,13 2,6"></polyline>
@@ -464,7 +471,7 @@
         </a>
     </aside>
 
-    <script src="home.js?v=2.6"></script>
+    <script src="home.js?v=2.8"></script>
 </body>
 
 </html>

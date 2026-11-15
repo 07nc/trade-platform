@@ -46,9 +46,9 @@ const I18N = {
     // Contact Section
     contact_title: "Need Help? Contact Us",
     contact_sub: "Have questions? Reach out — we'd love to hear from you.",
-    card_call_title: "Call Directly",
+    card_call_title: "Call Us",
     card_email_title: "Email Us",
-    card_whatsapp_title: "Chat on WhatsApp",
+    card_whatsapp_title: "WhatsApp",
 
     // Footer & Floating Widget
     footer_copy: "&copy; 2024 Real Amount &bull; All Rights Reserved",
@@ -104,7 +104,7 @@ const I18N = {
     contact_sub: "हम आपको बेस्ट लोकल रेट्स दिलाने के लिए हमेशा तैयार हैं।",
     card_call_title: "कॉल करें",
     card_email_title: "ईमेल करें",
-    card_whatsapp_title: "WhatsApp पर चैट करें",
+    card_whatsapp_title: "WhatsApp",
 
     // Footer & Floating Widget
     footer_copy: "&copy; 2024 Real Amount &bull; सर्वाधिकार सुरक्षित",
