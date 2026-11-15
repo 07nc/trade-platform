@@ -27,14 +27,14 @@ const I18N = {
 
     // Primary Action Buttons
     btn_post_req_title: "Post Your<br />Requirement",
-    btn_post_req_sub: "अपनी ज़रूरत बताएं",
+    btn_post_req_sub: "",
     btn_post_req_title_plain: "Post Requirement",
     btn_reg_biz_title: "Register<br />Your Business",
-    btn_reg_biz_sub: "अपने व्यवसाय को जोड़ें",
+    btn_reg_biz_sub: "",
     btn_reg_biz_title_plain: "Register Business",
 
     // How It Works
-    how_it_works_title: "How It Works? / यह कैसे काम करता है?",
+    how_it_works_title: "How It Works?",
     hiw_step1: "Post<br />Requirement",
     hiw_step2: "Get Best<br />Offers",
     hiw_step3: "Choose &amp;<br />Connect",
@@ -98,13 +98,13 @@ const I18N = {
     btn_reg_biz_title_plain: "अपने व्यवसाय को जोड़ें",
 
     // How It Works
-    how_it_works_title: "यह कैसे काम करता है? / How It Works?",
+    how_it_works_title: "यह कैसे काम करता है?",
     hiw_step1: "अपनी ज़रूरत<br />बताएं",
     hiw_step2: "बेस्ट ऑफर्स<br />पाएं",
     hiw_step3: "पसंद करें और<br />जुड़ें",
 
     // Popular Categories Section
-    popular_categories_title: "Popular Categories / लोकप्रिय कैटेगरी",
+    popular_categories_title: "लोकप्रिय कैटेगरी",
     browse_all_btn: "सभी देखें ▾",
     cat_ac: "एयर कंडीशनर",
     cat_tv: "टेलीविजन",

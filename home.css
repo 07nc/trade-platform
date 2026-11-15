@@ -813,6 +813,16 @@ html[lang="en"] .headline-curve-wrap {
     color: var(--accent);
 }
 
+.action-card-sub:empty,
+html[lang="en"] .action-card-sub {
+    display: none !important;
+}
+
+html[lang="en"] .action-card-req .action-card-title,
+html[lang="en"] .action-card-biz .action-card-title {
+    margin-bottom: 0 !important;
+}
+
 /* 4. VISUALIZATION: "HOW IT WORKS" CARD */
 .how-it-works-section {
     padding: 0 0 3rem;
