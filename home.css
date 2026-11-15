@@ -1159,10 +1159,12 @@ html[lang="hi"] .main-headline {
 .modal-categories-grid {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 1.25rem 1.5rem;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.85rem;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-category-card {
@@ -1176,6 +1178,7 @@ html[lang="hi"] .main-headline {
     text-align: center;
     text-decoration: none;
     color: var(--text-main);
+    min-width: 0;
     transition: all var(--transition);
 }
 
@@ -1196,6 +1199,9 @@ html[lang="hi"] .main-headline {
     font-size: 0.78rem;
     font-weight: 600;
     line-height: 1.25;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1413,5 +1419,56 @@ html[lang="hi"] .main-headline {
     .footer-links-row {
         flex-wrap: wrap;
         justify-content: center;
+    }
+    /* Categories Modal Mobile Optimization */
+    .categories-modal-overlay {
+        padding: 0.75rem;
+    }
+    .categories-modal-card {
+        max-height: 90vh;
+        border-radius: var(--radius-md);
+    }
+    .modal-header {
+        padding: 1rem 1rem 0.65rem;
+    }
+    .modal-title {
+        font-size: 1.15rem;
+    }
+    .modal-desc {
+        font-size: 0.76rem;
+    }
+    .modal-search-bar {
+        padding: 0.65rem 1rem;
+    }
+    .modal-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .modal-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    .modal-tab {
+        padding: 0.65rem 0.65rem;
+        font-size: 0.78rem;
+        flex: 1 0 auto;
+    }
+    .modal-categories-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+        padding: 0.85rem;
+        overflow-x: hidden;
+    }
+    .modal-category-card {
+        padding: 0.75rem 0.45rem;
+        min-width: 0;
+    }
+    .modal-category-card img {
+        width: 32px;
+        height: 32px;
+    }
+    .modal-category-card-name {
+        font-size: 0.76rem;
     }
 }

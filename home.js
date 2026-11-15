@@ -465,7 +465,7 @@ const ALL_CATEGORIES = [
     nameHi: "सैनिटरी व हार्डवेयर",
     type: "product",
     serviceType: "Buy New Product",
-    icon: "https://img.icons8.com/color/48/faucet.png",
+    icon: "https://img.icons8.com/color/48/toilet-bowl.png",
     keywords: ["sanitary", "hardware", "tiles", "bathroom fittings", "pipes", "washbasin", "हार्डवेयर", "सैनिटरी", "टाइल्स"]
   },
   {
@@ -521,7 +521,7 @@ const ALL_CATEGORIES = [
     nameHi: "सीसीटीवी कैमरा व सिक्योरिटी",
     type: "product",
     serviceType: "Buy New Product",
-    icon: "https://img.icons8.com/color/48/security-camera.png",
+    icon: "https://img.icons8.com/color/48/camera.png",
     keywords: ["cctv", "camera", "security camera", "surveillance", "dvr", "cp plus", "hikvision", "सीसीटीवी", "कैमरा"]
   },
   {
@@ -590,7 +590,7 @@ function initCategorySearch() {
 
   function filterCategories(query) {
     if (!query) {
-      return ALL_CATEGORIES.slice(0, 8);
+      return [];
     }
     const q = query.toLowerCase().trim();
     return ALL_CATEGORIES.filter(c => {
@@ -611,7 +611,7 @@ function initCategorySearch() {
     dropdown.style.display = 'none';
   }
 
-  function renderDropdown(items, isDefault = false) {
+  function renderDropdown(items) {
     dropdown.innerHTML = "";
     currentFocusIndex = -1;
 
@@ -622,13 +622,6 @@ function initCategorySearch() {
       dropdown.innerHTML = `<div class="search-no-results">${noResText}</div>`;
       showDropdown();
       return;
-    }
-
-    if (isDefault) {
-      const header = document.createElement('div');
-      header.className = 'search-results-group-title';
-      header.textContent = currentLang === 'hi' ? 'ज्यादा सर्च किए जाने वाले' : 'Popular Searches';
-      dropdown.appendChild(header);
     }
 
     items.forEach((item, index) => {
@@ -643,7 +636,7 @@ function initCategorySearch() {
         : (currentLang === 'hi' ? 'प्रोडक्ट' : 'Product');
 
       a.innerHTML = `
-        <img src="${item.icon}" alt="" />
+        <img src="${item.icon}" alt="" onerror="this.onerror=null; this.src='https://img.icons8.com/color/48/maintenance.png';" />
         <span>${escapeHtml(displayName)}</span>
         <span class="search-result-badge">${typeBadge}</span>
       `;
@@ -661,10 +654,10 @@ function initCategorySearch() {
 
   searchInput.addEventListener('focus', () => {
     const val = searchInput.value.trim();
-    if (!val) {
-      renderDropdown(filterCategories(""), true);
+    if (val) {
+      renderDropdown(filterCategories(val));
     } else {
-      renderDropdown(filterCategories(val), false);
+      hideDropdown();
     }
   });
 
@@ -680,10 +673,10 @@ function initCategorySearch() {
       }
     }
 
-    if (!val) {
-      renderDropdown(filterCategories(""), true);
+    if (val) {
+      renderDropdown(filterCategories(val));
     } else {
-      renderDropdown(filterCategories(val), false);
+      hideDropdown();
     }
   });
 
@@ -692,7 +685,7 @@ function initCategorySearch() {
       searchInput.value = '';
       clearBtn.classList.add('hidden');
       clearBtn.style.display = 'none';
-      renderDropdown(filterCategories(""), true);
+      hideDropdown();
       searchInput.focus();
     });
   }
@@ -738,9 +731,11 @@ function initCategorySearch() {
   }
 
   window.refreshCategorySearch = () => {
-    if (!dropdown.classList.contains('hidden') && dropdown.style.display !== 'none') {
-      const val = searchInput.value.trim();
-      renderDropdown(filterCategories(val), !val);
+    const val = searchInput.value.trim();
+    if (val && !dropdown.classList.contains('hidden') && dropdown.style.display !== 'none') {
+      renderDropdown(filterCategories(val));
+    } else {
+      hideDropdown();
     }
   };
 }
@@ -788,7 +783,7 @@ function initCategoriesModal() {
       a.href = `register.html?type=customer&category=${encodeURIComponent(item.name)}`;
       const displayName = (currentLang === 'hi' && item.nameHi) ? item.nameHi : item.name;
       a.innerHTML = `
-        <img src="${item.icon}" alt="" />
+        <img src="${item.icon}" alt="" onerror="this.onerror=null; this.src='https://img.icons8.com/color/48/maintenance.png';" />
         <span class="modal-category-card-name">${escapeHtml(displayName)}</span>
       `;
       grid.appendChild(a);
@@ -799,6 +794,8 @@ function initCategoriesModal() {
     modal.classList.remove('hidden');
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    grid.scrollTop = 0;
+    grid.scrollLeft = 0;
     activeTab = 'all';
     tabBtns.forEach(b => {
       if (b.getAttribute('data-tab') === 'all') b.classList.add('active');

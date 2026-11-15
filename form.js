@@ -47,6 +47,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ── Auto-handle URL parameters (?type= and ?category=) ──
   handlePresetURLParams();
+
+  // ── Partner Product Brand Cards dynamic update ──
+  document.querySelectorAll('input[name="products"]').forEach((cb) => {
+    cb.addEventListener("change", () => {
+      if (accountType === "Partner" && selectedBusinessType === "Product Sale (Retail)") {
+        renderPartnerCategoryBrandCards();
+      }
+    });
+  });
+
+  const prodOtherInp = document.getElementById("product-other-input");
+  if (prodOtherInp) {
+    prodOtherInp.addEventListener("input", () => {
+      if (accountType === "Partner" && selectedBusinessType === "Product Sale (Retail)") {
+        const otherCb = document.getElementById("product-other");
+        if (otherCb && otherCb.checked) {
+          renderPartnerCategoryBrandCards();
+        }
+      }
+    });
+  }
 });
 
 // ── CANONICAL CATEGORIES FOR DIRECT SELECTION ──
@@ -111,6 +132,219 @@ const CANONICAL_PRODUCTS = [
   { name: "Grocery Store", icon: "https://img.icons8.com/color/48/shopping-cart.png" },
   { name: "Spare Parts", icon: "https://img.icons8.com/color/48/gear.png" }
 ];
+
+// ── POPULAR BRANDS BY PRODUCT CATEGORY (PARTNER ONBOARDING) ──
+const POPULAR_CATEGORY_BRANDS = {
+  "Air Conditioner": ["Voltas", "Daikin", "LG", "Lloyd", "Blue Star", "Hitachi", "Samsung", "Carrier", "Panasonic", "Godrej", "O General", "Haier", "Mitsubishi"],
+  "Refrigerator": ["Samsung", "LG", "Whirlpool", "Haier", "Godrej", "Bosch", "Panasonic", "Voltas Beko", "Kelvinator", "Liebherr"],
+  "Led Tv": ["Sony", "Samsung", "LG", "Mi / Xiaomi", "OnePlus", "TCL", "Panasonic", "Vu", "Realme", "Acer", "Hisense", "Toshiba"],
+  "RO": ["Kent", "Aquaguard", "Pureit", "Livpure", "Havells", "Blue Star", "AO Smith", "Aqua Fresh", "Zero B"],
+  "Inverter": ["Luminous", "Microtek", "Exide", "Amaron", "Livguard", "Su-Kam", "V-Guard", "Okaya"],
+  "Oven/OTG/Induction": ["Bajaj", "Philips", "Prestige", "Morphy Richards", "IFB", "Samsung", "LG", "Pigeon", "Usha"],
+  "Cooler": ["Symphony", "Bajaj", "Crompton", "Kenstar", "Havells", "Orient", "Usha", "Voltas"],
+  "Washing Machine": ["LG", "Samsung", "Whirlpool", "IFB", "Bosch", "Godrej", "Panasonic", "Haier", "Voltas Beko"],
+  "Mobile": ["Apple (iPhone)", "Samsung", "OnePlus", "Xiaomi / Redmi", "Vivo", "Oppo", "Realme", "Motorola", "iQOO", "Nothing", "Poco"],
+  "Books and Stationary": ["Classmate", "Camlin", "Navneet", "Reynolds", "Parker", "Faber-Castell", "Doms", "Luxor", "ITC"],
+  "Kitchen Appliances": ["Prestige", "Bajaj", "Philips", "Hawkins", "Butterfly", "Sujata", "Morphy Richards", "Wonderchef", "Kent", "Milton"],
+  "Plywood and Hardware": ["Century Ply", "Greenply", "Kitply", "Action TESA", "Kajaria", "Godrej Locks", "Dorsët", "Hettich", "Hafele", "Ebco"],
+  "Automotive": ["Maruti Suzuki", "Hyundai", "Tata Motors", "Mahindra", "Honda", "Toyota", "Kia", "Hero", "Bajaj", "TVS", "Royal Enfield"],
+  "Furniture": ["Godrej Interio", "Nilkamal", "Durian", "Wakefit", "Sleepwell", "Featherlite", "Damro", "Zuari"],
+  "Gift Shop": ["Archies", "Miniso", "Hallmark", "Cadbury", "Ferns N Petals"],
+  "Footwear": ["Bata", "Puma", "Nike", "Adidas", "Red Chief", "Campus", "Sparx", "Relaxo", "Action", "Woodland", "Liberty", "Metro"],
+  "Chemist": ["Cipla", "Sun Pharma", "Dr. Reddy's", "Abbott", "Mankind", "Alkem", "Torrent", "Zydus", "Lupin", "Glenmark", "Himalaya", "Dabur"],
+  "Building Material": ["UltraTech Cement", "Ambuja Cement", "ACC", "Tata Tiscon", "Jindal Panther", "Kamdhenu", "Asian Paints", "Berger Paints", "Birla White"],
+  "Agricultural Goods": ["Bayer", "Syngenta", "UPL", "IFFCO", "Mahyco", "Rasi Seeds", "Kaveri Seeds", "Coromandel", "Dhanuka"],
+  "Sweet Shop": ["Haldiram", "Bikanervala", "Chhappan Bhog", "Kwality", "Bikaji"],
+  "Sanitary Store": ["Jaquar", "Hindware", "Cera", "Parryware", "Kohler", "Somany", "Kajaria", "Astral", "Supreme", "Ashirvad"],
+  "Hardware and Tools": ["Bosch", "Stanley", "DeWalt", "Black & Decker", "Taparia", "Makita", "Godrej", "Freemans"],
+  "Toys/Games": ["Lego", "Hot Wheels", "Mattel", "Hasbro", "Funskool", "Nerf", "Barbie", "Fisher-Price"],
+  "Flowers and Gifts": ["Ferns N Petals", "IGP", "Interflora"],
+  "Boutique": ["Manyavar", "Fabindia", "Biba", "W for Woman", "Aurelia", "Raymond"],
+  "Home Decor": ["Asian Paints", "D'Decor", "Bombay Dyeing", "Spaces", "Trident", "Story@Home", "Portico"],
+  "Opticals": ["Ray-Ban", "Lenskart", "Titan Eyeplus", "Fastrack", "Oakley", "Vogue", "Carrera", "Essilor", "Carl Zeiss"],
+  "Grocery Store": ["Tata Sampann", "Fortune", "Aashirvaad", "Amul", "Mother Dairy", "Nestle", "Britannia", "Parle", "MDH", "Catch", "Everest"],
+  "Spare Parts": ["Bosch", "Minda", "Motherson", "Gabriel", "Lucas TVS", "Denso", "Subros", "Brembo", "Valeo"]
+};
+
+const partnerCategoryBrandsState = {};
+
+function sanitizeId(str) {
+  return String(str || "").replace(/[^a-zA-Z0-9_-]/g, "_");
+}
+
+function updateCategoryBrandCountUI(cat) {
+  const countEl = document.getElementById(`brand-count-${sanitizeId(cat)}`);
+  if (!countEl) return;
+  const state = partnerCategoryBrandsState[cat] || { brands: new Set(), custom: "" };
+  const customCount = (state.custom && state.custom.trim())
+    ? state.custom.split(",").map((s) => s.trim()).filter(Boolean).length
+    : 0;
+  const total = (state.brands ? state.brands.size : 0) + customCount;
+  if (total > 0) {
+    countEl.textContent = `${total} brand${total > 1 ? "s" : ""} selected`;
+    countEl.className = "category-brand-count has-brands";
+  } else {
+    countEl.textContent = "0 brands selected";
+    countEl.className = "category-brand-count";
+  }
+}
+
+function renderPartnerCategoryBrandCards() {
+  const container = document.getElementById("partner-brands-cards-container");
+  if (!container) return;
+
+  const checkedCheckboxes = Array.from(document.querySelectorAll('input[name="products"]:checked'));
+
+  if (checkedCheckboxes.length === 0) {
+    container.innerHTML = `
+      <div class="partner-brands-empty">
+        <p>Please select at least one product category above to choose your brands.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Preserve any typed text from existing inputs in the DOM into state before re-rendering
+  container.querySelectorAll(".category-brand-card").forEach((card) => {
+    const cat = card.dataset.category;
+    if (cat) {
+      if (!partnerCategoryBrandsState[cat]) {
+        partnerCategoryBrandsState[cat] = { brands: new Set(), custom: "" };
+      }
+      const input = card.querySelector(".custom-brand-input");
+      if (input) {
+        partnerCategoryBrandsState[cat].custom = input.value;
+      }
+    }
+  });
+
+  const activeCategories = [];
+  checkedCheckboxes.forEach((cb) => {
+    let cat = cb.value;
+    if (cat === "Other") {
+      const otherVal = document.getElementById("product-other-input")?.value?.trim();
+      cat = otherVal ? `Other (${otherVal})` : "Other";
+    }
+    activeCategories.push({ name: cat, rawValue: cb.value });
+  });
+
+  let cardsHtml = "";
+  activeCategories.forEach(({ name, rawValue }) => {
+    if (!partnerCategoryBrandsState[name]) {
+      partnerCategoryBrandsState[name] = { brands: new Set(), custom: "" };
+    }
+    const state = partnerCategoryBrandsState[name];
+    const brandChips = POPULAR_CATEGORY_BRANDS[rawValue] || POPULAR_CATEGORY_BRANDS[name] || [];
+    const iconObj = CANONICAL_PRODUCTS.find((p) => p.name === rawValue || p.name === name);
+    const iconSrc = iconObj ? iconObj.icon : "https://img.icons8.com/color/48/star.png";
+
+    const customCount = (state.custom && state.custom.trim())
+      ? state.custom.split(",").map((s) => s.trim()).filter(Boolean).length
+      : 0;
+    const totalCount = (state.brands ? state.brands.size : 0) + customCount;
+    const countText = totalCount > 0 ? `${totalCount} brand${totalCount > 1 ? "s" : ""} selected` : "0 brands selected";
+    const countClass = totalCount > 0 ? "category-brand-count has-brands" : "category-brand-count";
+
+    let chipsHtml = "";
+    if (brandChips.length > 0) {
+      chipsHtml = brandChips
+        .map((brand) => {
+          const isSel = state.brands && state.brands.has(brand);
+          return `
+          <button type="button" class="brand-chip ${isSel ? "selected" : ""}" data-category="${escapeHtml(name)}" data-brand="${escapeHtml(brand)}">
+            <span class="brand-chip-check">✓</span>
+            <span class="brand-chip-text">${escapeHtml(brand)}</span>
+          </button>
+        `;
+        })
+        .join("");
+    }
+
+    cardsHtml += `
+      <div class="category-brand-card" data-category="${escapeHtml(name)}">
+        <div class="category-brand-card-header">
+          <div class="category-brand-title-wrap">
+            <img src="${iconSrc}" alt="${escapeHtml(name)}" class="category-brand-icon" onerror="this.src='https://img.icons8.com/color/48/star.png'" />
+            <span class="category-brand-name">${escapeHtml(name)}</span>
+          </div>
+          <span class="${countClass}" id="brand-count-${sanitizeId(name)}">${countText}</span>
+        </div>
+        ${chipsHtml ? `<div class="brand-chips-wrap">${chipsHtml}</div>` : ""}
+        <div class="category-brand-custom-wrap">
+          <input type="text" class="custom-brand-input" data-category="${escapeHtml(name)}"
+                 placeholder="Other ${escapeHtml(name)} brands (type &amp; separate with comma)..."
+                 value="${escapeHtml(state.custom || "")}" />
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = cardsHtml;
+
+  // Re-attach event listeners
+  container.querySelectorAll(".brand-chip").forEach((chip) => {
+    chip.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cat = chip.dataset.category;
+      const brand = chip.dataset.brand;
+      if (!partnerCategoryBrandsState[cat]) {
+        partnerCategoryBrandsState[cat] = { brands: new Set(), custom: "" };
+      }
+      if (partnerCategoryBrandsState[cat].brands.has(brand)) {
+        partnerCategoryBrandsState[cat].brands.delete(brand);
+        chip.classList.remove("selected");
+      } else {
+        partnerCategoryBrandsState[cat].brands.add(brand);
+        chip.classList.add("selected");
+      }
+      updateCategoryBrandCountUI(cat);
+    });
+  });
+
+  container.querySelectorAll(".custom-brand-input").forEach((input) => {
+    input.addEventListener("input", () => {
+      const cat = input.dataset.category;
+      if (!partnerCategoryBrandsState[cat]) {
+        partnerCategoryBrandsState[cat] = { brands: new Set(), custom: "" };
+      }
+      partnerCategoryBrandsState[cat].custom = input.value;
+      updateCategoryBrandCountUI(cat);
+    });
+  });
+}
+
+function getPartnerSelectedBrandsSummary() {
+  const parts = [];
+  const checkedBoxes = Array.from(document.querySelectorAll('input[name="products"]:checked'));
+
+  checkedBoxes.forEach((cb) => {
+    let cat = cb.value;
+    if (cat === "Other") {
+      const otherVal = document.getElementById("product-other-input")?.value?.trim();
+      cat = otherVal ? `Other (${otherVal})` : "Other";
+    }
+
+    const state = partnerCategoryBrandsState[cat];
+    if (!state) return;
+
+    const brandList = Array.from(state.brands || []);
+    if (state.custom && state.custom.trim()) {
+      state.custom
+        .split(",")
+        .map((b) => b.trim())
+        .filter(Boolean)
+        .forEach((b) => {
+          if (!brandList.includes(b)) brandList.push(b);
+        });
+    }
+
+    if (brandList.length > 0) {
+      parts.push(`${cat}: ${brandList.join(", ")}`);
+    }
+  });
+
+  return parts.join(" | ");
+}
 
 let preselectedCategoryData = null;
 
@@ -210,6 +444,10 @@ function applyDecidedCategory(item, kind) {
   // 3. Advance to Customer Step 1
   goToStep1();
 
+  // Hide the "What service do you want?" question since category is already selected
+  const custServiceGroup = document.getElementById('customer-service-type-group');
+  if (custServiceGroup) custServiceGroup.style.display = 'none';
+
   // 4. Render Pre-decided Category Banner
   const banner = document.getElementById('selected-category-card');
   const imgEl = document.getElementById('selected-cat-img');
@@ -244,6 +482,20 @@ function clearSelectedCategory() {
   }
 
   preselectedCategoryData = null;
+
+  // Unhide the "What service do you want?" question
+  const custServiceGroup = document.getElementById('customer-service-type-group');
+  if (custServiceGroup) custServiceGroup.style.display = '';
+
+  // Unhide step 2 checkbox grids and notes
+  const prodGrid = document.getElementById('product-checkbox-grid');
+  if (prodGrid) prodGrid.style.display = '';
+  const prodNote = document.getElementById('step-2a-note');
+  if (prodNote) prodNote.style.display = '';
+  const servGrid = document.getElementById('service-checkbox-grid');
+  if (servGrid) servGrid.style.display = '';
+  const servNote = document.getElementById('step-2b-note');
+  if (servNote) servNote.style.display = '';
 
   // Uncheck customerService radios
   document.querySelectorAll('input[name="customerService"]').forEach(r => r.checked = false);
@@ -550,6 +802,20 @@ function goToStep2() {
   if (progLine2) progLine2.classList.add("filled");
 
   // Update UI for Partner
+  const partnerBrandsSec = document.getElementById('partner-brands-section');
+  const generalBrandsWrap = document.getElementById('general-brands-wrapper');
+
+  if (selectedBusinessType === "Product Sale (Retail)") {
+    if (partnerBrandsSec) {
+      partnerBrandsSec.classList.remove('hidden');
+      renderPartnerCategoryBrandCards();
+    }
+    if (generalBrandsWrap) generalBrandsWrap.classList.add('hidden');
+  } else {
+    if (partnerBrandsSec) partnerBrandsSec.classList.add('hidden');
+    if (generalBrandsWrap) generalBrandsWrap.classList.add('hidden');
+  }
+
   const brandsLabel = document.getElementById('brands-label');
   if (brandsLabel) brandsLabel.textContent = 'Please mention the brands you deal in';
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
@@ -584,15 +850,53 @@ function goToStep2Customer() {
   step1Customer.classList.add("hidden");
 
   // Change heading and badge for customer context
-  const heading = document.getElementById('step-2a-heading');
-  if (heading) heading.textContent = 'What product are you interested in?';
-  const badge = document.getElementById('step-2a-badge');
-  if (badge) badge.textContent = 'Select a Product';
-
-  if (selectedCustomerService === "Service/Repair") {
-    step2b.classList.remove("hidden");
+  if (preselectedCategoryData) {
+    const { item, kind } = preselectedCategoryData;
+    if (kind === "product") {
+      const heading = document.getElementById('step-2a-heading');
+      if (heading) heading.textContent = `Requirement Details: ${item.name}`;
+      const badge = document.getElementById('step-2a-badge');
+      if (badge) badge.textContent = 'Selected Product';
+      const grid = document.getElementById('product-checkbox-grid');
+      if (grid) grid.style.display = 'none';
+      const note = document.getElementById('step-2a-note');
+      if (note) note.style.display = 'none';
+      step2a.classList.remove("hidden");
+    } else {
+      const heading = document.getElementById('step-2b-heading');
+      if (heading) heading.textContent = `Service Details: ${item.name}`;
+      const badge = document.getElementById('step-2b-badge');
+      if (badge) badge.textContent = 'Selected Service';
+      const grid = document.getElementById('service-checkbox-grid');
+      if (grid) grid.style.display = 'none';
+      const note = document.getElementById('step-2b-note');
+      if (note) note.style.display = 'none';
+      step2b.classList.remove("hidden");
+    }
   } else {
-    step2a.classList.remove("hidden");
+    const heading = document.getElementById('step-2a-heading');
+    if (heading) heading.textContent = 'What product are you interested in?';
+    const badge = document.getElementById('step-2a-badge');
+    if (badge) badge.textContent = 'Select a Product';
+    const gridA = document.getElementById('product-checkbox-grid');
+    if (gridA) gridA.style.display = '';
+    const noteA = document.getElementById('step-2a-note');
+    if (noteA) noteA.style.display = '';
+
+    const headingB = document.getElementById('step-2b-heading');
+    if (headingB) headingB.textContent = 'What services do you need?';
+    const badgeB = document.getElementById('step-2b-badge');
+    if (badgeB) badgeB.textContent = 'Service Provider';
+    const gridB = document.getElementById('service-checkbox-grid');
+    if (gridB) gridB.style.display = '';
+    const noteB = document.getElementById('step-2b-note');
+    if (noteB) noteB.style.display = '';
+
+    if (selectedCustomerService === "Service/Repair") {
+      step2b.classList.remove("hidden");
+    } else {
+      step2a.classList.remove("hidden");
+    }
   }
 
   // Update progress
@@ -604,6 +908,11 @@ function goToStep2Customer() {
   if (progLine2) progLine2.classList.add("filled");
 
   // Update UI for Customer
+  const partnerBrandsSec = document.getElementById('partner-brands-section');
+  const generalBrandsWrap = document.getElementById('general-brands-wrapper');
+  if (partnerBrandsSec) partnerBrandsSec.classList.add('hidden');
+  if (generalBrandsWrap) generalBrandsWrap.classList.remove('hidden');
+
   const brandsLabel = document.getElementById('brands-label');
   if (brandsLabel) {
     if (selectedCustomerService === "Sell Used Product") {
@@ -661,6 +970,9 @@ function goBack() {
   step2a.classList.add("hidden");
   step2b.classList.add("hidden");
 
+  const partnerBrandsSec = document.getElementById('partner-brands-section');
+  if (partnerBrandsSec) partnerBrandsSec.classList.add('hidden');
+
   // Reset step 2 submit buttons in case they were left in loading state
   ["product-submit-btn", "service-submit-btn"].forEach(id => {
     const btn = document.getElementById(id);
@@ -671,6 +983,10 @@ function goBack() {
     step1.classList.remove("hidden");
   } else {
     step1Customer.classList.remove("hidden");
+    const custServiceGroup = document.getElementById('customer-service-type-group');
+    if (custServiceGroup) {
+      custServiceGroup.style.display = preselectedCategoryData ? 'none' : '';
+    }
   }
 
   // Reset heading and badge back to default
@@ -1167,7 +1483,7 @@ async function submitForm() {
     mobileNumber: document.getElementById("mobile").value.trim(),
     businessType: selectedBusinessType,
     selectedItems: selectedItems,
-    brands: isProduct ? document.getElementById("brands").value.trim() : "",
+    brands: isProduct ? (getPartnerSelectedBrandsSummary() || document.getElementById("brands").value.trim()) : "",
     offerPrice: isProduct ? document.getElementById("offerPriceProduct").value.trim() : "",
     description: isProduct ? document.getElementById("productDescription").value.trim() : document.getElementById("serviceDescription").value.trim(),
   };
