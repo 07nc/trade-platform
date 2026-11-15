@@ -7,7 +7,7 @@
     <title>Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं!</title>
     <meta name="description"
         content="Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं! Connect directly with trusted local shops and service experts for the lowest price." />
-    <link rel="stylesheet" href="home.css?v=2.9" />
+    <link rel="stylesheet" href="home.css?v=3.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -103,13 +103,6 @@
                         Guaranteed Best Prices,<br />Just Tell Us What You Need!
                     </h1>
 
-                    <!-- Golden curve swoosh (shown in Hindi mode when headline is in Hindi) -->
-                    <div class="headline-curve-wrap" id="headline-curve-wrap">
-                        <svg class="headline-curve" viewBox="0 0 320 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 14 Q 160 2 314 14" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" fill="none" />
-                        </svg>
-                    </div>
-
                     <!-- Highlighted Hindi Tagline Badge with Radiant Whiskers (shown in English mode) -->
                     <div class="tagline-highlight-wrapper">
                         <div class="tagline-highlight-badge">
@@ -126,6 +119,64 @@
                             </svg>
                         </div>
                     </div>
+
+                    <!-- Golden curve swoosh (shown above trust badges in both English & Hindi) -->
+                    <div class="headline-curve-wrap" id="headline-curve-wrap">
+                        <svg class="headline-curve" viewBox="0 0 360 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 16 Q 180 3 350 16" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                        </svg>
+                    </div>
+
+                    <!-- Trust Highlights Bar (3 Badges with Dividers) -->
+                    <div class="hero-trust-bar" id="hero-trust-bar">
+                        <!-- 1. Verified Local Shops -->
+                        <div class="trust-badge-item">
+                            <div class="trust-badge-icon-wrap" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <path d="m9 12 2 2 4-4"></path>
+                                </svg>
+                            </div>
+                            <div class="trust-badge-text">
+                                <span data-i18n="trust_b1_l1">Verified</span>
+                                <span data-i18n="trust_b1_l2">Local Shops</span>
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="trust-badge-divider" aria-hidden="true"></div>
+
+                        <!-- 2. Best Price Offers -->
+                        <div class="trust-badge-item">
+                            <div class="trust-badge-icon-wrap" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                    <circle cx="7" cy="7" r="1.5"></circle>
+                                </svg>
+                            </div>
+                            <div class="trust-badge-text">
+                                <span data-i18n="trust_b2_l1">Best Price</span>
+                                <span data-i18n="trust_b2_l2">Offers</span>
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="trust-badge-divider" aria-hidden="true"></div>
+
+                        <!-- 3. Secure & Trusted -->
+                        <div class="trust-badge-item">
+                            <div class="trust-badge-icon-wrap" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <path d="m9 12 2 2 4-4"></path>
+                                </svg>
+                            </div>
+                            <div class="trust-badge-text">
+                                <span data-i18n="trust_b3_l1">Secure &amp;</span>
+                                <span data-i18n="trust_b3_l2">Trusted</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -138,7 +189,7 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                         <input type="text" id="category-search-input"
-                            placeholder="क्या खोज रहे हैं? (जैसे AC, TV, Repair, Plumbing)"
+                            placeholder="What are you looking for? (e.g. AC, TV, Repair...)"
                             data-i18n-placeholder="search_placeholder" autocomplete="off" spellcheck="false" />
                         <button type="button" class="search-clear-btn hidden" id="search-clear-btn" aria-label="Clear Search" style="display: none;">✕</button>
                         <!-- Live Search Dropdown -->
@@ -471,7 +522,7 @@
         </a>
     </aside>
 
-    <script src="home.js?v=2.9"></script>
+    <script src="home.js?v=3.0"></script>
 </body>
 
 </html>

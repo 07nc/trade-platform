@@ -411,11 +411,16 @@ html[lang="hi"] .main-headline {
 .headline-curve-wrap {
     display: flex;
     justify-content: center;
-    margin-top: 0.5rem;
+    margin-top: 0.95rem;
+}
+
+html[lang="hi"] .headline-curve-wrap {
+    margin-top: 0.65rem;
 }
 
 .headline-curve {
-    width: 320px;
+    width: 360px;
+    max-width: 86%;
     height: 20px;
 }
 
@@ -427,7 +432,7 @@ html[lang="hi"] .main-headline {
 }
 
 /* Visibility based on Language: */
-/* In Hindi mode: Show curve, HIDE highlighted Hindi pill (headline is already Hindi) */
+/* In Hindi mode: Show curve & trust badges, HIDE highlighted Hindi pill (headline is already Hindi) */
 html[lang="hi"] .tagline-highlight-wrapper {
     display: none !important;
 }
@@ -435,12 +440,12 @@ html[lang="hi"] .headline-curve-wrap {
     display: flex;
 }
 
-/* In English mode: SHOW highlighted Hindi pill, HIDE curve */
+/* In English mode: SHOW highlighted Hindi pill, AND ALSO SHOW curve & trust badges */
 html[lang="en"] .tagline-highlight-wrapper {
     display: flex;
 }
 html[lang="en"] .headline-curve-wrap {
-    display: none !important;
+    display: flex;
 }
 
 .tagline-highlight-badge {
@@ -488,9 +493,85 @@ html[lang="en"] .headline-curve-wrap {
     color: #081829;
 }
 
+/* Trust Highlights Bar (3 Badges) */
+.hero-trust-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 540px;
+    margin: 1.15rem auto 0;
+    padding: 0 0.5rem;
+}
+
+.trust-badge-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    user-select: none;
+}
+
+.trust-badge-icon-wrap {
+    width: 52px;
+    height: 38px;
+    border-radius: 9999px;
+    background-color: #fef7e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c98808;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.trust-badge-item:hover .trust-badge-icon-wrap {
+    transform: scale(1.06);
+}
+
+.trust-badge-icon-wrap svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.trust-badge-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.55rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+}
+
+.trust-badge-divider {
+    width: 1px;
+    height: 36px;
+    background-color: rgba(0, 0, 0, 0.12);
+    margin: 0 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Dark Mode Overrides for Trust Highlights Bar */
+[data-theme="dark"] .trust-badge-icon-wrap {
+    background-color: rgba(245, 158, 11, 0.18);
+    color: #f59e0b;
+}
+
+[data-theme="dark"] .trust-badge-divider {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .trust-badge-text {
+    color: var(--text-main);
+}
+
 /* 2. SEARCH BAR SECTION */
 .search-section {
-    padding: 1.25rem 0 2rem;
+    padding: 1.15rem 0 2rem;
 }
 
 .search-bar-wrap {
@@ -1410,6 +1491,32 @@ html[lang="en"] .headline-curve-wrap {
         white-space: normal;
         text-align: center;
     }
+    .headline-curve-wrap {
+        margin-top: 0.7rem;
+    }
+    .headline-curve {
+        width: 300px;
+    }
+    .hero-trust-bar {
+        max-width: 440px;
+        margin-top: 0.85rem;
+    }
+    .trust-badge-icon-wrap {
+        width: 46px;
+        height: 34px;
+    }
+    .trust-badge-icon-wrap svg {
+        width: 19px;
+        height: 19px;
+    }
+    .trust-badge-text {
+        font-size: 0.76rem;
+        margin-top: 0.4rem;
+    }
+    .trust-badge-divider {
+        height: 28px;
+        margin: 0 0.35rem;
+    }
     .search-section {
         padding: 0.75rem 0 1.25rem;
     }
@@ -1470,6 +1577,26 @@ html[lang="en"] .headline-curve-wrap {
     .categories-8-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 0.5rem;
+    }
+    .hero-trust-bar {
+        max-width: 100%;
+        padding: 0 0.25rem;
+    }
+    .trust-badge-icon-wrap {
+        width: 42px;
+        height: 32px;
+    }
+    .trust-badge-icon-wrap svg {
+        width: 17px;
+        height: 17px;
+    }
+    .trust-badge-text {
+        font-size: 0.72rem;
+        margin-top: 0.35rem;
+    }
+    .trust-badge-divider {
+        height: 26px;
+        margin: 0 0.2rem;
     }
     .cat-tile {
         padding: 0.75rem 0.25rem;

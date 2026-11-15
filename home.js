@@ -15,7 +15,15 @@ const I18N = {
 
     // Main Headline & Search
     main_headline: "Guaranteed Best Prices,<br />Just Tell Us What You Need!",
-    search_placeholder: "What are you looking for? (e.g. AC, TV, Repair, Plumbing)",
+    search_placeholder: "What are you looking for? (e.g. AC, TV, Repair...)",
+
+    // Trust Badges
+    trust_b1_l1: "Verified",
+    trust_b1_l2: "Local Shops",
+    trust_b2_l1: "Best Price",
+    trust_b2_l2: "Offers",
+    trust_b3_l1: "Secure &amp;",
+    trust_b3_l2: "Trusted",
 
     // Primary Action Buttons
     btn_post_req_title: "Post Your<br />Requirement",
@@ -71,7 +79,15 @@ const I18N = {
 
     // Main Headline & Search (Exact user requirement)
     main_headline: "सही दाम की गारंटी,<br />बस अपनी ज़रूरत बताएं!",
-    search_placeholder: "क्या खोज रहे हैं? (जैसे AC, TV, Repair, Plumbing)",
+    search_placeholder: "क्या खोज रहे हैं? (जैसे AC, TV, Repair, Plumber...)",
+
+    // Trust Badges
+    trust_b1_l1: "वेरिफाइड",
+    trust_b1_l2: "लोकल दुकानें",
+    trust_b2_l1: "बेस्ट प्राइस",
+    trust_b2_l2: "ऑफ़र्स",
+    trust_b3_l1: "सुरक्षित और",
+    trust_b3_l2: "भरोसेमंद",
 
     // Primary Action Buttons
     btn_post_req_title: "अपनी ज़रूरत<br />बताएं",
