@@ -37,8 +37,27 @@
 
     <!-- ───── MAIN ───── -->
     <main class="main-container">
-        <!-- Progress Indicator -->
-        <div class="progress-wrapper" id="progress-wrapper">
+        <!-- Admin Navigation Tabs -->
+        <div class="admin-nav-tabs" style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem;">
+            <a href="create-quote.html" class="admin-nav-tab active" style="padding: 0.6rem 1.25rem; border-radius: 8px; font-size: 0.92rem; font-weight: 600; text-decoration: none; background: var(--primary); color: #fff; border: 1px solid var(--primary); display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                Customer Quotes
+            </a>
+            <a href="create-service-pay.html" class="admin-nav-tab" style="padding: 0.6rem 1.25rem; border-radius: 8px; font-size: 0.92rem; font-weight: 600; text-decoration: none; color: var(--text-muted); background: #ffffff; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                Service Category Payment Link
+            </a>
+        </div>
+
+        <!-- Progress Indicator (Hidden) -->
+        <div class="progress-wrapper hidden" id="progress-wrapper" style="display: none !important;">
             <div class="progress-track">
                 <div class="progress-step" id="prog-step-0">
                     <div class="step-circle active" id="prog-circle-0">
@@ -100,7 +119,6 @@
         <!-- ── STEP 1: Customer Details ── -->
         <div class="form-card hidden" id="step-1">
             <div class="card-header">
-                <span class="card-badge">Step 1 of 2</span>
                 <h2>Customer Details</h2>
                 <p class="required-note">
                     <span class="asterisk">*</span> indicates required field

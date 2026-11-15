@@ -45,19 +45,224 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRadioCardHighlight();
   setupLiveValidation();
 
-  // ── Auto-skip step-0 if ?type= is in the URL ──
+  // ── Auto-handle URL parameters (?type= and ?category=) ──
+  handlePresetURLParams();
+});
+
+// ── CANONICAL CATEGORIES FOR DIRECT SELECTION ──
+const CANONICAL_SERVICES = [
+  { name: "Ac Service/Repair", icon: "https://img.icons8.com/color/48/air-conditioner.png" },
+  { name: "Refrigerator Repair", icon: "https://img.icons8.com/color/48/fridge.png" },
+  { name: "Tv/Led Repair", icon: "https://img.icons8.com/color/48/tv.png" },
+  { name: "Mobile Repair", icon: "https://img.icons8.com/color/48/smartphone.png" },
+  { name: "Laptop Repair", icon: "https://img.icons8.com/color/48/laptop.png" },
+  { name: "Plumber", icon: "https://img.icons8.com/color/48/plumbing.png" },
+  { name: "Car Service", icon: "https://img.icons8.com/color/48/car-service.png" },
+  { name: "Two Wheeler Service", icon: "https://img.icons8.com/color/48/motorcycle.png" },
+  { name: "Professional Services (CA/Tax Advocate/Doctor)", icon: "https://img.icons8.com/color/48/briefcase.png" },
+  { name: "Insurance(Life/Health/Vehicle)", icon: "https://img.icons8.com/color/48/shield.png" },
+  { name: "Unisex Saloon", icon: "https://img.icons8.com/color/48/barbershop.png" },
+  { name: "Banking Services", icon: "https://img.icons8.com/color/48/bank.png" },
+  { name: "Auto Dealer", icon: "https://img.icons8.com/color/48/steering-wheel.png" },
+  { name: "Electrician", icon: "https://img.icons8.com/color/48/lightning-bolt.png" },
+  { name: "Carpenter", icon: "https://img.icons8.com/color/48/saw.png" },
+  { name: "Education", icon: "https://img.icons8.com/color/48/graduation-cap.png" },
+  { name: "Health Care", icon: "https://img.icons8.com/color/48/hospital.png" },
+  { name: "Taxi/Cab Services", icon: "https://img.icons8.com/color/48/taxi.png" },
+  { name: "Financial Services", icon: "https://img.icons8.com/color/48/money.png" },
+  { name: "Car Washing", icon: "https://img.icons8.com/color/48/car-service.png" },
+  { name: "Photographer", icon: "https://img.icons8.com/color/48/camera.png" },
+  { name: "Courier Services", icon: "https://img.icons8.com/color/48/truck.png" },
+  { name: "Banquet Hall", icon: "https://img.icons8.com/color/48/city-buildings.png" },
+  { name: "Real Estate", icon: "https://img.icons8.com/color/48/home.png" }
+];
+
+const CANONICAL_PRODUCTS = [
+  { name: "Air Conditioner", icon: "https://img.icons8.com/color/48/air-conditioner.png" },
+  { name: "Refrigerator", icon: "https://img.icons8.com/color/48/fridge.png" },
+  { name: "Led Tv", icon: "https://img.icons8.com/color/48/tv.png" },
+  { name: "RO", icon: "https://img.icons8.com/color/48/bottle-of-water.png" },
+  { name: "Inverter", icon: "https://img.icons8.com/color/48/car-battery.png" },
+  { name: "Oven/OTG/Induction", icon: "https://img.icons8.com/color/48/cooker.png" },
+  { name: "Cooler", icon: "https://img.icons8.com/color/48/fan.png" },
+  { name: "Washing Machine", icon: "https://img.icons8.com/color/48/washing-machine.png" },
+  { name: "Mobile", icon: "https://img.icons8.com/color/48/smartphone.png" },
+  { name: "Books and Stationary", icon: "https://img.icons8.com/color/48/books.png" },
+  { name: "Kitchen Appliances", icon: "https://img.icons8.com/color/48/kettle.png" },
+  { name: "Plywood and Hardware", icon: "https://img.icons8.com/color/48/wood.png" },
+  { name: "Automotive", icon: "https://img.icons8.com/color/48/car.png" },
+  { name: "Furniture", icon: "https://img.icons8.com/color/48/sofa.png" },
+  { name: "Gift Shop", icon: "https://img.icons8.com/color/48/gift.png" },
+  { name: "Footwear", icon: "https://img.icons8.com/color/48/trainers.png" },
+  { name: "Chemist", icon: "https://img.icons8.com/color/48/pills.png" },
+  { name: "Building Material", icon: "https://img.icons8.com/color/48/brick-wall.png" },
+  { name: "Agricultural Goods", icon: "https://img.icons8.com/color/48/wheat.png" },
+  { name: "Event Management", icon: "https://img.icons8.com/color/48/party-baloons.png" },
+  { name: "Catering", icon: "https://img.icons8.com/color/48/food.png" },
+  { name: "Sweet Shop", icon: "https://img.icons8.com/color/48/cupcake.png" },
+  { name: "Sanitary Store", icon: "https://img.icons8.com/color/48/toilet-bowl.png" },
+  { name: "Home Baker", icon: "https://img.icons8.com/color/48/cake.png" },
+  { name: "Hardware and Tools", icon: "https://img.icons8.com/color/48/maintenance.png" },
+  { name: "Toys/Games", icon: "https://img.icons8.com/color/48/controller.png" },
+  { name: "Flowers and Gifts", icon: "https://img.icons8.com/color/48/rose.png" },
+  { name: "Boutique", icon: "https://img.icons8.com/color/48/womens-shirt.png" },
+  { name: "Home Decor", icon: "https://img.icons8.com/color/48/lamp.png" },
+  { name: "Opticals", icon: "https://img.icons8.com/color/48/glasses.png" },
+  { name: "Grocery Store", icon: "https://img.icons8.com/color/48/shopping-cart.png" },
+  { name: "Spare Parts", icon: "https://img.icons8.com/color/48/gear.png" }
+];
+
+let preselectedCategoryData = null;
+
+function handlePresetURLParams() {
   const urlParams = new URLSearchParams(window.location.search);
   const presetType = urlParams.get('type');
+  const presetCategory = urlParams.get('category') || urlParams.get('cat') || urlParams.get('serviceName');
+
+  if (presetCategory) {
+    // If category is provided, account type is Customer and category is pre-decided
+    const catClean = presetCategory.trim().toLowerCase();
+
+    // Check in services first
+    const matchedService = CANONICAL_SERVICES.find(s => s.name.toLowerCase() === catClean || s.name.toLowerCase().includes(catClean) || catClean.includes(s.name.toLowerCase()));
+
+    // Check in products
+    const matchedProduct = CANONICAL_PRODUCTS.find(p => p.name.toLowerCase() === catClean || p.name.toLowerCase().includes(catClean) || catClean.includes(p.name.toLowerCase()));
+
+    if (matchedService) {
+      applyDecidedCategory(matchedService, "service");
+      return;
+    } else if (matchedProduct) {
+      applyDecidedCategory(matchedProduct, "product");
+      return;
+    } else {
+      // Fallback: match by partial word
+      const anyService = CANONICAL_SERVICES.find(s => s.name.toLowerCase().split(/[\s/]+/).some(w => catClean.includes(w) && w.length > 2));
+      if (anyService) {
+        applyDecidedCategory(anyService, "service");
+        return;
+      }
+      const anyProduct = CANONICAL_PRODUCTS.find(p => p.name.toLowerCase().split(/[\s/]+/).some(w => catClean.includes(w) && w.length > 2));
+      if (anyProduct) {
+        applyDecidedCategory(anyProduct, "product");
+        return;
+      }
+    }
+  }
+
+  // Regular preset type handling
   if (presetType === 'partner') {
-    document.getElementById('at-partner').checked = true;
-    document.getElementById('radio-card-partner').classList.add('selected');
+    const atP = document.getElementById('at-partner');
+    if (atP) atP.checked = true;
+    const cardP = document.getElementById('radio-card-partner');
+    if (cardP) cardP.classList.add('selected');
     goToStep1();
   } else if (presetType === 'customer') {
-    document.getElementById('at-customer').checked = true;
-    document.getElementById('radio-card-customer').classList.add('selected');
+    const atC = document.getElementById('at-customer');
+    if (atC) atC.checked = true;
+    const cardC = document.getElementById('radio-card-customer');
+    if (cardC) cardC.classList.add('selected');
     goToStep1();
   }
-});
+}
+
+function applyDecidedCategory(item, kind) {
+  preselectedCategoryData = { item, kind };
+
+  // 1. Set account type to Customer
+  const atC = document.getElementById('at-customer');
+  if (atC) atC.checked = true;
+  const cardC = document.getElementById('radio-card-customer');
+  if (cardC) cardC.classList.add('selected');
+
+  // 2. Set service type and pre-check checkbox
+  if (kind === "service") {
+    selectedCustomerService = "Service/Repair";
+    const radioS = document.getElementById('cs-service-repair');
+    if (radioS) radioS.checked = true;
+    const cardS = document.getElementById('radio-card-service-repair');
+    if (cardS) cardS.classList.add('selected');
+
+    // Pre-check the service checkbox in Step 2B
+    const cb = document.querySelector(`input[name="services"][value="${item.name}"]`);
+    if (cb) {
+      cb.checked = true;
+      const parentLabel = cb.closest('.checkbox-item');
+      if (parentLabel) parentLabel.classList.add('checked');
+    }
+  } else {
+    // Product
+    selectedCustomerService = "Buy New Product";
+    const radioB = document.getElementById('cs-buy-new');
+    if (radioB) radioB.checked = true;
+    const cardB = document.getElementById('radio-card-buy-new');
+    if (cardB) cardB.classList.add('selected');
+
+    // Pre-check the product checkbox in Step 2A
+    const cb = document.querySelector(`input[name="products"][value="${item.name}"]`);
+    if (cb) {
+      cb.checked = true;
+      const parentLabel = cb.closest('.checkbox-item');
+      if (parentLabel) parentLabel.classList.add('checked');
+    }
+  }
+
+  // 3. Advance to Customer Step 1
+  goToStep1();
+
+  // 4. Render Pre-decided Category Banner
+  const banner = document.getElementById('selected-category-card');
+  const imgEl = document.getElementById('selected-cat-img');
+  const pillEl = document.getElementById('selected-cat-type-pill');
+  const titleEl = document.getElementById('selected-cat-name-display');
+
+  if (banner && imgEl && pillEl && titleEl) {
+    imgEl.src = item.icon;
+    pillEl.textContent = kind === "service" ? "Service / Repair" : "Product";
+    titleEl.textContent = item.name;
+    banner.classList.remove('hidden');
+  }
+
+  // Update WhatsApp 1-Click link with specific category
+  const waQuickBtn = document.getElementById('customer-wa-quick-btn');
+  if (waQuickBtn) {
+    const text = encodeURIComponent(`Hi Real Amount, I need ${item.name} near my area. Please share the best local quotes.`);
+    waQuickBtn.href = `https://wa.me/917009095598?text=${text}`;
+  }
+}
+
+function clearSelectedCategory() {
+  if (preselectedCategoryData) {
+    const { item, kind } = preselectedCategoryData;
+    const groupName = kind === "service" ? "services" : "products";
+    const cb = document.querySelector(`input[name="${groupName}"][value="${item.name}"]`);
+    if (cb) {
+      cb.checked = false;
+      const parentLabel = cb.closest('.checkbox-item');
+      if (parentLabel) parentLabel.classList.remove('checked');
+    }
+  }
+
+  preselectedCategoryData = null;
+
+  // Uncheck customerService radios
+  document.querySelectorAll('input[name="customerService"]').forEach(r => r.checked = false);
+  ["radio-card-buy-new", "radio-card-service-repair", "radio-card-buy-used", "radio-card-sell-used"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+
+  const banner = document.getElementById('selected-category-card');
+  if (banner) banner.classList.add('hidden');
+
+  const waQuickBtn = document.getElementById('customer-wa-quick-btn');
+  if (waQuickBtn) {
+    const text = encodeURIComponent(`Hi Real Amount, I want to request the a local quote. Details: `);
+    waQuickBtn.href = `https://wa.me/917009095598?text=${text}`;
+  }
+
+  showToast("Category cleared. Please choose your service type below.", "info");
+}
 
 // ── Live radio card visual ──
 function setupRadioCardHighlight() {
@@ -110,7 +315,7 @@ function setupRadioCardHighlight() {
   });
 }
 
-// ── Clear error on input ──
+// ── Clear error on input & advance only on blur ──
 function setupLiveValidation() {
   [
     "email", "businessName", "workplaceAddress", "contactPerson", "mobile",
@@ -118,11 +323,15 @@ function setupLiveValidation() {
   ].forEach((id) => {
     const el = document.getElementById(id);
     if (!el) return;
+
+    // Clear error while typing (never auto-advance on keystroke)
     el.addEventListener("input", () => {
       el.classList.remove("error");
       clearFieldError(`${id}-error`);
+    });
 
-      // Auto-advance
+    // Advance only when clicking out of the textbox (blur) after typing the full value
+    el.addEventListener("blur", () => {
       if (accountType === "Partner" && isStep1ValidSilent()) {
         goToStep2();
       } else if (accountType === "Customer" && isStep1CustomerValidSilent()) {
@@ -168,7 +377,7 @@ function setupOtherCheckbox(checkboxId, wrapId, inputId) {
 function setupNoneCheckbox(noneId, groupName) {
   const noneBox = document.getElementById(noneId);
   if (!noneBox) return; // Add null check in case the element doesn't exist
-  
+
   const allBoxes = document.querySelectorAll(`input[name="${groupName}"]`);
 
   noneBox.addEventListener("change", () => {
@@ -269,28 +478,30 @@ function goToStep1() {
 
   step0.classList.add("hidden");
 
-  progCircle1.classList.remove("active");
-  progCircle1.classList.add("completed");
-  progCircle2.classList.add("active");
-  progLine1.classList.add("filled");
+  if (progCircle1) {
+    progCircle1.classList.remove("active");
+    progCircle1.classList.add("completed");
+  }
+  if (progCircle2) progCircle2.classList.add("active");
+  if (progLine1) progLine1.classList.add("filled");
 
   const mainTitle = document.getElementById("main-form-title");
 
   if (accountType === "Partner") {
     if (mainTitle) mainTitle.textContent = "Partner Registration Form";
-    progLabel1.textContent = "Account";
-    progLabel2.textContent = "Basic Info";
-    progLabel3.textContent = "Business Details";
-    progStep3.classList.remove("hidden");
-    progLine2.classList.remove("hidden");
+    if (progLabel1) progLabel1.textContent = "Account";
+    if (progLabel2) progLabel2.textContent = "Basic Info";
+    if (progLabel3) progLabel3.textContent = "Business Details";
+    if (progStep3) progStep3.classList.remove("hidden");
+    if (progLine2) progLine2.classList.remove("hidden");
     step1.classList.remove("hidden");
   } else {
     if (mainTitle) mainTitle.textContent = "Customer Registration Form";
-    progLabel1.textContent = "Account";
-    progLabel2.textContent = "Details";
-    progLabel3.textContent = "Payment";
-    progLine2.classList.remove("hidden");
-    progStep3.classList.remove("hidden");
+    if (progLabel1) progLabel1.textContent = "Account";
+    if (progLabel2) progLabel2.textContent = "Details";
+    if (progLabel3) progLabel3.textContent = "Payment";
+    if (progLine2) progLine2.classList.remove("hidden");
+    if (progStep3) progStep3.classList.remove("hidden");
     step1Customer.classList.remove("hidden");
   }
 
@@ -305,15 +516,18 @@ function goBackToStep0() {
   const mainTitle = document.getElementById("main-form-title");
   if (mainTitle) mainTitle.textContent = "Choose your account type";
 
-  progCircle2.classList.remove("active");
-  progCircle1.classList.remove("completed");
-  progCircle1.classList.add("active");
-  progLine1.classList.remove("filled");
+  if (progCircle2) progCircle2.classList.remove("active");
+  if (progCircle1) {
+    progCircle1.classList.remove("completed");
+    progCircle1.classList.add("active");
+  }
+  if (progLine1) progLine1.classList.remove("filled");
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function goToStep2() {
+  if (step1 && step1.classList.contains("hidden")) return;
   if (!validateStep1()) return;
 
   const businessType = document.querySelector('input[name="businessType"]:checked');
@@ -328,17 +542,19 @@ function goToStep2() {
   }
 
   // Update progress
-  progCircle2.classList.remove("active");
-  progCircle2.classList.add("completed");
-  progCircle3.classList.add("active");
-  progLine2.classList.add("filled");
+  if (progCircle2) {
+    progCircle2.classList.remove("active");
+    progCircle2.classList.add("completed");
+  }
+  if (progCircle3) progCircle3.classList.add("active");
+  if (progLine2) progLine2.classList.add("filled");
 
   // Update UI for Partner
   const brandsLabel = document.getElementById('brands-label');
   if (brandsLabel) brandsLabel.textContent = 'Please mention the brands you deal in';
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
   if (offerPriceProduct) offerPriceProduct.style.display = 'none';
-  
+
 
   const productDesc = document.getElementById('product-description-wrapper');
   if (productDesc) productDesc.style.display = 'block';
@@ -359,6 +575,7 @@ function goToStep2() {
 }
 
 function goToStep2Customer() {
+  if (step1Customer && step1Customer.classList.contains("hidden")) return;
   if (!validateStep1Customer()) return;
 
   const custService = document.querySelector('input[name="customerService"]:checked');
@@ -379,10 +596,12 @@ function goToStep2Customer() {
   }
 
   // Update progress
-  progCircle2.classList.remove("active");
-  progCircle2.classList.add("completed");
-  progCircle3.classList.add("active");
-  progLine2.classList.add("filled");
+  if (progCircle2) {
+    progCircle2.classList.remove("active");
+    progCircle2.classList.add("completed");
+  }
+  if (progCircle3) progCircle3.classList.add("active");
+  if (progLine2) progLine2.classList.add("filled");
 
   // Update UI for Customer
   const brandsLabel = document.getElementById('brands-label');
@@ -402,12 +621,12 @@ function goToStep2Customer() {
       offerPriceProductLabel.innerHTML = 'Price offered to you <span class="asterisk">*</span>';
     }
   }
-  
-  
+
+
 
   const offerPriceProduct = document.getElementById('offer-price-product-wrapper');
   if (offerPriceProduct) offerPriceProduct.style.display = 'block';
-  
+
 
   const productDesc = document.getElementById('product-description-wrapper');
   if (productDesc) productDesc.style.display = 'block';
@@ -418,7 +637,7 @@ function goToStep2Customer() {
 
   const productUploadLabel = document.getElementById('product-upload-label');
   if (productUploadLabel) productUploadLabel.textContent = 'Upload a photo, if relevant';
-  
+
   const serviceUploadLabel = document.getElementById('service-upload-label');
   if (serviceUploadLabel) {
     if (selectedCustomerService === "Service/Repair") {
@@ -460,10 +679,12 @@ function goBack() {
   const badge = document.getElementById('step-2a-badge');
   if (badge) badge.textContent = 'Product Sale (Retail)';
 
-  progCircle3.classList.remove("active");
-  progCircle2.classList.remove("completed");
-  progCircle2.classList.add("active");
-  progLine2.classList.remove("filled");
+  if (progCircle3) progCircle3.classList.remove("active");
+  if (progCircle2) {
+    progCircle2.classList.remove("completed");
+    progCircle2.classList.add("active");
+  }
+  if (progLine2) progLine2.classList.remove("filled");
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -485,13 +706,13 @@ async function handleStep2Submit(type) {
     const mobile = document.getElementById("customerMobile").value.trim();
     isRegisteredMerchant = false;
 
-    
+
     isFreeService = (selectedCustomerService === "Service/Repair");
 
     currentPaymentAmount = 50;
     if (type === "product") {
-        const price = parseFloat(document.getElementById("offerPriceProduct").value) || 0;
-        currentPaymentAmount = Math.max(10, Math.min(50, Math.round(price * 0.025)));
+      const price = parseFloat(document.getElementById("offerPriceProduct").value) || 0;
+      currentPaymentAmount = Math.max(10, Math.min(50, Math.round(price * 0.025)));
     }
 
 
@@ -499,7 +720,7 @@ async function handleStep2Submit(type) {
       // It's a completely free service for everyone
       const paymentBox = document.querySelector("#step-3-customer .payment-box");
       const submitBtn = document.getElementById("customer-submit-btn");
-      
+
       if (paymentBox) {
         paymentBox.innerHTML = `
           <div style="margin-bottom: 1rem;">
@@ -525,26 +746,26 @@ async function handleStep2Submit(type) {
       if (submitBtn) {
         submitBtn.innerHTML = "Submit Request";
       }
-      
+
     } else {
       // Normal flow (Merchant check or Paid)
       try {
         const res = await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify({ action: "check_merchant", mobile: mobile }),
-      });
-      const text = await res.text();
-      const result = JSON.parse(text);
-      
-      const paymentBox = document.querySelector("#step-3-customer .payment-box");
-      const submitBtn = document.getElementById("customer-submit-btn");
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({ action: "check_merchant", mobile: mobile }),
+        });
+        const text = await res.text();
+        const result = JSON.parse(text);
 
-      if (result.success && result.isMerchant) {
-        if (result.hasFreeQuota) {
-          isRegisteredMerchant = true; // Use free bypass
-          if (paymentBox) {
-            paymentBox.innerHTML = `
+        const paymentBox = document.querySelector("#step-3-customer .payment-box");
+        const submitBtn = document.getElementById("customer-submit-btn");
+
+        if (result.success && result.isMerchant) {
+          if (result.hasFreeQuota) {
+            isRegisteredMerchant = true; // Use free bypass
+            if (paymentBox) {
+              paymentBox.innerHTML = `
               <div style="margin-bottom: 1rem;">
                 <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#16a34a" stroke-width="2">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -581,14 +802,14 @@ async function handleStep2Submit(type) {
                 As a valued partner, you can submit up to 5 free requests per month. No payment is required for this transaction.
               </div>
             `;
-          }
-          if (submitBtn) {
-            submitBtn.innerHTML = "Verify OTP & Submit";
-          }
-        } else {
-          isRegisteredMerchant = false; // Must pay!
-          if (paymentBox) {
-            paymentBox.innerHTML = `
+            }
+            if (submitBtn) {
+              submitBtn.innerHTML = "Verify OTP & Submit";
+            }
+          } else {
+            isRegisteredMerchant = false; // Must pay!
+            if (paymentBox) {
+              paymentBox.innerHTML = `
               <div style="margin-bottom: 1rem;">
                 <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#eab308" stroke-width="2">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -608,16 +829,16 @@ async function handleStep2Submit(type) {
               </div>
               <p style="color: var(--text-muted); font-size: 0.85rem;">One-time platform service fee</p>
             `;
+            }
+            if (submitBtn) {
+              submitBtn.innerHTML = `Pay ₹${currentPaymentAmount} & Submit`;
+            }
           }
-          if (submitBtn) {
-            submitBtn.innerHTML = `Pay ₹${currentPaymentAmount} & Submit`;
-          }
-        }
-      } else {
-        // Not a merchant, standard payment UI applies automatically (already in HTML)
-        isRegisteredMerchant = false;
-        // reset to default if they went back and changed mobile
-        if (paymentBox) {
+        } else {
+          // Not a merchant, standard payment UI applies automatically (already in HTML)
+          isRegisteredMerchant = false;
+          // reset to default if they went back and changed mobile
+          if (paymentBox) {
             paymentBox.innerHTML = `
               <div style="margin-bottom: 1rem;">
                   <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--primary)" stroke-width="2">
@@ -641,15 +862,15 @@ async function handleStep2Submit(type) {
                   Your payment is processed securely through Razorpay. Real Amount does not store your payment details.
               </div>
             `;
-        }
-        if (submitBtn) {
+          }
+          if (submitBtn) {
             submitBtn.innerHTML = `Pay ₹${currentPaymentAmount} & Submit`;
+          }
         }
+      } catch (err) {
+        console.error("Merchant check failed:", err);
+        isRegisteredMerchant = false;
       }
-    } catch (err) {
-      console.error("Merchant check failed:", err);
-      isRegisteredMerchant = false;
-    }
     }
 
     // Reset submit button state before showing step 3
@@ -833,7 +1054,7 @@ function validateStep2(type) {
       scrollToField("services-error");
       return false;
     }
-    
+
   }
 
   return true;
@@ -935,9 +1156,9 @@ async function submitForm() {
   });
 
   const payload = {
-      accountType: accountType,
-      merchantBypass: isRegisteredMerchant,
-      freeServiceBypass: isFreeService,
+    accountType: accountType,
+    merchantBypass: isRegisteredMerchant,
+    freeServiceBypass: isFreeService,
     email: document.getElementById("email").value.trim(),
     businessName: document.getElementById("businessName").value.trim(),
     workplaceAddress: document.getElementById("workplaceAddress").value.trim(),
@@ -1032,9 +1253,9 @@ async function submitCustomerForm() {
   });
 
   const payload = {
-      accountType: accountType,
-      merchantBypass: isRegisteredMerchant,
-      freeServiceBypass: isFreeService,
+    accountType: accountType,
+    merchantBypass: isRegisteredMerchant,
+    freeServiceBypass: isFreeService,
     customerName: document.getElementById("customerName").value.trim(),
     customerMobile: document.getElementById("customerMobile").value.trim(),
     customerAddress: document.getElementById("customerAddress").value.trim(),
@@ -1242,8 +1463,10 @@ function showSuccessScreen(payload, referenceId) {
   step2b.classList.add("hidden");
 
   // Keep progress bar at 3 steps completed
-  progCircle3.classList.remove("active");
-  progCircle3.classList.add("completed");
+  if (progCircle3) {
+    progCircle3.classList.remove("active");
+    progCircle3.classList.add("completed");
+  }
 
   const meta = document.getElementById("success-meta");
   if (meta) {
@@ -1266,8 +1489,10 @@ function showSuccessScreenCustomer(payload, referenceId) {
   successScreen.classList.remove("hidden");
 
   // Keep progress bar at 3 steps completed
-  progCircle3.classList.remove("active");
-  progCircle3.classList.add("completed");
+  if (progCircle3) {
+    progCircle3.classList.remove("active");
+    progCircle3.classList.add("completed");
+  }
 
   const meta = document.getElementById("success-meta");
   const tags = [
@@ -1327,15 +1552,15 @@ function resetForm() {
     if (el) el.classList.remove("selected");
   });
 
-  progCircle1.className = "step-circle active";
-  progCircle2.className = "step-circle";
-  progCircle3.className = "step-circle";
-  progLine1.classList.remove("filled");
-  progLine2.classList.remove("filled");
+  if (progCircle1) progCircle1.className = "step-circle active";
+  if (progCircle2) progCircle2.className = "step-circle";
+  if (progCircle3) progCircle3.className = "step-circle";
+  if (progLine1) progLine1.classList.remove("filled");
+  if (progLine2) progLine2.classList.remove("filled");
 
-  progLabel1.textContent = "Account Type";
-  progLabel2.textContent = "Basic Info";
-  progLabel3.textContent = "Payment";
+  if (progLabel1) progLabel1.textContent = "Account Type";
+  if (progLabel2) progLabel2.textContent = "Basic Info";
+  if (progLabel3) progLabel3.textContent = "Payment";
 
   const mainTitle = document.getElementById("main-form-title");
   if (mainTitle) mainTitle.textContent = "Choose your account type";

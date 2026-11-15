@@ -48,9 +48,12 @@ function verifyPasswordAndGoToStep1() {
   document.getElementById("step-0").classList.add("hidden");
   document.getElementById("step-1").classList.remove("hidden");
   
-  document.getElementById("prog-circle-0").innerHTML = "✓";
-  document.getElementById("prog-circle-1").classList.add("active");
-  document.getElementById("prog-line-0").classList.add("active");
+  const p0 = document.getElementById("prog-circle-0");
+  const p1 = document.getElementById("prog-circle-1");
+  const l0 = document.getElementById("prog-line-0");
+  if (p0) p0.innerHTML = "✓";
+  if (p1) p1.classList.add("active");
+  if (l0) l0.classList.add("active");
 
   // Setup radio highlights, mobile format, single selects, other inputs
   setupQuoteRadios();
@@ -77,9 +80,12 @@ function goToStep2() {
     document.getElementById("step-2a").classList.remove("hidden");
   }
 
-  document.getElementById("prog-circle-1").innerHTML = "✓";
-  document.getElementById("prog-circle-2").classList.add("active");
-  document.getElementById("prog-line-1").classList.add("active");
+  const p1 = document.getElementById("prog-circle-1");
+  const p2 = document.getElementById("prog-circle-2");
+  const l1 = document.getElementById("prog-line-1");
+  if (p1) p1.innerHTML = "✓";
+  if (p2) p2.classList.add("active");
+  if (l1) l1.classList.add("active");
   
   window.scrollTo(0, 0);
 }
@@ -89,9 +95,12 @@ function goBackToStep1() {
   document.getElementById("step-2b").classList.add("hidden");
   document.getElementById("step-1").classList.remove("hidden");
 
-  document.getElementById("prog-circle-1").innerHTML = "1";
-  document.getElementById("prog-circle-2").classList.remove("active");
-  document.getElementById("prog-line-1").classList.remove("active");
+  const p1 = document.getElementById("prog-circle-1");
+  const p2 = document.getElementById("prog-circle-2");
+  const l1 = document.getElementById("prog-line-1");
+  if (p1) p1.innerHTML = "1";
+  if (p2) p2.classList.remove("active");
+  if (l1) l1.classList.remove("active");
   
   window.scrollTo(0, 0);
 }

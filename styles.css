@@ -139,10 +139,10 @@ body {
 }
 
 /* ═══════════════════════════════
-   PROGRESS INDICATOR
+   PROGRESS INDICATOR (Hidden on all forms)
 ═══════════════════════════════ */
 .progress-wrapper {
-    margin-bottom: 1.5rem;
+    display: none !important;
 }
 
 .progress-track {
@@ -523,6 +523,20 @@ textarea {
     font-size: 0.77rem;
     color: var(--text-muted);
     line-height: 1.4;
+}
+
+.radio-badge-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #16a34a;
+    background: rgba(37, 211, 102, 0.12);
+    border: 1px solid rgba(37, 211, 102, 0.35);
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-top: 4px;
 }
 
 .radio-card:hover .radio-card-inner {
@@ -1216,3 +1230,216 @@ textarea {
 .radio-card input:checked + .radio-card-inner .color-icon-large {
     transform: scale(1.1) translateY(-4px);
 }
+
+/* ═══════════════════════════════
+   PRE-SELECTED CATEGORY BANNER
+═══════════════════════════════ */
+.selected-category-card {
+    background: linear-gradient(135deg, rgba(201, 168, 76, 0.12) 0%, rgba(26, 60, 94, 0.05) 100%);
+    border: 1.5px solid rgba(201, 168, 76, 0.4);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.35rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: 0 4px 16px rgba(26, 60, 94, 0.05);
+}
+
+.selected-category-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.selected-category-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+}
+
+.selected-category-icon-box img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.selected-category-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.selected-category-pill {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    background: rgba(201, 168, 76, 0.25);
+    padding: 0.15rem 0.55rem;
+    border-radius: 20px;
+}
+
+.selected-category-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+}
+
+.change-category-btn {
+    background: #fff;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition);
+}
+
+.change-category-btn:hover {
+    color: var(--error);
+    border-color: var(--error);
+    background: var(--error-bg);
+}
+
+@media (max-width: 520px) {
+    .selected-category-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    .change-category-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ── 1-Click WhatsApp Shortcut for Customer Form ── */
+.whatsapp-quick-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, rgba(22, 163, 74, 0.04) 100%);
+    border: 1.5px solid rgba(37, 211, 102, 0.35);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin: 0.5rem 1.5rem 1.25rem;
+}
+
+.whatsapp-quick-card .wq-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 12px rgba(37, 211, 102, 0.35);
+}
+
+.whatsapp-quick-card .wq-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.whatsapp-quick-card .wq-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.whatsapp-quick-card .wq-body strong {
+    display: block;
+    color: #111827;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+}
+
+.whatsapp-quick-card .wq-body p {
+    color: #4b5563;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.whatsapp-quick-card .wq-button {
+    background: #25d366;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.6rem 1.15rem;
+    border-radius: 100px;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.whatsapp-quick-card .wq-button:hover {
+    background: #20ba5a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.45);
+}
+
+.form-or-divider {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 1.5rem 1.25rem;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.form-or-divider::before,
+.form-or-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.form-or-divider span {
+    padding: 0 1rem;
+}
+
+@media (max-width: 600px) {
+    .whatsapp-quick-card {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 0.5rem 1rem 1rem;
+        text-align: center;
+    }
+    .whatsapp-quick-card .wq-icon {
+        margin: 0 auto;
+    }
+    .whatsapp-quick-card .wq-button {
+        justify-content: center;
+        width: 100%;
+    }
+    .form-or-divider {
+        margin: 0.5rem 1rem 1rem;
+    }
+}
+

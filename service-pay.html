@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Payment Bill — Real Amount</title>
+    <meta name="description" content="Pay for customer service and repairs directly via Google Pay or UPI on Real Amount." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ── Specific Styles for Service Bill Payment ── */
+        .bill-wrapper {
+            max-width: 600px;
+            margin: 1.5rem auto 3rem;
+            padding: 0 1rem;
+        }
+
+        .bill-card {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 12px 40px rgba(26, 60, 94, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bill-header {
+            background: linear-gradient(135deg, #1a3c5e 0%, #112840 100%);
+            color: #ffffff;
+            padding: 1.75rem 1.75rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .bill-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #c9a84c, #e8c96e, #c9a84c);
+        }
+
+        .bill-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(201, 168, 76, 0.18);
+            border: 1px solid rgba(201, 168, 76, 0.4);
+            color: #e8c96e;
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e8c96e;
+            box-shadow: 0 0 0 rgba(232, 201, 110, 0.4);
+            animation: pulse-ring 1.8s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(232, 201, 110, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(232, 201, 110, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(232, 201, 110, 0); }
+        }
+
+        .bill-title {
+            font-family: 'Outfit', 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 0.35rem;
+            letter-spacing: -0.02em;
+        }
+
+        .bill-subtitle {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.88rem;
+            margin: 0;
+        }
+
+        /* ── Summary & Breakdown ── */
+        .bill-body {
+            padding: 1.5rem 1.75rem;
+        }
+
+        .bill-info-grid {
+            display: grid;
+            gap: 0.75rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .bill-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.92rem;
+        }
+
+        .bill-info-row:not(:last-child) {
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 0.75rem;
+        }
+
+        .bill-info-label {
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bill-info-value {
+            color: var(--text);
+            font-weight: 700;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .app-no-chip {
+            background: #eef2f7;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.88rem;
+            color: var(--primary);
+            border: 1px solid #d8e0eb;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .app-no-chip:hover {
+            background: #e2e8f0;
+            border-color: var(--primary);
+        }
+
+        .qty-badge {
+            display: inline-block;
+            background: rgba(26, 60, 94, 0.1);
+            color: var(--primary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        /* ── Services Item Highlight ── */
+        .service-highlight-box {
+            background: linear-gradient(135deg, rgba(201, 168, 76, 0.08) 0%, rgba(26, 60, 94, 0.04) 100%);
+            border: 1.5px solid rgba(201, 168, 76, 0.35);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .service-icon-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+        }
+
+        .service-icon-circle img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+        }
+
+        .service-title-wrap {
+            flex: 1;
+        }
+
+        .service-name {
+            font-family: 'Outfit', 'Inter', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 0.2rem;
+        }
+
+        .service-submeta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* ── Total Amount Card ── */
+        .bill-total-card {
+            background: linear-gradient(135deg, #fdf8ec 0%, #fffbf0 100%);
+            border: 2px solid var(--accent);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(201, 168, 76, 0.12);
+        }
+
+        .bill-total-label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .bill-total-amount {
+            font-family: 'Outfit', 'Inter', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .bill-total-amount span.rupee-symbol {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .bill-total-note {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        /* ── Payment Action Buttons ── */
+        .payment-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        /* ── Payment Action Button ── */
+        .payment-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .pay-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 1.1rem 1.75rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 16px rgba(26, 60, 94, 0.25);
+            text-decoration: none;
+        }
+
+        .pay-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 60, 94, 0.35);
+        }
+
+        .pay-btn:active {
+            transform: translateY(0);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .razorpay-badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-top: 0.25rem;
+        }
+
+        .rzp-shield-icon {
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ── Success Screen ── */
+        .bill-success-card {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .success-tick-circle {
+            width: 72px;
+            height: 72px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #16a34a;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.2);
+        }
+
+        .bill-footer-trust {
+            padding: 1.25rem 1.75rem;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .bill-wrapper {
+                margin: 0.75rem auto 2rem;
+                padding: 0 0.65rem;
+            }
+            .bill-header {
+                padding: 1.25rem 1rem 1.1rem;
+            }
+            .bill-body {
+                padding: 1.1rem 1rem;
+            }
+            .bill-title {
+                font-size: 1.3rem;
+            }
+            .bill-total-amount {
+                font-size: 1.95rem;
+            }
+            .btn-gpay {
+                padding: 0.95rem 1.25rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ───── HEADER ───── -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" aria-label="Real Amount Home">
+                <img src="assets/logo.png" alt="Real Amount Logo" class="logo" />
+            </a>
+            <div class="header-contact">
+                <a href="tel:+917009095598" class="contact-item" id="header-phone-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    +91 7009095598
+                </a>
+                <a href="mailto:realamountofficial@gmail.com" class="contact-item" id="header-email-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                    realamountofficial@gmail.com
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ───── MAIN CONTAINER ───── -->
+    <main class="main-container">
+        <div class="bill-wrapper">
+            <div class="bill-card" id="bill-card">
+                <!-- Header -->
+                <div class="bill-header">
+                    <div class="bill-badge-pill">
+                        <span class="pulse-dot"></span>
+                        <span id="bill-status-badge">Payment Pending</span>
+                    </div>
+                    <h1 class="bill-title" id="page-main-heading">Service Payment Bill</h1>
+                    <p class="bill-subtitle" id="page-sub-heading">Real Amount &bull; Official Partner Service Settlement</p>
+                </div>
+
+                <!-- Normal Invoice View -->
+                <div class="bill-body" id="bill-body">
+                    <!-- Service Highlight Box -->
+                    <div class="service-highlight-box">
+                        <div class="service-icon-circle" id="service-icon-wrap">
+                            <img src="https://img.icons8.com/color/48/air-conditioner.png" alt="Service Icon" id="service-img" />
+                        </div>
+                        <div class="service-title-wrap">
+                            <h2 class="service-name" id="display-service-name">AC Service / Repair</h2>
+                            <p class="service-submeta">
+                                Category: <strong id="display-category-label">Home Appliance Service</strong>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Details Grid -->
+                    <div class="bill-info-grid">
+                        <!-- Numbers of Services -->
+                        <div class="bill-info-row">
+                            <span class="bill-info-label">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <polyline points="17 11 19 13 23 9"></polyline>
+                                </svg>
+                                <span id="label-qty-text">Numbers of AC Services</span>
+                            </span>
+                            <span class="bill-info-value">
+                                <span class="qty-badge" id="display-service-qty">1 Service</span>
+                            </span>
+                        </div>
+
+                        <!-- Application Number -->
+                        <div class="bill-info-row">
+                            <span class="bill-info-label">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                Application Number
+                            </span>
+                            <span class="bill-info-value">
+                                <button class="app-no-chip" id="copy-app-no-btn" onclick="copyAppNumber()" title="Click to copy Application Number">
+                                    <span id="display-app-no">RA-SRV-202410-001</span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </span>
+                        </div>
+
+                        <!-- Date Generated -->
+                        <div class="bill-info-row">
+                            <span class="bill-info-label">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                Date Generated
+                            </span>
+                            <span class="bill-info-value" id="display-date-generated">11 Oct 2026</span>
+                        </div>
+
+                        <!-- Shopkeeper / Partner (Conditional) -->
+                        <div class="bill-info-row" id="row-shopkeeper">
+                            <span class="bill-info-label">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                                Partner / Shopkeeper
+                            </span>
+                            <span class="bill-info-value" id="display-shopkeeper-name">Verified Partner</span>
+                        </div>
+
+                        <!-- Customer / Note (Conditional) -->
+                        <div class="bill-info-row hidden" id="row-note">
+                            <span class="bill-info-label">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="4" y1="9" x2="20" y2="9"></line>
+                                    <line x1="4" y1="15" x2="20" y2="15"></line>
+                                    <line x1="10" y1="3" x2="8" y2="21"></line>
+                                    <line x1="16" y1="3" x2="14" y2="21"></line>
+                                </svg>
+                                Service Remarks
+                            </span>
+                            <span class="bill-info-value" id="display-service-note">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Total Amount Card -->
+                    <div class="bill-total-card">
+                        <div class="bill-total-label">Total Payable Amount</div>
+                        <div class="bill-total-amount">
+                            <span class="rupee-symbol">₹</span>
+                            <span id="display-total-amount">500</span>
+                        </div>
+                        <div class="bill-total-note">Instant Online Payment &bull; Real Amount Partner Settlement</div>
+                    </div>
+
+                    <!-- Payment Action Section -->
+                    <div class="payment-actions">
+                        <button class="pay-btn" id="pay-btn" onclick="payWithRazorpay()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span id="pay-btn-text">Pay ₹<span id="btn-pay-amount">500</span> &amp; Confirm</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+
+                        <div class="razorpay-badge-row">
+                            <span class="rzp-shield-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                                </svg>
+                            </span>
+                            <span>Secured by <strong>Razorpay</strong> &bull; UPI, Cards, NetBanking</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Success / Paid Screen ── -->
+                <div class="bill-success-card hidden" id="bill-success-screen">
+                    <div class="success-tick-circle">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h2 style="color: var(--primary); font-size: 1.4rem; margin-bottom: 0.35rem;">Payment Successful!</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+                        The service payment has been confirmed. Thank you for your partnership with Real Amount.
+                    </p>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; max-width: 320px; margin: 0 auto 1.5rem; text-align: left;">
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Application Reference:</div>
+                        <div style="font-size: 1.05rem; font-weight: 700; color: var(--primary); font-family: monospace;" id="success-ref-no">—</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Amount Settled:</div>
+                        <div style="font-size: 1.15rem; font-weight: 800; color: #16a34a;" id="success-amount-display">₹500</div>
+                    </div>
+                    <a href="index.html" class="btn btn-primary" style="display: inline-block; padding: 0.75rem 2rem; border-radius: 10px; text-decoration: none;">
+                        Back to Real Amount Home
+                    </a>
+                </div>
+
+                <!-- Footer Trust Badges -->
+                <div class="bill-footer-trust">
+                    <div class="trust-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        NPCI UPI Secured
+                    </div>
+                    <div class="trust-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Instant Receipt
+                    </div>
+                    <div class="trust-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        Official Real Amount
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ───── FOOTER ───── -->
+    <footer class="site-footer">
+        <p>&copy; 2024 Real Amount &bull; Stable Growth | Financial Trust</p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast"></div>
+
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="service-pay.js?v=2"></script>
+</body>
+
+</html>

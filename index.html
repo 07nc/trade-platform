@@ -1,596 +1,466 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Real Amount</title>
+    <title>Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं!</title>
     <meta name="description"
-        content="Real Amount — Partner with us or explore our premium product and service offerings." />
-    <link rel="stylesheet" href="home.css" />
+        content="Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं! Connect directly with trusted local shops and service experts for the lowest price." />
+    <link rel="stylesheet" href="home.css?v=2.3" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
 </head>
 
 <body>
-    <!-- ═══════════ NAVIGATION ═══════════ -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-inner">
-            <a href="index.html" class="nav-brand">
-                <img src="assets/logo.png" alt="Real Amount" class="nav-logo" />
-            </a>
-            <div class="nav-links" id="nav-links">
-                <a href="#hero" class="nav-link active">Home</a>
-                <a href="#services" class="nav-link">Services</a>
-                <a href="#about" class="nav-link">About Us</a>
-                <a href="#contact" class="nav-link">Contact Us</a>
-                <a href="register.html" class="nav-cta">Get Started</a>
-            </div>
-            <div class="nav-mobile-actions">
-                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-                    <span></span><span></span><span></span>
+    <div class="site-wrapper">
+
+        <!-- ═══════════ HEADER (FULL WIDTH) ═══════════ -->
+        <header class="site-header">
+            <div class="header-container">
+                <!-- Mobile Drawer Toggle -->
+                <button type="button" class="mobile-menu-btn" id="menu-toggle-btn" aria-label="Open Navigation Menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
                 </button>
-            </div>
-        </div>
-    </nav>
 
-    <!-- ═══════════ HERO ═══════════ -->
-    <section class="hero" id="hero">
-        <div class="hero-bg">
-            <img src="assets/hero-bg.png" alt="" class="hero-bg-img" />
-            <div class="hero-overlay"></div>
-        </div>
-        <div class="hero-content">
-            <div class="hero-welcome-wrap">
-                <span class="welcome-text">WELCOME TO</span>
-                <span class="welcome-line"></span>
-            </div>
-
-            <h1 class="hero-title">Real Amount</h1>
-            <p class="hero-tagline">Best Prices. Local Shops. Real Deals.</p>
-            <div class="hero-separator"></div>
-
-            <p class="hero-subtitle">
-                Get the <strong>best prices</strong> on products &amp; repairs near you. Real Amount connects
-                customers directly with local shops &dash; fast, easy, and reliable.
-            </p>
-
-
-            <div class="hero-action-buttons">
-                <a href="register.html?type=partner" class="action-btn partner-btn">
-                    <div class="icon-left">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M20 8v6M23 11h-6" />
-                        </svg>
-                    </div>
-                    <div class="btn-text">
-                        <span class="btn-title">Become a Partner</span>
-                        <span class="btn-sub">Grow your business with us</span>
-                    </div>
-                    <div class="icon-right">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                            <polyline points="12 5 19 12 12 19" />
-                        </svg>
-                    </div>
+                <!-- Brand Logo (Unchanged) -->
+                <a href="index.html" class="brand-logo-link" aria-label="Real Amount Home">
+                    <img src="assets/logo.png" alt="Real Amount" class="brand-logo-img" />
                 </a>
-                <a href="register.html?type=customer" class="action-btn customer-btn">
-                    <div class="icon-left">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </div>
-                    <div class="btn-text">
-                        <span class="btn-title">I'm a Customer</span>
-                        <span class="btn-sub">Explore products &amp; services</span>
-                    </div>
-                    <div class="icon-right">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                            <polyline points="12 5 19 12 12 19" />
-                        </svg>
-                    </div>
-                </a>
-            </div>
 
-            <div class="save-contact-banner">
-                <div class="banner-content">
-                    <a href="tel:+917009095598" class="banner-icon" style="text-decoration: none;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path
-                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z">
-                            </path>
+                <!-- Desktop Navigation Links -->
+                <nav class="desktop-nav-links" id="desktop-nav-links">
+                    <a href="index.html" class="desktop-nav-link active" data-i18n="nav_home">Home</a>
+                    <a href="register.html?type=customer" class="desktop-nav-link" data-i18n="btn_post_req_title_plain">Post Requirement</a>
+                    <a href="register.html?type=partner" class="desktop-nav-link" data-i18n="btn_reg_biz_title_plain">Register Business</a>
+                    <a href="#contact" class="desktop-nav-link" data-i18n="nav_contact">Contact Us</a>
+                </nav>
+
+                <!-- Actions Group: Theme Toggle, Language Toggle, WhatsApp -->
+                <div class="header-actions-group">
+                    <!-- Light / Dark Navy Theme Toggle -->
+                    <button type="button" class="action-pill-btn theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Light/Dark Theme" title="Toggle Theme">
+                        <span class="theme-icon" id="theme-toggle-icon">🌙</span>
+                    </button>
+
+                    <!-- Language Toggle Button (EN / HI) -->
+                    <button type="button" class="action-pill-btn lang-toggle-btn" id="lang-toggle-btn" aria-label="Change Language" title="Toggle English/Hindi">
+                        <span class="lang-icon">🌐</span>
+                        <span class="lang-text" id="lang-toggle-text">हिन्दी</span>
+                    </button>
+
+                    <!-- Header WhatsApp Button -->
+                    <a href="https://wa.me/917009095598?text=Hi" target="_blank" rel="noopener" class="header-wa-link" title="Chat on WhatsApp" aria-label="Chat on WhatsApp">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                        </svg>
+                        <span class="desktop-wa-text" data-i18n="nav_whatsapp">WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- ───── MOBILE SLIDE-OUT DRAWER ───── -->
+        <aside class="mobile-drawer" id="app-drawer" aria-hidden="true">
+            <div class="drawer-header">
+                <img src="assets/logo.png" alt="Real Amount" class="drawer-logo" />
+                <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Close Menu">✕</button>
+            </div>
+            <nav class="drawer-nav">
+                <a href="index.html" class="drawer-link active">
+                    <span class="drawer-icon">🏠</span>
+                    <span data-i18n="nav_home">Home</span>
+                </a>
+                <a href="register.html?type=customer" class="drawer-link">
+                    <span class="drawer-icon">📝</span>
+                    <span data-i18n="btn_post_req_title_plain">Post Your Requirement</span>
+                </a>
+                <a href="register.html?type=partner" class="drawer-link">
+                    <span class="drawer-icon">🏪</span>
+                    <span data-i18n="btn_reg_biz_title_plain">Register Your Business</span>
+                </a>
+                <a href="#contact" class="drawer-link" onclick="closeDrawer()">
+                    <span class="drawer-icon">📞</span>
+                    <span data-i18n="nav_contact">Contact Us</span>
+                </a>
+                <a href="https://wa.me/917009095598?text=Hi" target="_blank" rel="noopener" class="drawer-link">
+                    <span class="drawer-icon">💬</span>
+                    <span>WhatsApp Support</span>
+                </a>
+            </nav>
+            <div class="drawer-footer">
+                <p>Real Amount &bull; Trusted Local Deals</p>
+            </div>
+        </aside>
+        <div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+
+        <!-- ═══════════ MAIN CONTENT ═══════════ -->
+        <main class="site-main">
+
+            <!-- 1. HEADLINE WITH GOLDEN SWOOSH -->
+            <section class="headline-section">
+                <div class="section-container">
+                    <h1 class="main-headline" id="main-headline" data-i18n="main_headline">
+                        सही दाम की गारंटी,<br />बस अपनी ज़रूरत बताएं!
+                    </h1>
+                    <div class="headline-curve-wrap">
+                        <svg class="headline-curve" viewBox="0 0 320 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 14 Q 160 2 314 14" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. SEARCH BAR SECTION -->
+            <section class="search-section">
+                <div class="section-container">
+                    <div class="search-bar-wrap" id="category-search-bar">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="category-search-input"
+                            placeholder="क्या खोज रहे हैं? (जैसे AC, TV, Repair, Plumbing)"
+                            data-i18n-placeholder="search_placeholder" autocomplete="off" spellcheck="false" />
+                        <button type="button" class="search-clear-btn hidden" id="search-clear-btn" aria-label="Clear Search" style="display: none;">✕</button>
+                        <!-- Live Search Dropdown -->
+                        <div class="search-dropdown-results hidden" id="search-dropdown-results" style="display: none;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. TWO BIG ACTION CARDS (DIRECT LINKS) -->
+            <section class="action-cards-section">
+                <div class="section-container">
+                    <div class="action-cards-grid">
+                        <!-- Left: Post Your Requirement (Navy Blue Card) -->
+                        <a href="register.html?type=customer" class="action-card action-card-req" id="btn-post-requirement">
+                            <div class="action-card-icon-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="12" y1="12" x2="12" y2="18"></line>
+                                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="action-card-text">
+                                <h2 class="action-card-title" data-i18n="btn_post_req_title">Post Your<br />Requirement</h2>
+                                <span class="action-card-sub" data-i18n="btn_post_req_sub">अपनी ज़रूरत बताएं</span>
+                            </div>
+                        </a>
+
+                        <!-- Right: Register Your Business (Cream / Gold Border Card) -->
+                        <a href="register.html?type=partner" class="action-card action-card-biz" id="btn-register-biz">
+                            <div class="action-card-icon-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </div>
+                            <div class="action-card-text">
+                                <h2 class="action-card-title" data-i18n="btn_reg_biz_title">Register<br />Your Business</h2>
+                                <span class="action-card-sub" data-i18n="btn_reg_biz_sub">अपने व्यवसाय को जोड़ें</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. "HOW IT WORKS? / यह कैसे काम करता है?" CARD -->
+            <section class="how-it-works-section">
+                <div class="section-container">
+                    <div class="how-it-works-card">
+                        <h2 class="hiw-title" data-i18n="how_it_works_title">How It Works? / यह कैसे काम करता है?</h2>
+                        <div class="hiw-steps-row">
+                            <!-- Step 1 -->
+                            <div class="hiw-step">
+                                <div class="hiw-icon-circle">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </div>
+                                <span class="hiw-step-label" data-i18n="hiw_step1">Post<br />Requirement</span>
+                            </div>
+
+                            <!-- Arrow 1 -->
+                            <div class="hiw-arrow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="hiw-step">
+                                <div class="hiw-icon-circle">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <span class="hiw-step-label" data-i18n="hiw_step2">Get Best<br />Offers</span>
+                            </div>
+
+                            <!-- Arrow 2 -->
+                            <div class="hiw-arrow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="hiw-step">
+                                <div class="hiw-icon-circle">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65l.77.78L12 20.66l7.65-7.65.77-.78a5.4 5.4 0 0 0 0-7.65z"></path>
+                                    </svg>
+                                </div>
+                                <span class="hiw-step-label" data-i18n="hiw_step3">Choose &amp;<br />Connect</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. POPULAR CATEGORIES (8-TILE GRID) -->
+            <section class="popular-categories-section">
+                <div class="section-container">
+                    <div class="popular-header-row">
+                        <h2 class="popular-section-title" data-i18n="popular_categories_title">Popular Categories</h2>
+                        <button type="button" class="see-all-link-btn" onclick="openCategoriesModal()" data-i18n="browse_all_btn">
+                            See All ▾
+                        </button>
+                    </div>
+
+                    <div class="categories-8-grid">
+                        <!-- 1. Air Conditioner -->
+                        <a href="register.html?type=customer&category=Air+Conditioner" class="cat-tile">
+                            <div class="cat-tile-icon-box">
+                                <img src="https://img.icons8.com/color/96/air-conditioner.png" alt="Air Conditioner" />
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_ac">Air Conditioner</span>
+                        </a>
+
+                        <!-- 2. Television -->
+                        <a href="register.html?type=customer&category=Led+Tv" class="cat-tile">
+                            <div class="cat-tile-icon-box">
+                                <img src="https://img.icons8.com/color/96/tv.png" alt="Television" />
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_tv">Television</span>
+                        </a>
+
+                        <!-- 3. Washing Machine -->
+                        <a href="register.html?type=customer&category=Washing+Machine" class="cat-tile">
+                            <div class="cat-tile-icon-box">
+                                <img src="https://img.icons8.com/color/96/washing-machine.png" alt="Washing Machine" />
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_washing">Washing Machine</span>
+                        </a>
+
+                        <!-- 4. Refrigerator -->
+                        <a href="register.html?type=customer&category=Refrigerator" class="cat-tile">
+                            <div class="cat-tile-icon-box">
+                                <img src="https://img.icons8.com/color/96/fridge.png" alt="Refrigerator" />
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_fridge">Refrigerator</span>
+                        </a>
+
+                        <!-- 5. Repair Service -->
+                        <a href="register.html?type=customer&category=Ac+Service%2FRepair" class="cat-tile cat-tile-gold">
+                            <div class="cat-tile-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                </svg>
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_repair">Repair Service</span>
+                        </a>
+
+                        <!-- 6. Home Services -->
+                        <a href="register.html?type=customer&category=Electrician" class="cat-tile cat-tile-gold">
+                            <div class="cat-tile-icon-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_home_serv">Home Services</span>
+                        </a>
+
+                        <!-- 7. Home & Living -->
+                        <a href="register.html?type=customer&category=Furniture" class="cat-tile cat-tile-gold">
+                            <div class="cat-tile-icon-box">
+                                <img src="https://img.icons8.com/color/96/sofa.png" alt="Home & Living" />
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_home_living">Home &amp; Living</span>
+                        </a>
+
+                        <!-- 8. More Categories -->
+                        <button type="button" class="cat-tile cat-tile-more" onclick="openCategoriesModal()">
+                            <div class="cat-tile-icon-box">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                                    <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                                    <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                                    <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                                </svg>
+                            </div>
+                            <span class="cat-tile-name" data-i18n="cat_more">More Categories</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. CONTACT SECTION -->
+            <section class="contact-section" id="contact">
+                <div class="section-container">
+                    <div class="contact-card-box">
+                        <div class="contact-box-header">
+                            <h2 class="contact-box-title" data-i18n="contact_title">Need Help? Contact Us</h2>
+                            <p class="contact-box-desc" data-i18n="contact_sub">Have questions? Reach out — we'd love to hear from you.</p>
+                        </div>
+
+                        <div class="contact-cards-grid">
+                            <a href="tel:+917009095598" class="contact-item-card">
+                                <div class="contact-item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                    </svg>
+                                </div>
+                                <div class="contact-item-text">
+                                    <span class="contact-item-label" data-i18n="card_call_title">Call Directly</span>
+                                    <strong class="contact-item-val">+91 7009095598</strong>
+                                </div>
+                            </a>
+
+                            <a href="https://wa.me/917009095598?text=Hi" target="_blank" rel="noopener" class="contact-item-card contact-wa-card">
+                                <div class="contact-item-icon wa-icon-box">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                    </svg>
+                                </div>
+                                <div class="contact-item-text">
+                                    <span class="contact-item-label" data-i18n="card_whatsapp_title">Chat on WhatsApp</span>
+                                    <strong class="contact-item-val">Message Us</strong>
+                                </div>
+                            </a>
+
+                            <a href="mailto:realamountofficial@gmail.com" class="contact-item-card">
+                                <div class="contact-item-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="contact-item-text">
+                                    <span class="contact-item-label" data-i18n="card_email_title">Email Us</span>
+                                    <strong class="contact-item-val">realamountofficial@gmail.com</strong>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ═══════════ FOOTER (FULL WIDTH) ═══════════ -->
+        <footer class="site-footer">
+            <div class="footer-container">
+                <div class="footer-brand-wrap">
+                    <img src="assets/logo.png" alt="Real Amount" class="footer-logo" />
+                </div>
+                <div class="footer-links-row">
+                    <a href="index.html" data-i18n="nav_home">Home</a>
+                    <a href="register.html?type=customer" data-i18n="btn_post_req_title_plain">Post Requirement</a>
+                    <a href="register.html?type=partner" data-i18n="btn_reg_biz_title_plain">Register Business</a>
+                    <a href="#contact" data-i18n="nav_contact">Contact Us</a>
+                </div>
+                <div class="footer-social-row">
+                    <a href="https://wa.me/917009095598?text=Hi" target="_blank" rel="noopener" class="footer-social-icon" aria-label="WhatsApp">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                         </svg>
                     </a>
-                    <div class="banner-text">
-                        <strong>Get Latest Deals!</strong>
-                        <p>Save our number to your phone</p>
-                    </div>
+                    <a href="https://instagram.com/realamountofficial" target="_blank" rel="noopener" class="footer-social-icon" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg>
+                    </a>
+                    <a href="https://fb.me/realamountofficial" target="_blank" rel="noopener" class="footer-social-icon" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                    </a>
                 </div>
-                <a href="contact.vcf" download="RealAmount.vcf" class="save-contact-btn" style="text-decoration: none;">
-                    Save Contact
-                </a>
-            </div>
-
-            <div class="hero-features-row">
-                <div class="feature-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <path d="M16 10a4 4 0 0 1-8 0" />
-                    </svg>
-                    <span>Premium<br />Products</span>
-                </div>
-                <div class="feature-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                        <path
-                            d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
-                    </svg>
-                    <span>Expert<br />Services</span>
-                </div>
-                <div class="feature-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    <span>Business<br />Partnerships</span>
-                </div>
-                <div class="feature-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        <polyline points="9 12 11 14 15 10" />
-                    </svg>
-                    <span>Secure &amp;<br />Reliable</span>
+                <div class="footer-copy-text">
+                    <p data-i18n="footer_copy">&copy; 2024 Real Amount &bull; All Rights Reserved</p>
                 </div>
             </div>
+        </footer>
 
-        </div>
-        <div class="hero-scroll-indicator">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="mouse-icon">
-                <rect x="5" y="2" width="14" height="20" rx="7" />
-                <line x1="12" y1="6" x2="12" y2="10" />
-            </svg>
-            <span>SCROLL TO EXPLORE</span>
-            <div class="scroll-arrow">
+    </div>
+
+    <!-- ═══════════ ALL CATEGORIES MODAL ═══════════ -->
+    <div class="categories-modal-overlay hidden" id="categories-modal" style="display: none;">
+        <div class="categories-modal-card">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-badge">Direct Connect</span>
+                    <h3 class="modal-title" data-i18n="modal_title">Browse All Categories</h3>
+                    <p class="modal-desc" data-i18n="modal_desc">Select any service or product to get the best local prices</p>
+                </div>
+                <button type="button" class="modal-close-btn" id="close-categories-modal" onclick="closeCategoriesModal()" aria-label="Close modal">✕</button>
+            </div>
+
+            <div class="modal-search-bar">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9" />
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
+                <input type="text" id="modal-category-search"
+                    placeholder="Filter categories (e.g. car, ac, phone, paint...)"
+                    data-i18n-placeholder="modal_search_ph" autocomplete="off" />
+            </div>
+
+            <div class="modal-tabs">
+                <button type="button" class="modal-tab active" data-tab="all" data-i18n="modal_tab_all">All (56)</button>
+                <button type="button" class="modal-tab" data-tab="services" data-i18n="modal_tab_services">Services &amp; Repairs (24)</button>
+                <button type="button" class="modal-tab" data-tab="products" data-i18n="modal_tab_products">Products Buy/Sell (32)</button>
+            </div>
+
+            <div class="modal-categories-grid" id="modal-categories-grid">
+                <!-- Dynamically populated from ALL_CATEGORIES in home.js -->
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- ═══════════ TRUST STATS ═══════════ -->
-    <section class="trust-stats" id="trust-stats">
-        <div class="trust-stats-inner">
-            <h2 class="trust-stats-title">Trusted by Hundreds</h2>
-            <div class="trust-stats-grid">
-                <div class="trust-stat-card">
-                    <div class="trust-stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
-                    </div>
-                    <span class="trust-stat-number" data-target="500">0</span>
-                    <span class="trust-stat-suffix">+</span>
-                    <p class="trust-stat-label">Happy Customers</p>
-                </div>
-                <div class="trust-stat-divider"></div>
-                <div class="trust-stat-card">
-                    <div class="trust-stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
-                    </div>
-                    <span class="trust-stat-number" data-target="150">0</span>
-                    <span class="trust-stat-suffix">+</span>
-                    <p class="trust-stat-label">Verified Shops</p>
-                </div>
-                <div class="trust-stat-divider"></div>
-                <div class="trust-stat-card">
-                    <div class="trust-stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                            <line x1="3" y1="6" x2="21" y2="6" />
-                            <path d="M16 10a4 4 0 0 1-8 0" />
-                        </svg>
-                    </div>
-                    <span class="trust-stat-number" data-target="100">0</span>
-                    <span class="trust-stat-suffix">+</span>
-                    <p class="trust-stat-label">Products & Services</p>
-                </div>
-                <div class="trust-stat-divider"></div>
-                <div class="trust-stat-card">
-                    <div class="trust-stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            <polyline points="9 12 11 14 15 10" />
-                        </svg>
-                    </div>
-                    <span class="trust-stat-number" data-target="98">0</span>
-                    <span class="trust-stat-suffix">%</span>
-                    <p class="trust-stat-label">Customer Satisfaction</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- ═══════════ FLOATING 1-CLICK WHATSAPP BUTTON ═══════════ -->
+    <aside class="floating-whatsapp-widget" id="floating-whatsapp-widget" aria-label="Order on WhatsApp">
+        <a href="https://wa.me/917009095598?text=Hi%20Real%20Amount,%20I%20want%20to%20request%20the%20best%20quote"
+            target="_blank" rel="noopener" class="floating-wa-btn" id="floating-wa-btn" title="Order on WhatsApp">
+            <span class="floating-wa-pulse"></span>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            <span class="floating-wa-label" data-i18n="floating_wa_label">Order on WhatsApp</span>
+        </a>
+    </aside>
 
-    <!-- ═══════════ SERVICES ═══════════ -->
-    <section class="services" id="services">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-tag">What We Offer</span>
-                <h2 class="section-title">Our <span class="text-accent">Services</span></h2>
-                <p class="section-desc">Real Amount connects you directly to local shops and service providers
-                    &dash; so you always get the <span class="text-accent">best price</span>.</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card" id="card-products">
-                    <div class="service-card-glow"></div>
-                    <div class="service-icon-wrap">
-                        <img src="assets/service-products.png" alt="Products" class="service-icon-img" />
-                    </div>
-                    <h3 class="service-card-title">Buy &amp; Sell Products</h3>
-                    <p class="service-card-desc">Looking for a new or used product? We connect you straight to
-                        verified local shops &dash; best prices, zero hassle.</p>
-                    <ul class="service-features">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Lowest prices guaranteed
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Verified local sellers
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Transparent pricing
-                        </li>
-                    </ul>
-                    <a href="register.html?type=customer" class="service-card-link">
-                        Find a Product
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5">
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="service-card featured" id="card-partnership">
-                    <div class="service-card-glow"></div>
-                    <div class="service-icon-wrap">
-                        <img src="assets/service-consulting.png" alt="Partnership" class="service-icon-img" />
-                    </div>
-                    <h3 class="service-card-title">Register Your Business</h3>
-                    <p class="service-card-desc">Are you a shop owner or service provider? Join Real Amount as a Partner
-                        and start receiving leads from customers directly to your door.</p>
-                    <ul class="service-features">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Direct customer leads
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Showcase your products
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Grow your local reach
-                        </li>
-                    </ul>
-                    <a href="register.html?type=partner" class="service-card-link">
-                        Become a Partner
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5">
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="service-card" id="card-growth">
-                    <div class="service-card-glow"></div>
-                    <div class="service-icon-wrap">
-                        <img src="assets/service-growth.png" alt="Growth" class="service-icon-img" />
-                    </div>
-                    <h3 class="service-card-title">Repair &amp; Service</h3>
-                    <p class="service-card-desc">Need your appliance, mobile, or gadget fixed? Connect with trusted
-                        local
-                        service professionals in your area and get it sorted quickly.</p>
-                    <ul class="service-features">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Verified technicians
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            All appliances covered
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Fast turnaround
-                        </li>
-                    </ul>
-                    <a href="register.html?type=customer" class="service-card-link">
-                        Book a Service
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5">
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══════════ ABOUT ═══════════ -->
-    <section class="about" id="about">
-        <div class="section-container">
-            <div class="about-grid">
-                <div class="about-content">
-                    <span class="section-tag">Who We Are</span>
-                    <h2 class="section-title">Built on <span class="text-accent">Trust</span>,<br />Driven by <span
-                            class="text-accent">Growth</span></h2>
-                    <p class="about-text">
-                        Real Amount is a local commerce platform that connects customers directly to nearby shops
-                        and service providers. We ensure you always get the best price &dash;
-                        whether you are buying a new product, selling a used one, or getting something repaired.
-                    </p>
-                    <div class="about-values">
-                        <div class="value-item">
-                            <div class="value-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4>Integrity First</h4>
-                                <p>No middlemen, no hidden charges. We connect you directly with trusted local partners.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="value-item">
-                            <div class="value-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4>Quick Response</h4>
-                                <p>Submit your requirement and our team will connect you with the right partner within
-                                    hours.</p>
-                            </div>
-                        </div>
-                        <div class="value-item">
-                            <div class="value-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4>Local Network</h4>
-                                <p>We are building a trusted network of local shops and service providers you can rely
-                                    on.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══════════ HOW IT WORKS ═══════════ -->
-    <section class="process" id="process">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-tag">How It Works</span>
-                <h2 class="section-title">Get Started in <span class="text-accent">3 Steps</span></h2>
-                <p class="section-desc">Simple steps for both partners listing their business and customers finding what
-                    they need.</p>
-            </div>
-            <div class="process-timeline">
-                <div class="process-step">
-                    <div class="process-number">01</div>
-                    <div class="process-connector"></div>
-                    <div class="process-content">
-                        <h3>Register Online</h3>
-                        <p>Fill out our quick form — as a <strong>Partner</strong> to list your shop, or as a
-                            <strong>Customer</strong> to post your requirement. Takes under 5 minutes.
-                        </p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="process-number">02</div>
-                    <div class="process-connector"></div>
-                    <div class="process-content">
-                        <h3>We Connect You</h3>
-                        <p>Our team reviews your request and matches customers with the nearest relevant partner shop or
-                            service provider.</p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="process-number">03</div>
-                    <div class="process-connector"></div>
-                    <div class="process-content">
-                        <h3>Deal Done</h3>
-                        <p>Meet, discuss, and close the deal directly. Real Amount ensures a smooth and trusted
-                            experience from start to finish.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══════════ CTA BANNER ═══════════ -->
-    <section class="cta-banner">
-        <div class="cta-bg-shapes">
-            <div class="cta-shape shape-1"></div>
-            <div class="cta-shape shape-2"></div>
-            <div class="cta-shape shape-3"></div>
-        </div>
-        <div class="section-container cta-content">
-            <h2 class="cta-title">Best Prices. Local Shops. Real Deals.</h2>
-            <p class="cta-desc">Customers &dash; find the <strong>cheapest deals</strong> on products &amp; repairs
-                near
-                you. Shop owners &dash; list your business and get direct leads. Real Amount makes it happen.</p>
-            <div class="cta-actions">
-                <a href="register.html" class="btn-cta-primary" id="cta-bottom-partner">
-                    Register Now
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                </a>
-                <a href="#contact" class="btn-cta-secondary" id="cta-bottom-contact">Contact Us</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══════════ CONTACT ═══════════ -->
-    <section class="contact" id="contact">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-tag">Get in Touch</span>
-                <h2 class="section-title">Contact <span class="text-accent">Us</span></h2>
-                <p class="section-desc">Have questions? Reach out — we'd love to hear from you.</p>
-            </div>
-            <div class="contact-grid">
-                <div class="contact-card" id="contact-phone" onclick="window.location.href='tel:+917009095598'"
-                    style="cursor: pointer;">
-                    <div class="contact-card-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5">
-                            <path
-                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                        </svg>
-                    </div>
-                    <h3>Call Us</h3>
-                    <a href="tel:+917009095598">+91 7009095598</a>
-                </div>
-                <div class="contact-card" id="contact-email"
-                    onclick="window.location.href='mailto:realamountofficial@gmail.com'" style="cursor: pointer;">
-                    <div class="contact-card-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                            <polyline points="22,6 12,13 2,6" />
-                        </svg>
-                    </div>
-                    <h3>Email Us</h3>
-                    <a href="mailto:realamountofficial@gmail.com">realamountofficial@gmail.com</a>
-                </div>
-                <div class="contact-card" id="contact-whatsapp"
-                    onclick="window.open('https://wa.me/917009095598?text=Hi,+I%27m+interested', '_blank')"
-                    style="cursor: pointer;">
-                    <div class="contact-card-icon whatsapp-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                        </svg>
-                    </div>
-                    <h3>Chat with Us</h3>
-                    <a href="https://wa.me/917009095598?text=Hi" target="_blank" rel="noopener">WhatsApp</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ═══════════ FOOTER ═══════════ -->
-    <footer class="home-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <img src="assets/logo.png" alt="Real Amount" class="footer-logo" />
-
-            </div>
-            <div class="footer-links">
-                <a href="#hero">Home</a>
-                <a href="#services">Services</a>
-                <a href="#about">About Us</a>
-                <a href="#contact">Contact Us</a>
-                <a href="register.html">Register</a>
-            </div>
-            <div class="footer-socials">
-                <a href="https://instagram.com/realamountofficial" target="_blank" rel="noopener" class="social-link"
-                    aria-label="Instagram">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                    </svg>
-                </a>
-                <a href="https://t.me/realamountofficial" target="_blank" rel="noopener" class="social-link"
-                    aria-label="Telegram">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-                    </svg>
-                </a>
-                <a href="https://fb.me/realamountofficial" target="_blank" rel="noopener" class="social-link"
-                    aria-label="Facebook">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                </a>
-                <a href="https://wa.me/917009095598?text=Hi" target="_blank" rel="noopener" class="social-link"
-                    aria-label="WhatsApp">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                    </svg>
-                </a>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Real Amount &bull; All Rights Reserved</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="home.js"></script>
+    <script src="home.js?v=2.3"></script>
 </body>
 
 </html>
