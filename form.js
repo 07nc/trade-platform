@@ -51,6 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── Brand Picker Modal for Partners ──
   initBrandPickerModal();
 
+  // ── Category Searchbars in Form (Services vs Products) ──
+  initFormCategorySearch();
+
   // ── Auto-handle URL parameters (?type= and ?category=) ──
   handlePresetURLParams();
 
@@ -154,65 +157,65 @@ function initMobileDrawer() {
 
 // ── CANONICAL CATEGORIES FOR DIRECT SELECTION ──
 const CANONICAL_SERVICES = [
-  { name: "Ac Service/Repair", icon: "https://img.icons8.com/color/48/air-conditioner.png" },
-  { name: "Refrigerator Repair", icon: "https://img.icons8.com/color/48/fridge.png" },
-  { name: "Tv/Led Repair", icon: "https://img.icons8.com/color/48/tv.png" },
-  { name: "Mobile Repair", icon: "https://img.icons8.com/color/48/smartphone.png" },
-  { name: "Laptop Repair", icon: "https://img.icons8.com/color/48/laptop.png" },
-  { name: "Plumber", icon: "https://img.icons8.com/color/48/plumbing.png" },
-  { name: "Car Service", icon: "https://img.icons8.com/color/48/car-service.png" },
-  { name: "Two Wheeler Service", icon: "https://img.icons8.com/color/48/motorcycle.png" },
-  { name: "Professional Services (CA/Tax Advocate/Doctor)", icon: "https://img.icons8.com/color/48/briefcase.png" },
-  { name: "Insurance(Life/Health/Vehicle)", icon: "https://img.icons8.com/color/48/shield.png" },
-  { name: "Unisex Saloon", icon: "https://img.icons8.com/color/48/barbershop.png" },
-  { name: "Banking Services", icon: "https://img.icons8.com/color/48/bank.png" },
-  { name: "Auto Dealer", icon: "https://img.icons8.com/color/48/steering-wheel.png" },
-  { name: "Electrician", icon: "https://img.icons8.com/color/48/lightning-bolt.png" },
-  { name: "Carpenter", icon: "https://img.icons8.com/color/48/saw.png" },
-  { name: "Education", icon: "https://img.icons8.com/color/48/graduation-cap.png" },
-  { name: "Health Care", icon: "https://img.icons8.com/color/48/hospital.png" },
-  { name: "Taxi/Cab Services", icon: "https://img.icons8.com/color/48/taxi.png" },
-  { name: "Financial Services", icon: "https://img.icons8.com/color/48/money.png" },
-  { name: "Car Washing", icon: "https://img.icons8.com/color/48/car-service.png" },
-  { name: "Photographer", icon: "https://img.icons8.com/color/48/camera.png" },
-  { name: "Courier Services", icon: "https://img.icons8.com/color/48/truck.png" },
-  { name: "Banquet Hall", icon: "https://img.icons8.com/color/48/city-buildings.png" },
-  { name: "Real Estate", icon: "https://img.icons8.com/color/48/home.png" }
+  { name: "Ac Service/Repair", icon: "https://img.icons8.com/color/48/air-conditioner.png", keywords: ["ac", "air conditioner", "cooling", "gas charging", "service", "ac repair", "hvac", "repair"] },
+  { name: "Refrigerator Repair", icon: "https://img.icons8.com/color/48/fridge.png", keywords: ["fridge", "refrigerator", "freezer", "cooling repair", "defrost"] },
+  { name: "Tv/Led Repair", icon: "https://img.icons8.com/color/48/tv.png", keywords: ["tv", "led", "television", "smart tv", "display", "screen repair", "lcd"] },
+  { name: "Mobile Repair", icon: "https://img.icons8.com/color/48/smartphone.png", keywords: ["mobile", "phone", "smartphone", "iphone", "android", "screen repair", "battery", "display"] },
+  { name: "Laptop Repair", icon: "https://img.icons8.com/color/48/laptop.png", keywords: ["laptop", "computer", "pc", "macbook", "windows", "keyboard", "formatting"] },
+  { name: "Plumber", icon: "https://img.icons8.com/color/48/plumbing.png", keywords: ["plumber", "plumbing", "pipe", "tap", "leakage", "water", "drainage", "fittings"] },
+  { name: "Car Service", icon: "https://img.icons8.com/color/48/car-service.png", keywords: ["car", "automobile", "mechanic", "oil change", "servicing", "garage"] },
+  { name: "Two Wheeler Service", icon: "https://img.icons8.com/color/48/motorcycle.png", keywords: ["bike", "motorcycle", "scooter", "scooty", "two wheeler", "two-wheeler", "mechanic", "servicing"] },
+  { name: "Professional Services (CA/Tax Advocate/Doctor)", icon: "https://img.icons8.com/color/48/briefcase.png", keywords: ["ca", "chartered accountant", "tax", "gst", "advocate", "lawyer", "legal", "doctor", "consultant"] },
+  { name: "Insurance(Life/Health/Vehicle)", icon: "https://img.icons8.com/color/48/shield.png", keywords: ["insurance", "life insurance", "health insurance", "car insurance", "bike insurance", "policy", "lic"] },
+  { name: "Unisex Saloon", icon: "https://img.icons8.com/color/48/barbershop.png", keywords: ["saloon", "salon", "parlour", "parlor", "haircut", "beauty", "makeup", "grooming", "spa"] },
+  { name: "Banking Services", icon: "https://img.icons8.com/color/48/bank.png", keywords: ["bank", "banking", "loan", "personal loan", "home loan", "credit card", "finance", "account"] },
+  { name: "Auto Dealer", icon: "https://img.icons8.com/color/48/steering-wheel.png", keywords: ["auto dealer", "car dealer", "used car", "buy car", "sell car", "showroom", "vehicle"] },
+  { name: "Electrician", icon: "https://img.icons8.com/color/48/lightning-bolt.png", keywords: ["electrician", "electrical", "wiring", "fan repair", "short circuit", "switch", "meter"] },
+  { name: "Carpenter", icon: "https://img.icons8.com/color/48/saw.png", keywords: ["carpenter", "wood", "woodwork", "furniture repair", "door", "window", "cabinet", "interior"] },
+  { name: "Education", icon: "https://img.icons8.com/color/48/graduation-cap.png", keywords: ["education", "tuition", "coaching", "school", "college", "classes", "teacher", "tutor"] },
+  { name: "Health Care", icon: "https://img.icons8.com/color/48/hospital.png", keywords: ["health", "healthcare", "clinic", "hospital", "nursing", "ambulance", "physiotherapy", "pathology", "lab"] },
+  { name: "Taxi/Cab Services", icon: "https://img.icons8.com/color/48/taxi.png", keywords: ["taxi", "cab", "rental car", "driver", "travel", "tour", "outstation"] },
+  { name: "Financial Services", icon: "https://img.icons8.com/color/48/money.png", keywords: ["finance", "financial", "investment", "mutual fund", "sip", "advisory", "wealth"] },
+  { name: "Car Washing", icon: "https://img.icons8.com/color/48/car-service.png", keywords: ["car wash", "car washing", "detailing", "car cleaning", "foam wash", "polish"] },
+  { name: "Photographer", icon: "https://img.icons8.com/color/48/camera.png", keywords: ["photographer", "photography", "videography", "wedding shoot", "pre wedding", "studio", "photo shoot"] },
+  { name: "Courier Services", icon: "https://img.icons8.com/color/48/truck.png", keywords: ["courier", "parcel", "delivery", "shipping", "logistics", "speed post", "cargo"] },
+  { name: "Banquet Hall", icon: "https://img.icons8.com/color/48/city-buildings.png", keywords: ["banquet", "marriage hall", "party hall", "wedding venue", "resort", "reception"] },
+  { name: "Real Estate", icon: "https://img.icons8.com/color/48/home.png", keywords: ["real estate", "property", "flat", "plot", "rent", "buy house", "dealer", "broker"] }
 ];
 
 const CANONICAL_PRODUCTS = [
-  { name: "Air Conditioner", icon: "https://img.icons8.com/color/48/air-conditioner.png" },
-  { name: "Refrigerator", icon: "https://img.icons8.com/color/48/fridge.png" },
-  { name: "Led Tv", icon: "https://img.icons8.com/color/48/tv.png" },
-  { name: "RO", icon: "https://img.icons8.com/color/48/bottle-of-water.png" },
-  { name: "Inverter", icon: "https://img.icons8.com/color/48/car-battery.png" },
-  { name: "Oven/OTG/Induction", icon: "https://img.icons8.com/color/48/cooker.png" },
-  { name: "Cooler", icon: "https://img.icons8.com/color/48/fan.png" },
-  { name: "Washing Machine", icon: "https://img.icons8.com/color/48/washing-machine.png" },
-  { name: "Mobile", icon: "https://img.icons8.com/color/48/smartphone.png" },
-  { name: "Books and Stationary", icon: "https://img.icons8.com/color/48/books.png" },
-  { name: "Kitchen Appliances", icon: "https://img.icons8.com/color/48/kettle.png" },
-  { name: "Plywood and Hardware", icon: "https://img.icons8.com/color/48/wood.png" },
-  { name: "Automotive", icon: "https://img.icons8.com/color/48/car.png" },
-  { name: "Furniture", icon: "https://img.icons8.com/color/48/sofa.png" },
-  { name: "Gift Shop", icon: "https://img.icons8.com/color/48/gift.png" },
-  { name: "Footwear", icon: "https://img.icons8.com/color/48/trainers.png" },
-  { name: "Chemist", icon: "https://img.icons8.com/color/48/pills.png" },
-  { name: "Building Material", icon: "https://img.icons8.com/color/48/brick-wall.png" },
-  { name: "Agricultural Goods", icon: "https://img.icons8.com/color/48/wheat.png" },
-  { name: "Event Management", icon: "https://img.icons8.com/color/48/party-baloons.png" },
-  { name: "Catering", icon: "https://img.icons8.com/color/48/food.png" },
-  { name: "Sweet Shop", icon: "https://img.icons8.com/color/48/cupcake.png" },
-  { name: "Sanitary Store", icon: "https://img.icons8.com/color/48/toilet-bowl.png" },
-  { name: "Home Baker", icon: "https://img.icons8.com/color/48/cake.png" },
-  { name: "Hardware and Tools", icon: "https://img.icons8.com/color/48/maintenance.png" },
-  { name: "Toys/Games", icon: "https://img.icons8.com/color/48/controller.png" },
-  { name: "Flowers and Gifts", icon: "https://img.icons8.com/color/48/rose.png" },
-  { name: "Boutique", icon: "https://img.icons8.com/color/48/womens-shirt.png" },
-  { name: "Home Decor", icon: "https://img.icons8.com/color/48/lamp.png" },
-  { name: "Opticals", icon: "https://img.icons8.com/color/48/glasses.png" },
-  { name: "Grocery Store", icon: "https://img.icons8.com/color/48/shopping-cart.png" },
-  { name: "Spare Parts", icon: "https://img.icons8.com/color/48/gear.png" }
+  { name: "Air Conditioner", icon: "https://img.icons8.com/color/48/air-conditioner.png", keywords: ["ac", "air conditioner", "split ac", "window ac", "cooling", "inverter ac"] },
+  { name: "Refrigerator", icon: "https://img.icons8.com/color/48/fridge.png", keywords: ["fridge", "refrigerator", "double door", "single door", "deep freezer"] },
+  { name: "Led Tv", icon: "https://img.icons8.com/color/48/tv.png", keywords: ["tv", "led", "television", "smart tv", "4k tv", "oled", "android tv"] },
+  { name: "RO", icon: "https://img.icons8.com/color/48/bottle-of-water.png", keywords: ["ro", "water purifier", "filter", "uv", "water filter", "aquaguard"] },
+  { name: "Inverter", icon: "https://img.icons8.com/color/48/car-battery.png", keywords: ["inverter", "battery", "ups", "tubular battery", "solar inverter", "power backup"] },
+  { name: "Oven/OTG/Induction", icon: "https://img.icons8.com/color/48/cooker.png", keywords: ["oven", "otg", "induction", "microwave", "stove", "cooker"] },
+  { name: "Cooler", icon: "https://img.icons8.com/color/48/fan.png", keywords: ["cooler", "air cooler", "desert cooler", "personal cooler", "fan"] },
+  { name: "Washing Machine", icon: "https://img.icons8.com/color/48/washing-machine.png", keywords: ["washing machine", "washer", "dryer", "front load", "top load", "semi automatic"] },
+  { name: "Mobile", icon: "https://img.icons8.com/color/48/smartphone.png", keywords: ["mobile", "phone", "smartphone", "iphone", "android", "cell phone"] },
+  { name: "Books and Stationary", icon: "https://img.icons8.com/color/48/books.png", keywords: ["books", "stationary", "stationery", "pen", "notebook", "school books", "office supplies"] },
+  { name: "Kitchen Appliances", icon: "https://img.icons8.com/color/48/kettle.png", keywords: ["kitchen appliances", "mixer", "grinder", "juicer", "blender", "chimney", "cooktop"] },
+  { name: "Plywood and Hardware", icon: "https://img.icons8.com/color/48/wood.png", keywords: ["plywood", "timber", "hardware", "laminate", "mdf", "board", "hinges"] },
+  { name: "Automotive", icon: "https://img.icons8.com/color/48/car.png", keywords: ["automotive", "car parts", "bike parts", "auto accessories", "vehicle accessories"] },
+  { name: "Furniture", icon: "https://img.icons8.com/color/48/sofa.png", keywords: ["furniture", "sofa", "bed", "table", "chair", "almirah", "dining table", "wardrobe"] },
+  { name: "Gift Shop", icon: "https://img.icons8.com/color/48/gift.png", keywords: ["gift", "gift shop", "toys", "presents", "novelties", "memento"] },
+  { name: "Footwear", icon: "https://img.icons8.com/color/48/trainers.png", keywords: ["footwear", "shoes", "sneakers", "slippers", "sandals", "boots", "heels", "chappal"] },
+  { name: "Chemist", icon: "https://img.icons8.com/color/48/pills.png", keywords: ["chemist", "pharmacy", "medical store", "medicines", "drugs", "supplements"] },
+  { name: "Building Material", icon: "https://img.icons8.com/color/48/brick-wall.png", keywords: ["building material", "cement", "bricks", "sand", "steel", "iron", "construction"] },
+  { name: "Agricultural Goods", icon: "https://img.icons8.com/color/48/wheat.png", keywords: ["agriculture", "seeds", "fertilizers", "pesticides", "farming", "crop", "kisan"] },
+  { name: "Event Management", icon: "https://img.icons8.com/color/48/party-baloons.png", keywords: ["event management", "decoration", "party planner", "wedding planner", "stage", "sound"] },
+  { name: "Catering", icon: "https://img.icons8.com/color/48/food.png", keywords: ["catering", "caterer", "food", "wedding food", "halwai", "party food"] },
+  { name: "Sweet Shop", icon: "https://img.icons8.com/color/48/cupcake.png", keywords: ["sweet shop", "sweets", "mithai", "bakery", "snacks", "ladoo", "jalebi"] },
+  { name: "Sanitary Store", icon: "https://img.icons8.com/color/48/toilet-bowl.png", keywords: ["sanitary", "sanitaryware", "tiles", "faucets", "wash basin", "bathroom fittings"] },
+  { name: "Home Baker", icon: "https://img.icons8.com/color/48/cake.png", keywords: ["home baker", "cake", "pastry", "cookies", "baking", "custom cake", "birthday cake"] },
+  { name: "Hardware and Tools", icon: "https://img.icons8.com/color/48/maintenance.png", keywords: ["hardware", "tools", "drill machine", "hammer", "wrench", "screws", "fasteners"] },
+  { name: "Toys/Games", icon: "https://img.icons8.com/color/48/controller.png", keywords: ["toys", "games", "board games", "video games", "kids toys", "dolls", "action figures"] },
+  { name: "Flowers and Gifts", icon: "https://img.icons8.com/color/48/rose.png", keywords: ["flowers", "bouquet", "florist", "roses", "plant", "gifts"] },
+  { name: "Boutique", icon: "https://img.icons8.com/color/48/womens-shirt.png", keywords: ["boutique", "clothes", "clothing", "designer wear", "suit", "saree", "lehenga", "dresses"] },
+  { name: "Home Decor", icon: "https://img.icons8.com/color/48/lamp.png", keywords: ["home decor", "lighting", "paintings", "curtains", "clocks", "vases", "interior decor"] },
+  { name: "Opticals", icon: "https://img.icons8.com/color/48/glasses.png", keywords: ["opticals", "glasses", "spectacles", "sunglasses", "lenses", "eye checkup", "frames"] },
+  { name: "Grocery Store", icon: "https://img.icons8.com/color/48/shopping-cart.png", keywords: ["grocery", "kirana", "supermarket", "ration", "daily needs", "provisions"] },
+  { name: "Spare Parts", icon: "https://img.icons8.com/color/48/gear.png", keywords: ["spare parts", "parts", "components", "replacement parts", "spares"] }
 ];
 
 // ── POPULAR BRANDS BY PRODUCT CATEGORY (PARTNER ONBOARDING) ──
@@ -522,6 +525,17 @@ function handlePresetURLParams() {
     if (atC) atC.checked = true;
     const cardC = document.getElementById('radio-card-customer');
     if (cardC) cardC.classList.add('selected');
+
+    // Check if preset for service specifically
+    const presetService = urlParams.get('service') || urlParams.get('serviceType') || urlParams.get('mode');
+    if (presetService && (presetService === 'repair' || presetService === 'service' || presetService === 'services')) {
+      selectedCustomerService = "Service/Repair";
+      const radioS = document.getElementById('cs-service-repair');
+      if (radioS) radioS.checked = true;
+      const cardS = document.getElementById('radio-card-service-repair');
+      if (cardS) cardS.classList.add('selected');
+    }
+
     goToStep1();
   }
 }
@@ -613,15 +627,23 @@ function clearSelectedCategory() {
   const custServiceGroup = document.getElementById('customer-service-type-group');
   if (custServiceGroup) custServiceGroup.style.display = '';
 
-  // Unhide step 2 checkbox grids and notes
+  // Unhide step 2 checkbox grids, search bars, and notes
   const prodGrid = document.getElementById('product-checkbox-grid');
   if (prodGrid) prodGrid.style.display = '';
+  const prodSearch = document.getElementById('product-search-section');
+  if (prodSearch) prodSearch.style.display = '';
   const prodNote = document.getElementById('step-2a-note');
   if (prodNote) prodNote.style.display = '';
+
   const servGrid = document.getElementById('service-checkbox-grid');
   if (servGrid) servGrid.style.display = '';
+  const servSearch = document.getElementById('service-search-section');
+  if (servSearch) servSearch.style.display = '';
   const servNote = document.getElementById('step-2b-note');
   if (servNote) servNote.style.display = '';
+
+  if (typeof clearProductSearch === 'function') clearProductSearch();
+  if (typeof clearServiceSearch === 'function') clearServiceSearch();
 
   // Uncheck customerService radios
   document.querySelectorAll('input[name="customerService"]').forEach(r => r.checked = false);
@@ -982,6 +1004,8 @@ function goToStep2Customer() {
       if (badge) badge.textContent = 'Selected Product';
       const grid = document.getElementById('product-checkbox-grid');
       if (grid) grid.style.display = 'none';
+      const searchSecA = document.getElementById('product-search-section');
+      if (searchSecA) searchSecA.style.display = 'none';
       const note = document.getElementById('step-2a-note');
       if (note) note.style.display = 'none';
       step2a.classList.remove("hidden");
@@ -992,6 +1016,8 @@ function goToStep2Customer() {
       if (badge) badge.textContent = 'Selected Service';
       const grid = document.getElementById('service-checkbox-grid');
       if (grid) grid.style.display = 'none';
+      const searchSecB = document.getElementById('service-search-section');
+      if (searchSecB) searchSecB.style.display = 'none';
       const note = document.getElementById('step-2b-note');
       if (note) note.style.display = 'none';
       step2b.classList.remove("hidden");
@@ -1003,6 +1029,8 @@ function goToStep2Customer() {
     if (badge) badge.textContent = 'Select a Product';
     const gridA = document.getElementById('product-checkbox-grid');
     if (gridA) gridA.style.display = '';
+    const searchSecA = document.getElementById('product-search-section');
+    if (searchSecA) searchSecA.style.display = '';
     const noteA = document.getElementById('step-2a-note');
     if (noteA) noteA.style.display = '';
 
@@ -1012,6 +1040,8 @@ function goToStep2Customer() {
     if (badgeB) badgeB.textContent = 'Service Provider';
     const gridB = document.getElementById('service-checkbox-grid');
     if (gridB) gridB.style.display = '';
+    const searchSecB = document.getElementById('service-search-section');
+    if (searchSecB) searchSecB.style.display = '';
     const noteB = document.getElementById('step-2b-note');
     if (noteB) noteB.style.display = '';
 
@@ -2082,4 +2112,304 @@ function showToast(message, type = "info") {
 function escapeHtml(str) {
   if (!str || typeof str !== 'string') return '';
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// ═══════════════════════════════════════════════════
+// CATEGORY SEARCH IN CUSTOMER & PARTNER FORMS
+// ═══════════════════════════════════════════════════
+
+function initFormCategorySearch() {
+  setupCategorySearch({
+    searchBarWrapId: "service-category-search-bar",
+    inputId: "service-category-search-input",
+    clearBtnId: "service-search-clear-btn",
+    dropdownId: "service-search-dropdown-results",
+    gridId: "service-checkbox-grid",
+    categoryType: "service",
+    categories: CANONICAL_SERVICES,
+    inputName: "services"
+  });
+
+  setupCategorySearch({
+    searchBarWrapId: "product-category-search-bar",
+    inputId: "product-category-search-input",
+    clearBtnId: "product-search-clear-btn",
+    dropdownId: "product-search-dropdown-results",
+    gridId: "product-checkbox-grid",
+    categoryType: "product",
+    categories: CANONICAL_PRODUCTS,
+    inputName: "products"
+  });
+}
+
+function setupCategorySearch(config) {
+  const searchWrap = document.getElementById(config.searchBarWrapId);
+  const searchInput = document.getElementById(config.inputId);
+  const clearBtn = document.getElementById(config.clearBtnId);
+  const dropdown = document.getElementById(config.dropdownId);
+  const grid = document.getElementById(config.gridId);
+  if (!searchWrap || !searchInput || !dropdown || !grid) return;
+
+  let currentFocusIndex = -1;
+
+  function filterList(query) {
+    if (!query) return [];
+    const q = query.toLowerCase().trim();
+    return config.categories.filter((cat) => {
+      if (cat.name.toLowerCase().includes(q)) return true;
+      if (cat.keywords && cat.keywords.some((k) => k.toLowerCase().includes(q))) return true;
+      return false;
+    });
+  }
+
+  function filterGrid(query) {
+    const q = query.toLowerCase().trim();
+    const items = grid.querySelectorAll(".checkbox-item");
+    const matchedCategories = filterList(q);
+    const matchedNames = new Set(matchedCategories.map((c) => c.name.toLowerCase()));
+
+    let visibleCount = 0;
+    items.forEach((item) => {
+      const cb = item.querySelector(`input[name="${config.inputName}"]`);
+      if (!cb) return;
+
+      const val = cb.value;
+      if (val === "Other") {
+        item.style.display = ""; // Always keep "Other" visible
+        return;
+      }
+
+      if (!q) {
+        item.style.display = "";
+        visibleCount++;
+        return;
+      }
+
+      const valLower = val.toLowerCase();
+      const matchesDirect = valLower.includes(q);
+      const matchesKeywords = matchedNames.has(valLower);
+
+      if (matchesDirect || matchesKeywords) {
+        item.style.display = "";
+        visibleCount++;
+      } else {
+        item.style.display = "none";
+      }
+    });
+
+    const noticeEl = document.getElementById(`no-matching-${config.categoryType}`);
+    if (noticeEl) {
+      if (q && visibleCount === 0) {
+        noticeEl.classList.remove("hidden");
+        noticeEl.style.display = "block";
+      } else {
+        noticeEl.classList.add("hidden");
+        noticeEl.style.display = "none";
+      }
+    }
+  }
+
+  function showDropdown() {
+    dropdown.classList.remove("hidden");
+    dropdown.style.display = "block";
+  }
+
+  function hideDropdown() {
+    dropdown.classList.add("hidden");
+    dropdown.style.display = "none";
+    currentFocusIndex = -1;
+  }
+
+  function renderDropdown(items) {
+    dropdown.innerHTML = "";
+    currentFocusIndex = -1;
+
+    if (items.length === 0) {
+      dropdown.innerHTML = `
+        <div class="search-no-results">
+          No ${config.categoryType}s found matching "${escapeHtml(searchInput.value)}".<br>
+          <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; display: inline-block;">You can select "Other" below to enter a custom ${config.categoryType}.</span>
+        </div>
+      `;
+      showDropdown();
+      return;
+    }
+
+    items.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "search-result-item";
+      div.setAttribute("data-index", index);
+
+      const typeBadge = config.categoryType === "service" ? "Service" : "Product";
+      const isChecked = isCategoryChecked(config.inputName, item.name);
+
+      div.innerHTML = `
+        <img src="${item.icon}" alt="" onerror="this.onerror=null; this.src='https://img.icons8.com/color/48/maintenance.png';" />
+        <span>${escapeHtml(item.name)}</span>
+        ${isChecked ? '<span class="selected-indicator-pill">✓ Selected</span>' : ''}
+        <span class="search-result-badge">${typeBadge}</span>
+      `;
+
+      div.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        selectCategoryFromSearch(item.name, config.inputName, grid);
+        searchInput.value = "";
+        if (clearBtn) {
+          clearBtn.classList.add("hidden");
+          clearBtn.style.display = "none";
+        }
+        filterGrid("");
+        hideDropdown();
+      });
+
+      dropdown.appendChild(div);
+    });
+
+    showDropdown();
+  }
+
+  searchInput.addEventListener("focus", () => {
+    const val = searchInput.value.trim();
+    if (val) {
+      renderDropdown(filterList(val));
+    }
+  });
+
+  searchInput.addEventListener("input", () => {
+    const val = searchInput.value.trim();
+    if (clearBtn) {
+      if (val) {
+        clearBtn.classList.remove("hidden");
+        clearBtn.style.display = "flex";
+      } else {
+        clearBtn.classList.add("hidden");
+        clearBtn.style.display = "none";
+      }
+    }
+
+    filterGrid(val);
+
+    if (val) {
+      renderDropdown(filterList(val));
+    } else {
+      hideDropdown();
+    }
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      clearBtn.classList.add("hidden");
+      clearBtn.style.display = "none";
+      filterGrid("");
+      hideDropdown();
+      searchInput.focus();
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    if (!searchWrap.contains(e.target) && !dropdown.contains(e.target)) {
+      hideDropdown();
+    }
+  });
+
+  searchInput.addEventListener("keydown", (e) => {
+    const items = dropdown.querySelectorAll(".search-result-item");
+    if (!items.length || dropdown.classList.contains("hidden")) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      currentFocusIndex = (currentFocusIndex + 1) % items.length;
+      updateDropdownHighlight(items, currentFocusIndex);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      currentFocusIndex = (currentFocusIndex - 1 + items.length) % items.length;
+      updateDropdownHighlight(items, currentFocusIndex);
+    } else if (e.key === "Enter") {
+      if (currentFocusIndex >= 0 && items[currentFocusIndex]) {
+        e.preventDefault();
+        items[currentFocusIndex].dispatchEvent(new MouseEvent("mousedown"));
+      }
+    } else if (e.key === "Escape") {
+      hideDropdown();
+    }
+  });
+}
+
+function updateDropdownHighlight(items, focusIndex) {
+  items.forEach((item, idx) => {
+    if (idx === focusIndex) {
+      item.classList.add("highlighted");
+      item.scrollIntoView({ block: "nearest" });
+    } else {
+      item.classList.remove("highlighted");
+    }
+  });
+}
+
+function isCategoryChecked(inputName, categoryName) {
+  const cb = document.querySelector(`input[name="${inputName}"][value="${categoryName}"]`);
+  return cb ? cb.checked : false;
+}
+
+function selectCategoryFromSearch(categoryName, inputName, grid) {
+  const cb = grid.querySelector(`input[name="${inputName}"][value="${categoryName}"]`);
+  if (cb) {
+    cb.checked = true;
+    const parentLabel = cb.closest(".checkbox-item");
+    if (parentLabel) {
+      parentLabel.classList.add("checked");
+      parentLabel.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      parentLabel.classList.remove("just-selected-glow");
+      void parentLabel.offsetWidth; // trigger reflow
+      parentLabel.classList.add("just-selected-glow");
+    }
+
+    clearFieldError(`${inputName}-error`);
+
+    if (inputName === "products" && accountType === "Partner" && typeof renderPartnerCategoryBrandCards === "function") {
+      renderPartnerCategoryBrandCards();
+    }
+
+    showToast(`Selected "${categoryName}"`, "success");
+  }
+}
+
+function clearProductSearch() {
+  const input = document.getElementById("product-category-search-input");
+  const clearBtn = document.getElementById("product-search-clear-btn");
+  if (input) input.value = "";
+  if (clearBtn) {
+    clearBtn.classList.add("hidden");
+    clearBtn.style.display = "none";
+  }
+  const grid = document.getElementById("product-checkbox-grid");
+  if (grid) {
+    grid.querySelectorAll(".checkbox-item").forEach(item => item.style.display = "");
+  }
+  const notice = document.getElementById("no-matching-product");
+  if (notice) {
+    notice.classList.add("hidden");
+    notice.style.display = "none";
+  }
+}
+
+function clearServiceSearch() {
+  const input = document.getElementById("service-category-search-input");
+  const clearBtn = document.getElementById("service-search-clear-btn");
+  if (input) input.value = "";
+  if (clearBtn) {
+    clearBtn.classList.add("hidden");
+    clearBtn.style.display = "none";
+  }
+  const grid = document.getElementById("service-checkbox-grid");
+  if (grid) {
+    grid.querySelectorAll(".checkbox-item").forEach(item => item.style.display = "");
+  }
+  const notice = document.getElementById("no-matching-service");
+  if (notice) {
+    notice.classList.add("hidden");
+    notice.style.display = "none";
+  }
 }

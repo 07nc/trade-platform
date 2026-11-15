@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Partner Onboarding | Real Amount</title>
-    <link rel="stylesheet" href="styles.css?v=2.2" />
+    <link rel="stylesheet" href="styles.css?v=2.3" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -408,7 +408,26 @@
                 </p>
             </div>
 
+            <!-- Category Search Bar (Products) -->
+            <div class="form-category-search-section" id="product-search-section">
+                <div class="search-bar-wrap form-search-bar-wrap" id="product-category-search-bar">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="product-category-search-input"
+                        placeholder="Search products (e.g. AC, TV, Fridge, RO...)"
+                        autocomplete="off" spellcheck="false" />
+                    <button type="button" class="search-clear-btn hidden" id="product-search-clear-btn" aria-label="Clear Search" style="display: none;">✕</button>
+                    <!-- Live Search Dropdown -->
+                    <div class="search-dropdown-results hidden" id="product-search-dropdown-results" style="display: none;"></div>
+                </div>
+            </div>
+
             <div class="checkbox-grid" id="product-checkbox-grid">
+                <div class="no-matching-categories-notice hidden" id="no-matching-product" style="display: none;">
+                    No products found matching your search. You can choose "Other" below or <a href="javascript:void(0)" onclick="clearProductSearch()">clear search</a>.
+                </div>
                 <label class="checkbox-item"><input type="checkbox" name="products" value="Air Conditioner" /><span
                         class="checkbox-box"></span><img src="https://img.icons8.com/color/48/air-conditioner.png"
                         alt="Air Conditioner" class="color-icon" /> Air Conditioner</label>
@@ -609,7 +628,26 @@
                 </p>
             </div>
 
+            <!-- Category Search Bar (Services) -->
+            <div class="form-category-search-section" id="service-search-section">
+                <div class="search-bar-wrap form-search-bar-wrap" id="service-category-search-bar">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="service-category-search-input"
+                        placeholder="Search services (e.g. AC Repair, Plumber, Electrician...)"
+                        autocomplete="off" spellcheck="false" />
+                    <button type="button" class="search-clear-btn hidden" id="service-search-clear-btn" aria-label="Clear Search" style="display: none;">✕</button>
+                    <!-- Live Search Dropdown -->
+                    <div class="search-dropdown-results hidden" id="service-search-dropdown-results" style="display: none;"></div>
+                </div>
+            </div>
+
             <div class="checkbox-grid" id="service-checkbox-grid">
+                <div class="no-matching-categories-notice hidden" id="no-matching-service" style="display: none;">
+                    No services found matching your search. You can choose "Other" below or <a href="javascript:void(0)" onclick="clearServiceSearch()">clear search</a>.
+                </div>
                 <label class="checkbox-item"><input type="checkbox" name="services" value="Ac Service/Repair" /><span
                         class="checkbox-box"></span><img src="https://img.icons8.com/color/48/air-conditioner.png"
                         alt="Ac Service/Repair" class="color-icon" /> Ac Service/Repair</label>
@@ -898,7 +936,7 @@
         </p>
     </footer>
 
-    <script src="form.js?v=2.2"></script>
+    <script src="form.js?v=2.3"></script>
 </body>
 
 </html>
