@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Partner Onboarding | Real Amount</title>
-    <link rel="stylesheet" href="styles.css?v=2.1" />
+    <link rel="stylesheet" href="styles.css?v=2.2" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -519,9 +519,13 @@
                 <!-- Partner Category Brands Section -->
                 <div class="partner-brands-section hidden" id="partner-brands-section">
                     <div class="partner-brands-header">
-                        <span class="partner-brands-badge">Brand Selection</span>
-                        <h3 class="partner-brands-title">Select the Brands You Deal In</h3>
-                        <p class="partner-brands-sub">Tap popular brand chips for each selected product or type other brands</p>
+                        <div class="partner-brands-num-title">
+                            <span class="step-num-badge">4</span>
+                            <div>
+                                <h3 class="partner-brands-title">Brands You Deal In</h3>
+                                <p class="partner-brands-sub">Add brands for your chosen categories</p>
+                            </div>
+                        </div>
                     </div>
                     <div id="partner-brands-cards-container" class="partner-brands-cards-container"></div>
                 </div>
@@ -854,6 +858,37 @@
         </div>
     </main>
 
+    <!-- ── BRAND PICKER MODAL (FOR PARTNERS) ── -->
+    <div class="brand-modal-overlay hidden" id="brand-picker-modal" aria-hidden="true">
+        <div class="brand-modal-card">
+            <div class="brand-modal-header">
+                <div>
+                    <h3 class="brand-modal-title" id="brand-modal-title">Add Brand</h3>
+                    <p class="brand-modal-sub" id="brand-modal-sub">Choose from common Indian brands or enter custom</p>
+                </div>
+                <button type="button" class="brand-modal-close" id="brand-modal-close" aria-label="Close dialog">✕</button>
+            </div>
+
+            <!-- Custom Brand Input -->
+            <div class="brand-modal-input-group">
+                <input type="text" class="brand-modal-input" id="brand-modal-input" placeholder="Type custom brand name..." autocomplete="off" />
+                <button type="button" class="brand-modal-add-btn" id="brand-modal-add-btn">+ Add</button>
+            </div>
+
+            <!-- Common Brands in India -->
+            <div class="brand-modal-body">
+                <span class="brand-modal-section-title">Common Brands in India</span>
+                <div class="brand-suggestions-grid" id="brand-suggestions-grid">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <div class="brand-modal-footer">
+                <button type="button" class="brand-modal-done-btn" id="brand-modal-done-btn">Done</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast notification -->
     <div class="toast hidden" id="toast"></div>
 
@@ -863,7 +898,7 @@
         </p>
     </footer>
 
-    <script src="form.js?v=2.1"></script>
+    <script src="form.js?v=2.2"></script>
 </body>
 
 </html>

@@ -1648,251 +1648,423 @@ textarea {
 }
 
 /* ═══════════════════════════════════════
-   PARTNER CATEGORY-WISE BRANDS SECTION
+   PARTNER CATEGORY-WISE BRANDS SECTION (AS PER SCREENSHOT)
    ═══════════════════════════════════════ */
 .partner-brands-section {
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     margin-bottom: 1.5rem;
-    padding: 1.25rem;
-    background: #f8fafc;
+    padding: 1.35rem 1.25rem;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(12, 35, 60, 0.04);
 }
 
-.partner-brands-header {
-    margin-bottom: 1rem;
+.partner-brands-num-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
-.partner-brands-badge {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #92400e;
-    background: #fef3c7;
-    border: 1px solid #fde68a;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    margin-bottom: 0.35rem;
+.step-num-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #d97706;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
 }
 
 .partner-brands-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 0.2rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0c233c;
+    line-height: 1.2;
+    margin: 0;
 }
 
 .partner-brands-sub {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: #64748b;
+    margin-top: 0.2rem;
 }
 
 .partner-brands-cards-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.35rem;
+    margin-top: 1.15rem;
 }
 
-.category-brand-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-left: 4px solid var(--accent);
+.category-brands-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.category-brands-block:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.category-brands-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0c233c;
+    margin: 0;
+}
+
+.category-brands-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.brand-item-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #fff9e8;
+    border: 1.5px solid #f6d280;
+    border-radius: 9999px;
+    padding: 0.38rem 0.85rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0c233c;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    animation: popIn 0.15s ease-out;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.brand-item-remove {
+    background: transparent;
+    border: none;
+    color: #b45309;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease, color 0.1s ease;
+}
+
+.brand-item-remove:hover {
+    transform: scale(1.3);
+    color: #dc2626;
+}
+
+.btn-add-brand {
+    background: transparent;
+    border: none;
+    color: #1a56db;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.15s ease;
+}
+
+.btn-add-brand:hover {
+    background: rgba(26, 86, 219, 0.08);
+    color: #1e40af;
+}
+
+.btn-add-brand .plus-icon {
+    font-size: 1.15rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.partner-brands-empty {
+    padding: 1.25rem;
+    text-align: center;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
     border-radius: var(--radius-sm);
-    padding: 1rem 1.15rem;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
-    transition: all var(--transition);
+    color: #64748b;
+    font-size: 0.88rem;
 }
 
-.category-brand-card:hover {
-    border-color: #cbd5e1;
-    border-left-color: var(--accent);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.07);
-}
-
-.category-brand-card-header {
+/* ── Brand Picker Modal ── */
+.brand-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(8, 24, 41, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 1200;
     display: flex;
     align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.brand-modal-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: var(--radius);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    overflow: hidden;
+    animation: slideUp 0.2s ease-out;
+}
+
+.brand-modal-header {
+    padding: 1.15rem 1.25rem 0.85rem;
+    display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 0.85rem;
-    padding-bottom: 0.5rem;
     border-bottom: 1px solid #f1f5f9;
 }
 
-.category-brand-title-wrap {
+.brand-modal-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0c233c;
+    margin: 0;
+}
+
+.brand-modal-sub {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 0.2rem;
+}
+
+.brand-modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #94a3b8;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    justify-content: center;
+    transition: all 0.15s ease;
 }
 
-.category-brand-icon {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    flex-shrink: 0;
+.brand-modal-close:hover {
+    background: #f1f5f9;
+    color: #0c233c;
 }
 
-.category-brand-name {
-    font-size: 0.95rem;
+.brand-modal-input-group {
+    padding: 1rem 1.25rem 0.65rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.brand-modal-input {
+    flex: 1;
+    padding: 0.65rem 0.95rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    background: #fdfefe;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.brand-modal-input:focus {
+    border-color: #1a56db;
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.12);
+}
+
+.brand-modal-add-btn {
+    padding: 0.65rem 1.15rem;
+    background: #1a3c5e;
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
     font-weight: 700;
-    color: #0f172a;
-    line-height: 1.2;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-.category-brand-count {
+.brand-modal-add-btn:hover {
+    background: #0c233c;
+}
+
+.brand-modal-body {
+    padding: 0.75rem 1.25rem 1rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.brand-modal-section-title {
+    display: block;
     font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: #64748b;
-    font-weight: 500;
+    margin-bottom: 0.65rem;
 }
 
-.category-brand-count.has-brands {
-    color: #16a34a;
-    font-weight: 600;
-}
-
-.brand-chips-wrap {
+.brand-suggestions-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 0.85rem;
 }
 
-.brand-chip {
+.brand-suggestion-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.45rem 0.85rem;
+    padding: 0.42rem 0.85rem;
     background: #f8fafc;
     border: 1px solid #cbd5e1;
     border-radius: 9999px;
     font-size: 0.84rem;
-    font-weight: 500;
+    font-weight: 600;
     color: #334155;
     cursor: pointer;
     user-select: none;
-    transition: all 0.15s ease-in-out;
-    line-height: 1.2;
+    transition: all 0.15s ease;
 }
 
-.brand-chip:hover {
+.brand-suggestion-chip:hover {
     background: #f1f5f9;
-    border-color: var(--accent);
-    color: #0f172a;
+    border-color: #94a3b8;
+    color: #0c233c;
     transform: translateY(-1px);
 }
 
-.brand-chip.selected {
-    background: var(--primary);
-    border-color: var(--accent);
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(26, 60, 94, 0.25);
-}
-
-.brand-chip-check {
-    display: none;
-    font-size: 0.8rem;
+.brand-suggestion-chip.already-added {
+    background: #fff9e8;
+    border-color: #f6d280;
+    color: #b45309;
     font-weight: 700;
-    color: var(--accent-light);
 }
 
-.brand-chip.selected .brand-chip-check {
-    display: inline-block;
-}
-
-.category-brand-custom-wrap {
-    position: relative;
-}
-
-.custom-brand-input {
-    width: 100%;
-    padding: 0.6rem 0.85rem;
-    border: 1px dashed #cbd5e1;
-    border-radius: var(--radius-sm);
+.brand-suggestion-chip .chip-action-icon {
     font-size: 0.85rem;
-    background: #fdfefe;
-    color: var(--text);
-    transition: all var(--transition);
+    font-weight: 700;
 }
 
-.custom-brand-input:focus {
-    border-style: solid;
-    border-color: var(--primary);
-    background: #ffffff;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.1);
+.brand-modal-footer {
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
 }
 
-.partner-brands-empty {
-    padding: 1.5rem;
-    text-align: center;
-    background: #ffffff;
-    border: 1px dashed #cbd5e1;
+.brand-modal-done-btn {
+    padding: 0.6rem 1.5rem;
+    background: #1a3c5e;
+    color: #ffffff;
+    border: none;
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    font-weight: 700;
     font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-/* Dark mode overrides for partner brands */
+.brand-modal-done-btn:hover {
+    background: #0c233c;
+}
+
+/* Dark mode for partner brands & modal */
 [data-theme="dark"] .partner-brands-section {
-    background: #111d2d;
+    background: #152238;
     border-color: #243b55;
 }
 
 [data-theme="dark"] .partner-brands-title {
-    color: #e2e8f0;
+    color: #f1f5f9;
 }
 
 [data-theme="dark"] .partner-brands-sub {
     color: #94a3b8;
 }
 
-[data-theme="dark"] .category-brand-card {
-    background: #152238;
-    border-color: #243b55;
-    border-left-color: var(--accent);
-}
-
-[data-theme="dark"] .category-brand-name {
-    color: #f1f5f9;
-}
-
-[data-theme="dark"] .category-brand-count {
-    color: #94a3b8;
-}
-
-[data-theme="dark"] .brand-chip {
-    background: #1e2f47;
-    border-color: #334e6e;
-    color: #cbd5e1;
-}
-
-[data-theme="dark"] .brand-chip:hover {
-    background: #253954;
-    border-color: var(--accent);
-    color: #f8fafc;
-}
-
-[data-theme="dark"] .brand-chip.selected {
-    background: #c9a84c;
-    border-color: #f5e9c8;
-    color: #0f172a;
-    font-weight: 600;
-}
-
-[data-theme="dark"] .brand-chip.selected .brand-chip-check {
-    color: #0f172a;
-}
-
-[data-theme="dark"] .custom-brand-input {
-    background: #111d2d;
-    border-color: #334e6e;
+[data-theme="dark"] .category-brands-label {
     color: #e2e8f0;
 }
 
-[data-theme="dark"] .partner-brands-empty {
+[data-theme="dark"] .brand-item-chip {
+    background: #1e293b;
+    border-color: #d97706;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .brand-item-remove {
+    color: #fbbf24;
+}
+
+[data-theme="dark"] .btn-add-brand {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .btn-add-brand:hover {
+    background: rgba(96, 165, 250, 0.15);
+}
+
+[data-theme="dark"] .brand-modal-card {
+    background: #0f1d30;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .brand-modal-header,
+[data-theme="dark"] .brand-modal-footer {
+    border-color: #1e334d;
+}
+
+[data-theme="dark"] .brand-modal-title {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .brand-modal-input {
     background: #152238;
     border-color: #243b55;
-    color: #94a3b8;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .brand-suggestion-chip {
+    background: #152238;
+    border-color: #243b55;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .brand-suggestion-chip:hover {
+    background: #1c2e4a;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .brand-suggestion-chip.already-added {
+    background: #1e293b;
+    border-color: #d97706;
+    color: #fbbf24;
 }
 

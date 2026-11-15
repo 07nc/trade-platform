@@ -386,9 +386,9 @@ img {
     flex-direction: column;
 }
 
-/* 1. HEADLINE WITH GOLDEN SWOOSH */
+/* 1. HEADLINE WITH HIGHLIGHTED HINDI TAGLINE */
 .headline-section {
-    padding: 3.5rem 0 1rem;
+    padding: 3rem 0 1.25rem;
     text-align: center;
 }
 
@@ -407,15 +407,56 @@ html[lang="hi"] .main-headline {
     line-height: 1.3;
 }
 
-.headline-curve-wrap {
+.tagline-highlight-wrapper {
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 0.5rem;
+    margin-top: 1.15rem;
 }
 
-.headline-curve {
-    width: 320px;
-    height: 20px;
+.tagline-highlight-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
+    border: 2px solid #fde68a;
+    border-radius: 9999px;
+    padding: 0.55rem 1.6rem;
+    box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tagline-highlight-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(245, 158, 11, 0.45);
+}
+
+.tagline-sparkle {
+    width: 26px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.tagline-pill-text {
+    font-family: "Noto Sans Devanagari", "Inter", sans-serif;
+    color: #0c233c;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* Dark mode overrides for tagline badge */
+[data-theme="dark"] .tagline-highlight-badge {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #d97706 100%);
+    border-color: #fde68a;
+    box-shadow: 0 4px 20px rgba(217, 119, 6, 0.4);
+}
+
+[data-theme="dark"] .tagline-pill-text {
+    color: #081829;
 }
 
 /* 2. SEARCH BAR SECTION */
@@ -1293,14 +1334,28 @@ html[lang="hi"] .main-headline {
         padding: 1.75rem 0 0.5rem;
     }
     .main-headline {
-        font-size: 1.7rem;
+        font-size: 1.65rem;
     }
     html[lang="hi"] .main-headline {
-        font-size: 1.75rem;
+        font-size: 1.7rem;
     }
-    .headline-curve {
-        width: 230px;
-        height: 16px;
+    .tagline-highlight-wrapper {
+        margin-top: 0.75rem;
+        padding: 0 0.5rem;
+    }
+    .tagline-highlight-badge {
+        padding: 0.45rem 1.1rem;
+        gap: 0.4rem;
+        max-width: 100%;
+    }
+    .tagline-sparkle {
+        width: 18px;
+        height: 14px;
+    }
+    .tagline-pill-text {
+        font-size: 0.84rem;
+        white-space: normal;
+        text-align: center;
     }
     .search-section {
         padding: 0.75rem 0 1.25rem;

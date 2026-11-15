@@ -48,6 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ── Mobile Drawer Navigation ──
   initMobileDrawer();
 
+  // ── Brand Picker Modal for Partners ──
+  initBrandPickerModal();
+
   // ── Auto-handle URL parameters (?type= and ?category=) ──
   handlePresetURLParams();
 
@@ -246,27 +249,7 @@ const POPULAR_CATEGORY_BRANDS = {
 };
 
 const partnerCategoryBrandsState = {};
-
-function sanitizeId(str) {
-  return String(str || "").replace(/[^a-zA-Z0-9_-]/g, "_");
-}
-
-function updateCategoryBrandCountUI(cat) {
-  const countEl = document.getElementById(`brand-count-${sanitizeId(cat)}`);
-  if (!countEl) return;
-  const state = partnerCategoryBrandsState[cat] || { brands: new Set(), custom: "" };
-  const customCount = (state.custom && state.custom.trim())
-    ? state.custom.split(",").map((s) => s.trim()).filter(Boolean).length
-    : 0;
-  const total = (state.brands ? state.brands.size : 0) + customCount;
-  if (total > 0) {
-    countEl.textContent = `${total} brand${total > 1 ? "s" : ""} selected`;
-    countEl.className = "category-brand-count has-brands";
-  } else {
-    countEl.textContent = "0 brands selected";
-    countEl.className = "category-brand-count";
-  }
-}
+let currentBrandPickerCategory = null;
 
 function renderPartnerCategoryBrandCards() {
   const container = document.getElementById("partner-brands-cards-container");
@@ -277,25 +260,11 @@ function renderPartnerCategoryBrandCards() {
   if (checkedCheckboxes.length === 0) {
     container.innerHTML = `
       <div class="partner-brands-empty">
-        <p>Please select at least one product category above to choose your brands.</p>
+        <p>Please select your products from the grid above to specify the brands you deal in.</p>
       </div>
     `;
     return;
   }
-
-  // Preserve any typed text from existing inputs in the DOM into state before re-rendering
-  container.querySelectorAll(".category-brand-card").forEach((card) => {
-    const cat = card.dataset.category;
-    if (cat) {
-      if (!partnerCategoryBrandsState[cat]) {
-        partnerCategoryBrandsState[cat] = { brands: new Set(), custom: "" };
-      }
-      const input = card.querySelector(".custom-brand-input");
-      if (input) {
-        partnerCategoryBrandsState[cat].custom = input.value;
-      }
-    }
-  });
 
   const activeCategories = [];
   checkedCheckboxes.forEach((cb) => {
@@ -307,89 +276,177 @@ function renderPartnerCategoryBrandCards() {
     activeCategories.push({ name: cat, rawValue: cb.value });
   });
 
-  let cardsHtml = "";
-  activeCategories.forEach(({ name, rawValue }) => {
+  let html = "";
+  activeCategories.forEach(({ name }) => {
     if (!partnerCategoryBrandsState[name]) {
-      partnerCategoryBrandsState[name] = { brands: new Set(), custom: "" };
+      partnerCategoryBrandsState[name] = { brands: new Set() };
     }
     const state = partnerCategoryBrandsState[name];
-    const brandChips = POPULAR_CATEGORY_BRANDS[rawValue] || POPULAR_CATEGORY_BRANDS[name] || [];
-    const iconObj = CANONICAL_PRODUCTS.find((p) => p.name === rawValue || p.name === name);
-    const iconSrc = iconObj ? iconObj.icon : "https://img.icons8.com/color/48/star.png";
-
-    const customCount = (state.custom && state.custom.trim())
-      ? state.custom.split(",").map((s) => s.trim()).filter(Boolean).length
-      : 0;
-    const totalCount = (state.brands ? state.brands.size : 0) + customCount;
-    const countText = totalCount > 0 ? `${totalCount} brand${totalCount > 1 ? "s" : ""} selected` : "0 brands selected";
-    const countClass = totalCount > 0 ? "category-brand-count has-brands" : "category-brand-count";
+    const brandList = Array.from(state.brands || []);
 
     let chipsHtml = "";
-    if (brandChips.length > 0) {
-      chipsHtml = brandChips
-        .map((brand) => {
-          const isSel = state.brands && state.brands.has(brand);
-          return `
-          <button type="button" class="brand-chip ${isSel ? "selected" : ""}" data-category="${escapeHtml(name)}" data-brand="${escapeHtml(brand)}">
-            <span class="brand-chip-check">✓</span>
-            <span class="brand-chip-text">${escapeHtml(brand)}</span>
-          </button>
-        `;
-        })
-        .join("");
+    if (brandList.length > 0) {
+      chipsHtml = brandList.map(brand => `
+        <span class="brand-item-chip" data-brand="${escapeHtml(brand)}">
+          <span class="brand-item-name">${escapeHtml(brand)}</span>
+          <button type="button" class="brand-item-remove" data-category="${escapeHtml(name)}" data-brand="${escapeHtml(brand)}" aria-label="Remove ${escapeHtml(brand)}">✕</button>
+        </span>
+      `).join("");
     }
 
-    cardsHtml += `
-      <div class="category-brand-card" data-category="${escapeHtml(name)}">
-        <div class="category-brand-card-header">
-          <div class="category-brand-title-wrap">
-            <img src="${iconSrc}" alt="${escapeHtml(name)}" class="category-brand-icon" onerror="this.src='https://img.icons8.com/color/48/star.png'" />
-            <span class="category-brand-name">${escapeHtml(name)}</span>
-          </div>
-          <span class="${countClass}" id="brand-count-${sanitizeId(name)}">${countText}</span>
-        </div>
-        ${chipsHtml ? `<div class="brand-chips-wrap">${chipsHtml}</div>` : ""}
-        <div class="category-brand-custom-wrap">
-          <input type="text" class="custom-brand-input" data-category="${escapeHtml(name)}"
-                 placeholder="Other ${escapeHtml(name)} brands (type &amp; separate with comma)..."
-                 value="${escapeHtml(state.custom || "")}" />
+    html += `
+      <div class="category-brands-block" data-category="${escapeHtml(name)}">
+        <h4 class="category-brands-label">${escapeHtml(name)} Brands</h4>
+        <div class="category-brands-chips-row">
+          ${chipsHtml}
+          <button type="button" class="btn-add-brand" data-category="${escapeHtml(name)}">
+            <span class="plus-icon">+</span> Add Brand
+          </button>
         </div>
       </div>
     `;
   });
 
-  container.innerHTML = cardsHtml;
+  container.innerHTML = html;
 
-  // Re-attach event listeners
-  container.querySelectorAll(".brand-chip").forEach((chip) => {
-    chip.addEventListener("click", (e) => {
+  // Wire remove buttons directly on the cards
+  container.querySelectorAll(".brand-item-remove").forEach(btn => {
+    btn.addEventListener("click", (e) => {
       e.preventDefault();
-      const cat = chip.dataset.category;
-      const brand = chip.dataset.brand;
-      if (!partnerCategoryBrandsState[cat]) {
-        partnerCategoryBrandsState[cat] = { brands: new Set(), custom: "" };
-      }
-      if (partnerCategoryBrandsState[cat].brands.has(brand)) {
+      const cat = btn.dataset.category;
+      const brand = btn.dataset.brand;
+      if (partnerCategoryBrandsState[cat] && partnerCategoryBrandsState[cat].brands) {
         partnerCategoryBrandsState[cat].brands.delete(brand);
-        chip.classList.remove("selected");
-      } else {
-        partnerCategoryBrandsState[cat].brands.add(brand);
-        chip.classList.add("selected");
+        renderPartnerCategoryBrandCards();
+        if (currentBrandPickerCategory === cat) {
+          renderModalBrandSuggestions(cat);
+        }
       }
-      updateCategoryBrandCountUI(cat);
     });
   });
 
-  container.querySelectorAll(".custom-brand-input").forEach((input) => {
-    input.addEventListener("input", () => {
-      const cat = input.dataset.category;
-      if (!partnerCategoryBrandsState[cat]) {
-        partnerCategoryBrandsState[cat] = { brands: new Set(), custom: "" };
-      }
-      partnerCategoryBrandsState[cat].custom = input.value;
-      updateCategoryBrandCountUI(cat);
+  // Wire + Add Brand buttons
+  container.querySelectorAll(".btn-add-brand").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cat = btn.dataset.category;
+      openBrandPickerModal(cat);
     });
   });
+}
+
+function openBrandPickerModal(cat) {
+  currentBrandPickerCategory = cat;
+  const modal = document.getElementById("brand-picker-modal");
+  const titleEl = document.getElementById("brand-modal-title");
+  const input = document.getElementById("brand-modal-input");
+
+  if (!modal) return;
+
+  if (titleEl) titleEl.textContent = `Add Brand — ${cat}`;
+  if (input) input.value = "";
+
+  renderModalBrandSuggestions(cat);
+
+  modal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+  if (input) setTimeout(() => input.focus(), 80);
+}
+
+function renderModalBrandSuggestions(cat) {
+  const grid = document.getElementById("brand-suggestions-grid");
+  if (!grid) return;
+
+  if (!partnerCategoryBrandsState[cat]) {
+    partnerCategoryBrandsState[cat] = { brands: new Set() };
+  }
+  const state = partnerCategoryBrandsState[cat];
+
+  // Lookup popular brands for this category
+  let lookupKey = cat;
+  if (cat.startsWith("Other (") && cat.endsWith(")")) {
+    lookupKey = "Other";
+  }
+  const brandsList = POPULAR_CATEGORY_BRANDS[lookupKey] || POPULAR_CATEGORY_BRANDS[cat] || [];
+
+  if (brandsList.length === 0) {
+    grid.innerHTML = `<p style="color: #64748b; font-size: 0.85rem; padding: 0.5rem 0;">No common brands listed for this category. Please type your brand name above and click <strong>+ Add</strong>.</p>`;
+    return;
+  }
+
+  grid.innerHTML = brandsList.map(brand => {
+    const isAdded = state.brands.has(brand);
+    return `
+      <button type="button" class="brand-suggestion-chip ${isAdded ? 'already-added' : ''}" data-brand="${escapeHtml(brand)}">
+        <span class="chip-action-icon">${isAdded ? '✓' : '+'}</span>
+        <span>${escapeHtml(brand)}</span>
+      </button>
+    `;
+  }).join("");
+
+  grid.querySelectorAll(".brand-suggestion-chip").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const brand = btn.dataset.brand;
+      if (state.brands.has(brand)) {
+        state.brands.delete(brand);
+      } else {
+        state.brands.add(brand);
+      }
+      renderModalBrandSuggestions(cat);
+      renderPartnerCategoryBrandCards();
+    });
+  });
+}
+
+function initBrandPickerModal() {
+  const modal = document.getElementById("brand-picker-modal");
+  const closeBtn = document.getElementById("brand-modal-close");
+  const doneBtn = document.getElementById("brand-modal-done-btn");
+  const addBtn = document.getElementById("brand-modal-add-btn");
+  const input = document.getElementById("brand-modal-input");
+
+  if (!modal) return;
+
+  function closeModal() {
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
+    currentBrandPickerCategory = null;
+  }
+
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (doneBtn) doneBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  function handleCustomAdd() {
+    if (!currentBrandPickerCategory || !input) return;
+    const val = input.value.trim();
+    if (!val) return;
+
+    if (!partnerCategoryBrandsState[currentBrandPickerCategory]) {
+      partnerCategoryBrandsState[currentBrandPickerCategory] = { brands: new Set() };
+    }
+    // Handle comma-separated if user pasted multiple
+    val.split(",").map(b => b.trim()).filter(Boolean).forEach(b => {
+      partnerCategoryBrandsState[currentBrandPickerCategory].brands.add(b);
+    });
+
+    input.value = "";
+    renderModalBrandSuggestions(currentBrandPickerCategory);
+    renderPartnerCategoryBrandCards();
+  }
+
+  if (addBtn) addBtn.addEventListener("click", handleCustomAdd);
+  if (input) {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleCustomAdd();
+      }
+    });
+  }
 }
 
 function getPartnerSelectedBrandsSummary() {
@@ -404,19 +461,9 @@ function getPartnerSelectedBrandsSummary() {
     }
 
     const state = partnerCategoryBrandsState[cat];
-    if (!state) return;
+    if (!state || !state.brands || state.brands.size === 0) return;
 
-    const brandList = Array.from(state.brands || []);
-    if (state.custom && state.custom.trim()) {
-      state.custom
-        .split(",")
-        .map((b) => b.trim())
-        .filter(Boolean)
-        .forEach((b) => {
-          if (!brandList.includes(b)) brandList.push(b);
-        });
-    }
-
+    const brandList = Array.from(state.brands);
     if (brandList.length > 0) {
       parts.push(`${cat}: ${brandList.join(", ")}`);
     }
