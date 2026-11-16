@@ -27,10 +27,10 @@ const I18N = {
 
     // Primary Action Buttons
     btn_post_req_title: "Post Your<br />Requirement",
-    btn_post_req_sub: "",
+    btn_post_req_sub: "Tell us what you need &amp; get the best quotes from local shops",
     btn_post_req_title_plain: "Post Requirement",
     btn_reg_biz_title: "Register<br />Your Business",
-    btn_reg_biz_sub: "",
+    btn_reg_biz_sub: "List your shop, reach more customers and grow",
     btn_reg_biz_title_plain: "Register Business",
 
     // How It Works
@@ -91,10 +91,10 @@ const I18N = {
 
     // Primary Action Buttons
     btn_post_req_title: "अपनी ज़रूरत<br />बताएं",
-    btn_post_req_sub: "लोकल दुकानों से सीधा बेस्ट रेट",
+    btn_post_req_sub: "अपनी ज़रूरत बताएं और लोकल दुकानों से बेस्ट कोट्स पाएं",
     btn_post_req_title_plain: "अपनी ज़रूरत बताएं",
     btn_reg_biz_title: "अपने व्यवसाय को<br />जोड़ें",
-    btn_reg_biz_sub: "दुकान जोड़ें और नए ग्राहक पाएं",
+    btn_reg_biz_sub: "दुकान जोड़ें, नए ग्राहकों तक पहुंचें और बिज़नेस बढ़ाएं",
     btn_reg_biz_title_plain: "अपने व्यवसाय को जोड़ें",
 
     // How It Works

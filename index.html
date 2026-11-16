@@ -7,7 +7,7 @@
     <title>Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं!</title>
     <meta name="description"
         content="Real Amount — सही दाम की गारंटी, बस अपनी ज़रूरत बताएं! Connect directly with trusted local shops and service experts for the lowest price." />
-    <link rel="stylesheet" href="home.css?v=3.1" />
+    <link rel="stylesheet" href="home.css?v=3.2" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -103,23 +103,6 @@
                         Guaranteed Best Prices,<br />Just Tell Us What You Need!
                     </h1>
 
-                    <!-- Highlighted Hindi Tagline Badge with Radiant Whiskers (shown in English mode) -->
-                    <div class="tagline-highlight-wrapper">
-                        <div class="tagline-highlight-badge">
-                            <svg class="tagline-sparkle sparkle-left" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <line x1="26" y1="3" x2="4" y2="1" stroke="#f6b73c" stroke-width="2.5" stroke-linecap="round"/>
-                                <line x1="27" y1="10" x2="2" y2="10" stroke="#f6b73c" stroke-width="3" stroke-linecap="round"/>
-                                <line x1="26" y1="17" x2="4" y2="19" stroke="#f6b73c" stroke-width="2.5" stroke-linecap="round"/>
-                            </svg>
-                            <span class="tagline-pill-text">सही दाम की गारंटी, बस अपनी ज़रूरत बताएं!</span>
-                            <svg class="tagline-sparkle sparkle-right" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <line x1="2" y1="3" x2="24" y2="1" stroke="#f6b73c" stroke-width="2.5" stroke-linecap="round"/>
-                                <line x1="1" y1="10" x2="26" y2="10" stroke="#f6b73c" stroke-width="3" stroke-linecap="round"/>
-                                <line x1="2" y1="17" x2="24" y2="19" stroke="#f6b73c" stroke-width="2.5" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                    </div>
-
                     <!-- Golden curve swoosh (shown above trust badges in both English & Hindi) -->
                     <div class="headline-curve-wrap" id="headline-curve-wrap">
                         <svg class="headline-curve" viewBox="0 0 360 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -204,31 +187,41 @@
                     <div class="action-cards-grid">
                         <!-- Left: Post Your Requirement (Navy Blue Card) -->
                         <a href="register.html?type=customer" class="action-card action-card-req" id="btn-post-requirement">
-                            <div class="action-card-icon-wrap">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                            <div class="action-card-icon-wrap" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                     <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="12" y1="12" x2="12" y2="18"></line>
+                                    <line x1="12" y1="18" x2="12" y2="12"></line>
                                     <line x1="9" y1="15" x2="15" y2="15"></line>
                                 </svg>
                             </div>
-                            <div class="action-card-text">
-                                <h2 class="action-card-title" data-i18n="btn_post_req_title">Post Your<br />Requirement</h2>
-                                <span class="action-card-sub" data-i18n="btn_post_req_sub"></span>
+                            <h2 class="action-card-title" data-i18n="btn_post_req_title">Post Your<br />Requirement</h2>
+                            <p class="action-card-sub" data-i18n="btn_post_req_sub">Tell us what you need &amp; get the best quotes from local shops</p>
+                            <div class="action-card-arrow-btn" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
                             </div>
                         </a>
 
                         <!-- Right: Register Your Business (Cream / Gold Border Card) -->
                         <a href="register.html?type=partner" class="action-card action-card-biz" id="btn-register-biz">
-                            <div class="action-card-icon-wrap">
+                            <div class="action-card-icon-wrap" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                    <path d="M3 9l1-5h16l1 5"></path>
+                                    <path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"></path>
+                                    <path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"></path>
+                                    <line x1="9" y1="14" x2="15" y2="14"></line>
                                 </svg>
                             </div>
-                            <div class="action-card-text">
-                                <h2 class="action-card-title" data-i18n="btn_reg_biz_title">Register<br />Your Business</h2>
-                                <span class="action-card-sub" data-i18n="btn_reg_biz_sub"></span>
+                            <h2 class="action-card-title" data-i18n="btn_reg_biz_title">Register<br />Your Business</h2>
+                            <p class="action-card-sub" data-i18n="btn_reg_biz_sub">List your shop, reach more customers and grow</p>
+                            <div class="action-card-arrow-btn" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
                             </div>
                         </a>
                     </div>
@@ -522,7 +515,7 @@
         </a>
     </aside>
 
-    <script src="home.js?v=3.1"></script>
+    <script src="home.js?v=3.2"></script>
 </body>
 
 </html>
