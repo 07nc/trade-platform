@@ -14,7 +14,7 @@ const I18N = {
     nav_whatsapp: "WhatsApp",
 
     // Main Headline & Search
-    main_headline: "Guaranteed Best Prices,<br />Just Tell Us What You Need!",
+    main_headline: '<span class="tagline-primary">Guaranteed Best Prices</span><span class="tagline-secondary">Just Tell Us What You Need!</span>',
     search_placeholder: "What are you looking for? (e.g. AC, TV, Repair...)",
 
     // Trust Badges
@@ -28,10 +28,10 @@ const I18N = {
     // Primary Action Buttons
     btn_post_req_title: "Post Your<br />Requirement",
     btn_post_req_sub: "Tell us what you need &amp; get the best quotes from local shops",
-    btn_post_req_title_plain: "Post Requirement",
+    btn_post_req_title_plain: "Post Your Requirement",
     btn_reg_biz_title: "Register<br />Your Business",
     btn_reg_biz_sub: "List your shop, reach more customers and grow",
-    btn_reg_biz_title_plain: "Register Business",
+    btn_reg_biz_title_plain: "Register Your Business",
 
     // How It Works
     how_it_works_title: "How It Works?",
@@ -78,7 +78,7 @@ const I18N = {
     nav_whatsapp: "WhatsApp",
 
     // Main Headline & Search (Exact user requirement)
-    main_headline: "सही दाम की गारंटी,<br />बस अपनी ज़रूरत बताएं!",
+    main_headline: '<span class="tagline-primary">सही दाम की गारंटी,</span><span class="tagline-secondary">बस अपनी ज़रूरत बताएं!</span>',
     search_placeholder: "क्या खोज रहे हैं? (जैसे AC, TV, Repair, Plumber...)",
 
     // Trust Badges
